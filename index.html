@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SDG 永續桌遊 + AI + Draft | iGEM Wiki</title>
+<title>SDG 永續桌遊 + AI (Advance強化) | iGEM Wiki</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -12,6 +12,7 @@
     --accent2: #3b82f6;
     --danger: #ef4444;
     --warn: #f59e0b;
+    --neg: #e63946;
     --text: #e2e8f0;
     --muted: #94a3b8;
   }
@@ -167,6 +168,9 @@
     background: linear-gradient(90deg, #22c55e, #4ade80);
     transition: width 0.3s;
   }
+  .progress-fill.negative {
+    background: linear-gradient(90deg, #e63946, #ff6b6b);
+  }
   .progress-preview {
     position: absolute;
     top: 0; bottom: 0;
@@ -185,12 +189,12 @@
   .progress-preview.negative {
     background: repeating-linear-gradient(
       90deg,
-      rgba(239,68,68,0.35),
-      rgba(239,68,68,0.35) 4px,
-      rgba(239,68,68,0.15) 4px,
-      rgba(239,68,68,0.15) 8px
+      rgba(230,57,70,0.4),
+      rgba(230,57,70,0.4) 4px,
+      rgba(230,57,70,0.18) 4px,
+      rgba(230,57,70,0.18) 8px
     );
-    border-color: #f87171;
+    border-color: #e63946;
   }
   .progress-text {
     position: absolute;
@@ -520,17 +524,15 @@ let state = {
   discard: [],
   unusedSDGs: [],
   selectedCards: [],
-  mode: null, // "discard" | "play"
+  mode: null,
   playCount: 0,
   maxPlay: 2,
   capacityActive: false,
   isAIThinking: false,
-  // Draft
   draftAvailable: [],
   draftCurrentPlayer: 0,
-  draftPickCount: 0, // 0 or 1 for current player's first/second pick
+  draftPickCount: 0,
   draftSelected: null,
-  // Preview deltas: { playerIdx: { sdgIdx: delta } }
   previewDeltas: {}
 };
 
@@ -623,7 +625,7 @@ function startDraft() {
     name,
     isAI: types[idx] === "ai",
     difficulty: diffs[idx],
-    sdgs: [], // filled in draft
+    sdgs: [],
     hand: [],
     sanctioned: false,
     capacityNext: false
@@ -663,7 +665,6 @@ function renderDraft() {
     grid.appendChild(div);
   }
 
-  // show current picks
   let picksHtml = state.players.map(pl => {
     const s = pl.sdgs.map(x => `SDG ${x.id}`).join(", ") || "尚未選擇";
     return `${pl.name}: ${s}`;
@@ -693,7 +694,6 @@ function confirmDraftPick(id) {
     state.draftPickCount = 0;
     state.draftCurrentPlayer++;
     if (state.draftCurrentPlayer >= state.players.length) {
-      // draft done
       startGameAfterDraft();
       return;
     }
@@ -704,12 +704,10 @@ function confirmDraftPick(id) {
 function aiDraftPick() {
   const p = state.players[state.draftCurrentPlayer];
   if (!p.isAI || state.draftAvailable.length === 0) return;
-  // Easy: pure random; Basic/Advance: slight preference for mid numbers or random
   let choice;
   if (p.difficulty === "easy") {
     choice = randChoice(state.draftAvailable);
   } else {
-    // weighted toward 3~14
     const weighted = state.draftAvailable.slice().sort((a,b) => Math.abs(a-8.5) - Math.abs(b-8.5));
     choice = weighted[Math.floor(Math.random() * Math.min(6, weighted.length))];
   }
@@ -719,11 +717,9 @@ function aiDraftPick() {
 }
 
 function startGameAfterDraft() {
-  // remaining SDGs become unused pool
   state.unusedSDGs = [...state.draftAvailable];
   shuffle(state.unusedSDGs);
 
-  // Build deck
   state.deck = [];
   eventCards.forEach(c => state.deck.push({ ...c, kind: "event", id: Math.random().toString(36).slice(2) }));
   specialCards.forEach(c => {
@@ -775,7 +771,6 @@ function computePreview() {
   state.selectedCards.forEach(idx => {
     const card = p.hand[idx];
     if (!card || card.kind !== "event") return;
-    // forward
     card.forward.forEach(sdgId => {
       state.players.forEach((pl, pi) => {
         pl.sdgs.forEach((s, si) => {
@@ -786,7 +781,6 @@ function computePreview() {
         });
       });
     });
-    // backward
     card.backward.forEach(sdgId => {
       state.players.forEach((pl, pi) => {
         pl.sdgs.forEach((s, si) => {
@@ -842,7 +836,6 @@ function updateUI() {
 
   computePreview();
 
-  // Players grid
   const grid = document.getElementById("playersGrid");
   grid.innerHTML = "";
   state.players.forEach((pl, idx) => {
@@ -859,12 +852,14 @@ function updateUI() {
       const pct = ((cur + 2) / 5) * 100;
       const previewPct = ((preview + 2) / 5) * 100;
       const goal = cur >= 3;
+      const isNeg = cur < 0;
+      const previewNeg = preview < 0 || (delta < 0 && preview <= cur);
       html += `<div class="sdg-row">
         <div class="sdg-badge ${goal ? "goal" : ""} ${s.frozen ? "frozen" : ""}">SDG ${s.id}</div>
         <div class="progress-bar">
-          <div class="progress-fill" style="width:${pct}%"></div>
+          <div class="progress-fill ${isNeg ? "negative" : ""}" style="width:${pct}%"></div>
           ${delta !== 0 ? `<div class="progress-preview ${delta < 0 ? "negative" : ""}" style="left:0;width:${Math.max(pct, previewPct)}%;"></div>` : ""}
-          <div class="progress-text">${cur >= 3 ? "GOAL" : cur}${delta ? (delta > 0 ? ` →${preview}` : ` →${preview}`) : ""}${s.frozen ? " ❄" : ""}${s.immune ? " 🛡" : ""}</div>
+          <div class="progress-text">${cur >= 3 ? "GOAL" : cur}${delta ? ` →${preview}` : ""}${s.frozen ? " ❄" : ""}${s.immune ? " 🛡" : ""}</div>
         </div>
       </div>
       <div style="font-size:0.7rem;color:#64748b;margin-bottom:4px;">${SDG_NAMES[s.id] || ""}</div>`;
@@ -873,7 +868,6 @@ function updateUI() {
     grid.appendChild(div);
   });
 
-  // Hand
   const handEl = document.getElementById("handCards");
   handEl.innerHTML = "";
   p.hand.forEach((card, idx) => {
@@ -933,7 +927,7 @@ function onCardClick(idx) {
   if (state.phase !== "action" || !state.mode || getCurrentPlayer().isAI) return;
   const p = getCurrentPlayer();
   const card = p.hand[idx];
-  if (state.mode === "play" && card.kind === "special" && card.type === "veto") return; // cannot play veto
+  if (state.mode === "play" && card.kind === "special" && card.type === "veto") return;
 
   if (state.mode === "discard") {
     const pos = state.selectedCards.indexOf(idx);
@@ -949,7 +943,6 @@ function onCardClick(idx) {
       state.selectedCards.splice(pos, 1);
     } else {
       if (state.selectedCards.length >= state.maxPlay) {
-        // replace oldest
         state.selectedCards.shift();
       }
       state.selectedCards.push(idx);
@@ -974,7 +967,6 @@ function executeDiscard() {
 
 async function executePlay() {
   const p = getCurrentPlayer();
-  // Play in reverse index order to keep indices valid while removing
   const sorted = [...state.selectedCards].sort((a,b) => b - a);
   const cards = [];
   sorted.forEach(i => {
@@ -1094,7 +1086,6 @@ function easyAI(ai) {
     return { action: "discard", indices: idxs };
   }
   const maxP = ai.sanctioned ? 1 : 2;
-  // filter out veto for playing
   const playable = ai.hand.map((c,i) => i).filter(i => !(ai.hand[i].type === "veto"));
   if (playable.length === 0) return { action: "discard", indices: [0] };
   const n = Math.min(playable.length, maxP);
@@ -1137,16 +1128,26 @@ function evalCardBasic(ai, card) {
   return score;
 }
 
+/* ========== ADVANCE AI (強化版) ========== */
 function advanceAI(ai) {
-  let highThreat = null;
+  const maxP = ai.sanctioned ? 1 : 2;
+
+  // 1. 勝利優先權：檢查是否有組合能直接讓自己兩張 SDG 達 GOAL
+  const winCombo = findWinningCombo(ai, maxP);
+  if (winCombo) {
+    log(`${ai.name} (Advance) 發現直接勝利組合！`, "ai");
+    return { action: "play", indices: winCombo };
+  }
+
+  // 2. 一般評估
+  let highThreat = null; // 對手差1格勝利
   state.players.forEach((pl, pi) => {
     if (pl === ai) return;
     const goals = pl.sdgs.filter(s => s.progress >= 3).length;
-    const near = pl.sdgs.some(s => s.progress === 2);
+    const near = pl.sdgs.some(s => s.progress >= 2);
     if (goals >= 1 && near) highThreat = pi;
   });
 
-  const maxP = ai.sanctioned ? 1 : 2;
   let bestCombo = null;
   let bestScore = -Infinity;
   const n = ai.hand.length;
@@ -1158,51 +1159,169 @@ function advanceAI(ai) {
   if (maxP >= 2) {
     for (let i = 0; i < n; i++) {
       if (ai.hand[i].type === "veto") continue;
-      for (let j = i+1; j < n; j++) {
+      for (let j = i + 1; j < n; j++) {
         if (ai.hand[j].type === "veto") continue;
         combos.push([i, j]);
       }
     }
   }
+
   for (const idxs of combos) {
-    let score = evaluateState(ai);
+    let score = evaluateStateAdvance(ai);
     idxs.forEach(idx => {
       score += evalCardAdvance(ai, ai.hand[idx], highThreat);
     });
+    // 額外：模擬自己前進後的 GOAL 獎勵
+    score += simulateSelfProgressBonus(ai, idxs);
     if (score > bestScore) {
       bestScore = score;
       bestCombo = idxs;
     }
   }
-  if (bestScore > evaluateState(ai) - 5 && bestCombo) {
+
+  if (bestScore > evaluateStateAdvance(ai) - 10 && bestCombo) {
     return { action: "play", indices: bestCombo };
   }
-  const scores = ai.hand.map((c,i) => ({i, s: evalCardAdvance(ai, c, highThreat)}));
-  scores.sort((a,b) => a.s - b.s);
+
+  // 棄掉最差的
+  const scores = ai.hand.map((c, i) => ({ i, s: evalCardAdvance(ai, c, highThreat) }));
+  scores.sort((a, b) => a.s - b.s);
   return { action: "discard", indices: scores.slice(0, Math.min(2, scores.length)).map(x => x.i) };
 }
 
-function evaluateState(ai) {
-  const myTotal = ai.sdgs.reduce((a,s) => a + s.progress, 0);
+function findWinningCombo(ai, maxP) {
+  // 只考慮 event 卡的 forward 效果（最直接能推進自己的方式）
+  const n = ai.hand.length;
+  const candidates = [];
+  for (let i = 0; i < n; i++) {
+    if (ai.hand[i].kind === "event") candidates.push([i]);
+  }
+  if (maxP >= 2) {
+    for (let i = 0; i < n; i++) {
+      if (ai.hand[i].kind !== "event") continue;
+      for (let j = i + 1; j < n; j++) {
+        if (ai.hand[j].kind !== "event") continue;
+        candidates.push([i, j]);
+      }
+    }
+  }
+
+  for (const idxs of candidates) {
+    // 模擬進度
+    const sim = ai.sdgs.map(s => ({ id: s.id, progress: s.progress, frozen: s.frozen }));
+    idxs.forEach(idx => {
+      const card = ai.hand[idx];
+      card.forward.forEach(id => {
+        sim.forEach(s => {
+          if (s.id === id && s.progress < 3 && !s.frozen) {
+            s.progress = Math.min(3, s.progress + 1);
+          }
+        });
+      });
+    });
+    if (sim.every(s => s.progress >= 3)) {
+      return idxs;
+    }
+  }
+  return null;
+}
+
+function simulateSelfProgressBonus(ai, idxs) {
+  let bonus = 0;
+  const sim = ai.sdgs.map(s => ({ id: s.id, progress: s.progress, frozen: s.frozen }));
+  idxs.forEach(idx => {
+    const card = ai.hand[idx];
+    if (card.kind !== "event") return;
+    card.forward.forEach(id => {
+      sim.forEach(s => {
+        if (s.id === id && s.progress < 3 && !s.frozen) {
+          const before = s.progress;
+          s.progress = Math.min(3, s.progress + 1);
+          bonus += 25;
+          if (before < 3 && s.progress >= 3) bonus += 100;
+        }
+      });
+    });
+  });
+  return bonus;
+}
+
+function evaluateStateAdvance(ai) {
+  const myTotal = ai.sdgs.reduce((a, s) => a + s.progress, 0);
   const myGoals = ai.sdgs.filter(s => s.progress >= 3).length;
   let oppMax = 0;
+  let threatCount = 0;
   state.players.forEach(pl => {
     if (pl === ai) return;
-    const t = pl.sdgs.reduce((a,s) => a + s.progress, 0);
+    const t = pl.sdgs.reduce((a, s) => a + s.progress, 0);
     if (t > oppMax) oppMax = t;
+    const goals = pl.sdgs.filter(s => s.progress >= 3).length;
+    const near = pl.sdgs.some(s => s.progress >= 2);
+    if (goals >= 1 && near) threatCount++;
   });
   const defense = ai.hand.filter(c => c.type === "veto" || c.type === "immunity").length;
-  return myTotal * 15 + myGoals * 50 - oppMax * 12 + defense * 5;
+  return myTotal * 18 + myGoals * 60 - oppMax * 10 - threatCount * 30 + defense * 8;
 }
 
 function evalCardAdvance(ai, card, highThreat) {
-  let score = evalCardBasic(ai, card);
-  if (highThreat !== null) {
-    if (card.type === "freeze" || card.type === "sanction") score += 25;
-    if (card.kind === "event" && card.backward.length) score += 15;
+  let score = 0;
+
+  if (card.kind === "event") {
+    // 自己前進
+    card.forward.forEach(id => {
+      ai.sdgs.forEach(s => {
+        if (s.id === id && s.progress < 3 && !s.frozen) {
+          score += 25;
+          if (s.progress === 2) score += 40; // 接近 GOAL 額外加分
+        }
+      });
+    });
+    // 自己後退（嚴重懲罰）
+    card.backward.forEach(id => {
+      ai.sdgs.forEach(s => {
+        if (s.id === id && s.progress < 3 && !s.immune) score -= 40;
+      });
+    });
+    // 對手後退
+    card.backward.forEach(id => {
+      state.players.forEach(pl => {
+        if (pl === ai) return;
+        pl.sdgs.forEach(s => {
+          if (s.id === id && s.progress < 3 && !s.frozen && !s.immune) {
+            const isThreat = highThreat !== null && state.players[highThreat] === pl;
+            score += isThreat ? 80 : 8;
+          }
+        });
+      });
+    });
+  } else {
+    if (card.type === "freeze") {
+      // 只在有高威脅時給高分，且目標必須有效
+      if (highThreat !== null) score += 70;
+      else score += 12;
+    } else if (card.type === "sanction") {
+      if (highThreat !== null) score += 65;
+      else score += 10;
+    } else if (card.type === "immunity") {
+      score += 15;
+    } else if (card.type === "capacity") {
+      score += 12;
+    } else if (card.type === "sustain" || card.type === "swapSDG") {
+      score += 8;
+    } else if (card.type === "history") {
+      score += 6;
+    } else if (card.type === "aid" || card.type === "tradeHand") {
+      score += 5;
+    } else if (card.type === "veto") {
+      score = -100; // 絕對不主動打出
+    }
   }
-  if (card.type === "veto" || card.type === "immunity") score -= 8;
   return score;
+}
+
+/* 目標驗證：不可打在 GOAL 或 immune */
+function isValidNegativeTarget(s) {
+  return s.progress < 3 && !s.immune && !s.frozen;
 }
 
 async function executeAIMove(ai) {
@@ -1270,7 +1389,7 @@ function resolveEvent(card, isAI, done) {
   const targets = [];
   state.players.forEach((pl, pIdx) => {
     pl.sdgs.forEach((s, sIdx) => {
-      if (card.backward.includes(s.id) && s.progress < 3 && !s.frozen && !s.immune) {
+      if (card.backward.includes(s.id) && isValidNegativeTarget(s)) {
         targets.push({ pIdx, sIdx, pl, s });
       }
     });
@@ -1286,13 +1405,28 @@ function resolveEvent(card, isAI, done) {
   function nextTarget() {
     if (i >= targets.length) { done(); return; }
     const t = targets[i++];
-    // For event backward we still allow veto (as negative effect)
     const vetoIdx = t.pl.hand.findIndex(c => c.kind === "special" && c.type === "veto");
     if (vetoIdx >= 0) {
-      if (t.pl.isAI) {
-        const use = t.pl.difficulty === "easy" ? Math.random() < 0.4 :
+      // 精準 Veto：只在自己會後退 或 對手差1格勝利時使用
+      const wouldHurtSelf = t.pl === getCurrentPlayer() ? false : true; // 這是被打的人
+      const isSelf = t.pl === getCurrentPlayer();
+      // 對 Advance：如果是自己的 SDG 被打，或對手即將贏
+      let shouldUse = false;
+      if (t.pl.isAI && t.pl.difficulty === "advance") {
+        const isOwn = true; // 被打的是自己
+        const threat = state.players.some(pl => {
+          if (pl === t.pl) return false;
+          const g = pl.sdgs.filter(s => s.progress >= 3).length;
+          return g >= 1 && pl.sdgs.some(s => s.progress >= 2);
+        });
+        shouldUse = true; // 自己被後退就用
+      } else if (t.pl.isAI) {
+        shouldUse = t.pl.difficulty === "easy" ? Math.random() < 0.4 :
                     t.pl.difficulty === "basic" ? Math.random() < 0.7 : true;
-        if (use) {
+      }
+
+      if (t.pl.isAI) {
+        if (shouldUse) {
           const v = t.pl.hand.splice(vetoIdx, 1)[0];
           state.discard.push(v);
           log(`${t.pl.name} (AI) 使用否決權，抵銷了對 SDG ${t.s.id} 的後退效果！`, "ai");
@@ -1329,7 +1463,6 @@ function applyBackward(t) {
   log(`${t.pl.name} 的 SDG ${t.s.id} 後退至 ${t.s.progress}。`);
 }
 
-/* ===== Directed special cards with passive Veto ===== */
 function askVetoForDirected(attacker, target, cardName, onContinue, onVetoed) {
   const vetoIdx = target.hand.findIndex(c => c.kind === "special" && c.type === "veto");
   if (vetoIdx < 0) {
@@ -1337,13 +1470,19 @@ function askVetoForDirected(attacker, target, cardName, onContinue, onVetoed) {
     return;
   }
   if (target.isAI) {
-    const use = target.difficulty === "easy" ? Math.random() < 0.35 :
-                target.difficulty === "basic" ? Math.random() < 0.65 : Math.random() < 0.9;
+    let use = false;
+    if (target.difficulty === "advance") {
+      // 精準：只在會讓自己受傷或對手即將贏時用
+      // 定向卡本身就是對自己不利，所以 Advance 幾乎都用
+      use = true;
+    } else {
+      use = target.difficulty === "easy" ? Math.random() < 0.35 :
+            target.difficulty === "basic" ? Math.random() < 0.65 : true;
+    }
     if (use) {
       const v = target.hand.splice(vetoIdx, 1)[0];
       state.discard.push(v);
       log(`${target.name} (AI) 使用否決權，抵銷了「${cardName}」！`, "ai");
-      // both draw 1
       bothDrawOne(attacker, target);
       onVetoed();
     } else {
@@ -1373,7 +1512,6 @@ function bothDrawOne(p1, p2) {
       pl.hand.push(state.deck.pop());
       log(`${pl.name} 因否決權結算補了 1 張牌。`);
     }
-    // enforce hand limit 5
     while (pl.hand.length > 5) {
       const c = pl.hand.pop();
       state.discard.push(c);
@@ -1422,7 +1560,7 @@ function resolveSpecial(card, isAI, done) {
       break;
 
     case "veto":
-      log("否決權已打出（此卡僅能被動使用，不應主動打出）。");
+      log("否決權已打出（此卡僅能被動使用）。");
       done();
       break;
 
@@ -1453,11 +1591,14 @@ function resolveSpecial(card, isAI, done) {
 
     case "freeze":
       if (auto) {
+        // 只選有效目標（非 GOAL、非 immune）
         let best = null;
         state.players.forEach((pl, pi) => {
           if (pl === p) return;
           pl.sdgs.forEach((s, si) => {
-            if (s.progress < 3 && (!best || s.progress > best.progress)) best = { pi, si, progress: s.progress };
+            if (isValidNegativeTarget(s) && (!best || s.progress > best.progress)) {
+              best = { pi, si, progress: s.progress };
+            }
           });
         });
         if (best) {
@@ -1467,14 +1608,20 @@ function resolveSpecial(card, isAI, done) {
             log(`${p.name} (AI) 凍結了 ${target.name} 的 SDG ${target.sdgs[best.si].id}。`, "ai");
             done();
           }, () => done());
-        } else done();
+        } else {
+          log("無有效凍結目標。");
+          done();
+        }
       } else {
         let opts = "";
         state.players.forEach((pl, pi) => {
           pl.sdgs.forEach((s, si) => {
-            if (s.progress < 3) opts += `<button data-pi="${pi}" data-si="${si}">${pl.name} 的 SDG ${s.id}</button>`;
+            if (isValidNegativeTarget(s)) {
+              opts += `<button data-pi="${pi}" data-si="${si}">${pl.name} 的 SDG ${s.id}</button>`;
+            }
           });
         });
+        if (!opts) { log("無有效凍結目標。"); done(); return; }
         showModal("凍結計畫：選擇要凍結的 SDG", opts, [{ label: "取消", fn: done }]);
         setTimeout(() => {
           document.querySelectorAll("#modalBody button").forEach(btn => {
