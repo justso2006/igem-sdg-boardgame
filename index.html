@@ -71,7 +71,6 @@
   }
   .player-setup label { font-size: 0.9rem; color: var(--muted); }
 
-  /* Draft */
   .draft-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -89,7 +88,7 @@
     user-select: none;
   }
   .sdg-pick:hover:not(.disabled):not(.selected) { border-color: var(--accent2); transform: translateY(-2px); }
-  .sdg-pick.disabled { opacity: 0.32; cursor: not-allowed; border-color: #334155; }
+  .sdg-pick.disabled { opacity: 0.32; cursor: not-allowed; }
   .sdg-pick.selected {
     border-color: var(--accent);
     background: #14532d;
@@ -110,14 +109,8 @@
     grid-template-columns: 1fr 320px;
     gap: 16px;
   }
-  @media (max-width: 1000px) {
-    .game-layout { grid-template-columns: 1fr; }
-  }
-  .board {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 16px;
-  }
+  @media (max-width: 1000px) { .game-layout { grid-template-columns: 1fr; } }
+  .board { background: var(--card); border-radius: 12px; padding: 16px; }
   .players-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -137,115 +130,55 @@
   }
   .player-card.sanctioned::after {
     content: "制裁中";
-    position: absolute;
-    top: 6px; right: 8px;
-    background: var(--danger);
-    color: white;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 4px;
+    position: absolute; top: 6px; right: 8px;
+    background: var(--danger); color: white; font-size: 0.7rem;
+    padding: 2px 6px; border-radius: 4px;
   }
   .player-card.ai-tag::before {
     content: "AI";
-    position: absolute;
-    top: 6px; left: 8px;
-    background: #7c3aed;
-    color: white;
-    font-size: 0.65rem;
-    padding: 1px 5px;
-    border-radius: 3px;
+    position: absolute; top: 6px; left: 8px;
+    background: #7c3aed; color: white; font-size: 0.65rem;
+    padding: 1px 5px; border-radius: 3px;
   }
   .player-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; padding-left: 28px; }
-  .sdg-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 6px;
-    align-items: center;
-  }
+  .sdg-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
   .sdg-badge {
-    background: #1e3a5f;
-    border-radius: 6px;
-    padding: 4px 8px;
-    font-size: 0.85rem;
-    min-width: 70px;
-    text-align: center;
+    background: #1e3a5f; border-radius: 6px; padding: 4px 8px;
+    font-size: 0.85rem; min-width: 70px; text-align: center;
   }
   .sdg-badge.goal { background: #166534; color: #bbf7d0; }
   .sdg-badge.frozen { outline: 2px solid #38bdf8; }
   .progress-bar {
-    flex: 1;
-    height: 18px;
-    background: #1e293b;
-    border-radius: 9px;
-    overflow: hidden;
-    position: relative;
+    flex: 1; height: 18px; background: #1e293b; border-radius: 9px;
+    overflow: hidden; position: relative;
   }
   .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #22c55e, #4ade80);
-    transition: width 0.3s;
+    transition: width 0.6s ease;
   }
   .progress-fill.negative {
     background: linear-gradient(90deg, #e63946, #ff6b6b);
   }
   .progress-preview {
-    position: absolute;
-    top: 0; bottom: 0;
-    background: repeating-linear-gradient(
-      90deg,
-      rgba(34,197,94,0.35),
-      rgba(34,197,94,0.35) 4px,
-      rgba(34,197,94,0.15) 4px,
-      rgba(34,197,94,0.15) 8px
-    );
-    border: 2px dashed #4ade80;
-    border-radius: 9px;
-    pointer-events: none;
-    transition: all 0.25s;
+    position: absolute; top: 0; bottom: 0;
+    background: repeating-linear-gradient(90deg, rgba(34,197,94,0.35), rgba(34,197,94,0.35) 4px, rgba(34,197,94,0.15) 4px, rgba(34,197,94,0.15) 8px);
+    border: 2px dashed #4ade80; border-radius: 9px; pointer-events: none;
   }
   .progress-preview.negative {
-    background: repeating-linear-gradient(
-      90deg,
-      rgba(230,57,70,0.4),
-      rgba(230,57,70,0.4) 4px,
-      rgba(230,57,70,0.18) 4px,
-      rgba(230,57,70,0.18) 8px
-    );
+    background: repeating-linear-gradient(90deg, rgba(230,57,70,0.4), rgba(230,57,70,0.4) 4px, rgba(230,57,70,0.18) 4px, rgba(230,57,70,0.18) 8px);
     border-color: #e63946;
   }
   .progress-text {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    z-index: 2;
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 600; z-index: 2;
   }
 
-  .hand-area {
-    background: #0f172a;
-    border-radius: 10px;
-    padding: 12px;
-    margin-top: 12px;
-  }
-  .hand-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    min-height: 110px;
-  }
+  .hand-area { background: #0f172a; border-radius: 10px; padding: 12px; margin-top: 12px; }
+  .hand-cards { display: flex; flex-wrap: wrap; gap: 8px; min-height: 110px; }
   .card {
-    background: #1e293b;
-    border: 2px solid #475569;
-    border-radius: 8px;
-    padding: 8px;
-    width: 150px;
-    font-size: 0.78rem;
-    cursor: pointer;
-    transition: 0.15s;
-    position: relative;
+    background: #1e293b; border: 2px solid #475569; border-radius: 8px;
+    padding: 8px; width: 150px; font-size: 0.78rem; cursor: pointer; transition: 0.15s;
   }
   .card:hover { border-color: var(--accent2); transform: translateY(-2px); }
   .card.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
@@ -257,128 +190,139 @@
   .card-fwd { color: #4ade80; }
   .card-bwd { color: #f87171; }
 
-  .deck-info {
-    display: flex;
-    gap: 16px;
-    margin: 12px 0;
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
+  .deck-info { display: flex; gap: 16px; margin: 12px 0; font-size: 0.9rem; color: var(--muted); }
   .phase-bar {
-    background: #1e3a5f;
-    padding: 10px 14px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
+    background: #1e3a5f; padding: 10px 14px; border-radius: 8px; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
   }
   .phase-label { font-weight: 600; color: var(--accent); }
-  .ai-thinking {
-    color: #c4b5fd;
-    font-weight: 600;
-    animation: pulse 1.2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
+  .ai-thinking { color: #c4b5fd; font-weight: 600; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
   .log-panel {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 14px;
-    height: calc(100vh - 40px);
-    max-height: 900px;
-    display: flex;
-    flex-direction: column;
+    background: var(--card); border-radius: 12px; padding: 14px;
+    height: calc(100vh - 40px); max-height: 900px; display: flex; flex-direction: column;
   }
-  .log-content {
-    flex: 1;
-    overflow-y: auto;
-    font-size: 0.82rem;
-    color: var(--muted);
-  }
+  .log-content { flex: 1; overflow-y: auto; font-size: 0.82rem; color: var(--muted); }
   .log-entry { padding: 4px 0; border-bottom: 1px solid #1e293b; }
   .log-entry.sys { color: var(--accent2); }
   .log-entry.win { color: var(--accent); font-weight: 700; }
   .log-entry.ai { color: #c4b5fd; }
 
   .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    display: none; align-items: center; justify-content: center; z-index: 100;
   }
   .modal-overlay.show { display: flex; }
   .modal {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 480px;
-    width: 90%;
-    max-height: 85vh;
-    overflow-y: auto;
+    background: var(--card); border-radius: 12px; padding: 24px;
+    max-width: 480px; width: 90%; max-height: 85vh; overflow-y: auto;
   }
   .modal h3 { margin-bottom: 14px; color: var(--accent); }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
 
   .win-screen { text-align: center; padding: 60px 20px; }
   .win-screen h1 { font-size: 2.5rem; color: var(--accent); }
-
-  .confirm-bar {
-    margin-top: 12px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
+  .confirm-bar { margin-top: 12px; display: flex; gap: 10px; justify-content: center; }
 
   .room-id-display {
-    font-size: 1.8rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: var(--accent);
-    background: #0f172a;
-    padding: 12px 20px;
-    border-radius: 10px;
-    margin: 12px 0;
-    display: inline-block;
+    font-size: 1.8rem; font-weight: 700; letter-spacing: 3px; color: var(--accent);
+    background: #0f172a; padding: 12px 20px; border-radius: 10px; margin: 12px 0; display: inline-block;
   }
-  .lobby-players {
-    text-align: left;
-    margin: 16px 0;
-    max-height: 260px;
-    overflow-y: auto;
-  }
+  .lobby-players { text-align: left; margin: 16px 0; max-height: 260px; overflow-y: auto; }
   .lobby-player {
-    padding: 8px 12px;
-    background: #0f172a;
-    border-radius: 8px;
-    margin: 6px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 8px 12px; background: #0f172a; border-radius: 8px; margin: 6px 0;
+    display: flex; justify-content: space-between; align-items: center;
   }
   .lobby-player.ready { border-left: 4px solid var(--accent); }
   .lobby-player.host { border-left: 4px solid var(--accent2); }
-  .status-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 6px;
-  }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
   .status-dot.ready { background: var(--accent); }
   .status-dot.wait { background: var(--muted); }
+
+  /* ===== 卡牌打出全螢幕 Modal ===== */
+  #card-play-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.78);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  #card-play-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #card-play-modal.fade-out {
+    opacity: 0;
+  }
+  .card-announce-box {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    border: 2px solid var(--accent);
+    border-radius: 20px;
+    padding: 36px 48px;
+    max-width: 520px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(34,197,94,0.25);
+    transform: scale(0.85);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #card-play-modal.show .card-announce-box {
+    transform: scale(1);
+  }
+  .card-announce-player {
+    font-size: 1.1rem;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+  .card-announce-name {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .card-announce-desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .card-announce-effects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .effect-tag {
+    background: #1e3a5f;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .effect-tag.up { color: #4ade80; border: 1px solid #22c55e; }
+  .effect-tag.down { color: #f87171; border: 1px solid #ef4444; }
+  .effect-tag.special { color: #c4b5fd; border: 1px solid #a855f7; }
 </style>
 </head>
 <body>
 
-<!-- ========== MAIN MENU ========== -->
+<!-- ===== 卡牌打出全螢幕 Modal ===== -->
+<div id="card-play-modal">
+  <div class="card-announce-box">
+    <div class="card-announce-player" id="announcePlayer"></div>
+    <div class="card-announce-name" id="announceCardName"></div>
+    <div class="card-announce-desc" id="announceDesc"></div>
+    <div class="card-announce-effects" id="announceEffects"></div>
+  </div>
+</div>
+
+<!-- MAIN MENU -->
 <div id="mainMenu" class="screen active">
   <h1>🌍 SDG 永續桌遊</h1>
   <div class="menu-box">
@@ -388,27 +332,27 @@
   </div>
 </div>
 
-<!-- ========== PVP SUB MENU ========== -->
+<!-- PVP SUB -->
 <div id="pvpMenu" class="screen">
   <h1>多人對戰</h1>
   <div class="menu-box">
-    <button class="large success" id="btnLocal">同一裝置遊玩 (Local Pass & Play)</button>
-    <button class="large" id="btnOnline">跨裝置線上連線 (Online Rooms)</button>
+    <button class="large success" id="btnLocal">同一裝置遊玩 (Local)</button>
+    <button class="large" id="btnOnline">跨裝置線上連線 (Online)</button>
     <button class="large danger" id="btnBackMain" style="margin-top:20px;">返回主選單</button>
   </div>
 </div>
 
-<!-- ========== ONLINE MENU ========== -->
+<!-- ONLINE MENU -->
 <div id="onlineMenu" class="screen">
   <h1>線上房間</h1>
   <div class="menu-box">
-    <button class="large success" id="btnCreateRoom">建立房間 (Create Room)</button>
-    <button class="large" id="btnJoinRoom">加入房間 (Join Room)</button>
+    <button class="large success" id="btnCreateRoom">建立房間</button>
+    <button class="large" id="btnJoinRoom">加入房間</button>
     <button class="large danger" id="btnBackPVP" style="margin-top:20px;">返回</button>
   </div>
 </div>
 
-<!-- ========== CREATE ROOM ========== -->
+<!-- CREATE ROOM -->
 <div id="createRoomScreen" class="screen">
   <h1>建立房間</h1>
   <div class="lobby-box">
@@ -426,12 +370,12 @@
   </div>
 </div>
 
-<!-- ========== JOIN ROOM ========== -->
+<!-- JOIN ROOM -->
 <div id="joinRoomScreen" class="screen">
   <h1>加入房間</h1>
   <div class="lobby-box">
-    <label>房間號碼 (Room ID)</label>
-    <input type="text" id="joinRoomId" placeholder="例如 SDG-8829" style="width:100%;margin:8px 0;text-transform:uppercase;">
+    <label>房間號碼</label>
+    <input type="text" id="joinRoomId" placeholder="SDG-8829" style="width:100%;margin:8px 0;text-transform:uppercase;">
     <label>你的暱稱</label>
     <input type="text" id="joinName" value="玩家" maxlength="12" style="width:100%;margin:8px 0;">
     <button class="large success" id="btnDoJoin">加入房間</button>
@@ -439,7 +383,7 @@
   </div>
 </div>
 
-<!-- ========== LOBBY ========== -->
+<!-- LOBBY -->
 <div id="lobbyScreen" class="screen">
   <h1>等候室</h1>
   <div class="lobby-box">
@@ -449,14 +393,14 @@
     <div id="lobbyStatus" style="color:var(--muted);margin-bottom:8px;">等待玩家加入...</div>
     <div class="lobby-players" id="lobbyPlayers"></div>
     <div style="margin-top:16px;">
-      <button class="large success" id="btnReady" style="display:none;">準備就緒 (Ready)</button>
+      <button class="large success" id="btnReady" style="display:none;">準備就緒</button>
       <button class="large success" id="btnStartGame" style="display:none;">開始遊戲</button>
       <button class="large danger" id="btnLeaveLobby" style="margin-top:10px;">離開房間</button>
     </div>
   </div>
 </div>
 
-<!-- ========== PVC / LOCAL SETUP ========== -->
+<!-- SETUP -->
 <div id="setupScreen" class="screen">
   <h1>遊戲設定</h1>
   <div class="setup-box">
@@ -473,7 +417,7 @@
   </div>
 </div>
 
-<!-- ========== DRAFT ========== -->
+<!-- DRAFT -->
 <div id="draftScreen" class="screen">
   <h1>🎯 SDG 目標挑選</h1>
   <div class="draft-status" id="draftStatus">輪到 玩家1 挑選 2 張 SDG</div>
@@ -485,7 +429,7 @@
   <div id="draftPicks" style="margin-top:20px;text-align:center;color:var(--muted);"></div>
 </div>
 
-<!-- ========== GAME ========== -->
+<!-- GAME -->
 <div id="gameScreen" class="screen">
   <div class="game-layout">
     <div class="board">
@@ -520,7 +464,7 @@
   </div>
 </div>
 
-<!-- ========== WIN ========== -->
+<!-- WIN -->
 <div id="winScreen" class="screen">
   <div class="win-screen">
     <h1>🏆 勝利！</h1>
@@ -529,7 +473,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Generic Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <h3 id="modalTitle"></h3>
@@ -539,120 +483,111 @@
 </div>
 
 <script>
-/* ============================================================
-   CARD DATA (簡化保留完整資料)
-   ============================================================ */
+/* ==================== DATA ==================== */
 const eventCards = [
-  { name: "金融海嘯(2008)", forward: [], backward: [1, 8], desc: "全球金融市場崩盤，經濟大幅衰退。" },
-  { name: "莫拉克颱風(2009)", forward: [], backward: [11], desc: "重創台灣南部，引發嚴重水患與土石流。" },
-  { name: "焚書坑儒", forward: [], backward: [4], desc: "秦始皇焚毀典籍、迫害知識分子。" },
-  { name: "開普敦Day Zero(2018)", forward: [], backward: [6], desc: "水庫乾涸，城市面臨全面停水危機。" },
-  { name: "烏俄戰爭", forward: [], backward: [2, 17], desc: "全球糧食供應受衝擊。" },
-  { name: "東非飢荒", forward: [17], backward: [1, 2], desc: "乾旱造成嚴重糧食危機。" },
-  { name: "阿富汗限制女性受教育", forward: [], backward: [4, 5, 10], desc: "塔利班重新掌權後，女性受教權遭剝奪。" },
-  { name: "香港食水含鉛事件", forward: [], backward: [3, 6, 11], desc: "因焊料與老舊管線導致食水含鉛。" },
-  { name: "石油危機", forward: [7], backward: [9], desc: "能源供應受到衝擊。" },
-  { name: "COVID-19封城", forward: [3], backward: [8, 17], desc: "大量企業停工失業。" },
-  { name: "福島核災", forward: [], backward: [3, 7, 14], desc: "地震引發核電廠事故。" },
-  { name: "種族隔離制度", forward: [], backward: [4, 10, 16], desc: "以法律區隔不同種族權利。" },
-  { name: "快時尚盛行", forward: [], backward: [12, 13], desc: "大量消耗資源並增加廢棄物。" },
-  { name: "澳洲森林大火", forward: [], backward: [13, 15], desc: "極端氣候造成大規模野火。" },
-  { name: "墨西哥灣漏油事故", forward: [], backward: [6, 14], desc: "鑽油平台爆炸沉沒，釀史上最嚴重漏油。" },
-  { name: "山老鼠盛行", forward: [], backward: [12, 15], desc: "非法砍伐並盜運國家珍貴林木。" },
-  { name: "黑死病", forward: [], backward: [1], desc: "14世紀瘟疫席捲歐亞，造成大量人口死亡。" },
-  { name: "冷戰", forward: [], backward: [9, 17], desc: "美蘇長期政治軍事對峙，全球局勢緊張。" },
-  { name: "蘇伊士運河堵塞(2021)", forward: [], backward: [8, 9, 17], desc: "貨輪擱淺阻斷航運，全球供應鏈受衝擊。" },
-  { name: "裹小腳", forward: [], backward: [5, 16], desc: "以纏足限制女性足部發育。" },
-  { name: "榮譽殺人", forward: [], backward: [5, 16], desc: "以維護家族名譽為由殺害女性親屬。" },
-  { name: "大規模停電", forward: [], backward: [7], desc: "電力系統故障，造成大範圍供電中斷。" },
-  { name: "過度包裝文化", forward: [], backward: [12, 15], desc: "商品包裝過多，增加資源浪費與垃圾量。" },
-  { name: "幽靈漁網", forward: [5, 10, 16], backward: [12, 14], desc: "廢棄漁網持續捕殺海洋生物。" },
-  { name: "獵巫運動", forward: [], backward: [5], desc: "大量女性遭指控施巫術而受審與處決。" },
-  { name: "同性婚姻法通過", forward: [5, 10, 16], backward: [], desc: "台灣成為亞洲首個同性婚姻合法化國家。" },
-  { name: "建立自來水系統", forward: [3, 6], backward: [], desc: "台灣於日治時期建立自來水系統。" },
-  { name: "世界關燈日", forward: [7, 12, 13], backward: [], desc: "全球自發熄燈，倡議節能減碳。" },
-  { name: "冰島同工同酬(2018)", forward: [5, 10], backward: [], desc: "立法要求同工同酬，縮小薪資差距。" },
-  { name: "全民健保制度上路(1995)", forward: [3, 10], backward: [], desc: "強制性社會保險，將全體國民納入保障網。" },
-  { name: "法國反食物浪費法", forward: [2, 12], backward: [], desc: "禁止超市丟棄可食用食品，鼓勵捐贈。" },
-  { name: "歐盟2035禁售燃油車", forward: [7, 11], backward: [], desc: "推動電動車轉型，減少碳排放。" },
-  { name: "大阪世博(2025)", forward: [9, 17], backward: [], desc: "展示永續科技與國際合作成果。" },
-  { name: "Coldplay世界巡迴演唱會", forward: [7, 13], backward: [], desc: "推動低碳巡演、鼓勵永續參與。" },
-  { name: "聯合國千禧年減貧計畫", forward: [1, 8], backward: [], desc: "全球極端貧窮人口大幅下降。" },
-  { name: "綠色革命", forward: [1, 2, 9], backward: [], desc: "改良農作技術，提高糧食產量。" },
-  { name: "紐西蘭女性投票權(1893)", forward: [5, 10, 16], backward: [], desc: "全球首個女性普選國家。" },
-  { name: "網際網路普及", forward: [4, 9], backward: [10], desc: "網路促進資訊交流與產業創新。" },
-  { name: "高速鐵路通車(2007)", forward: [8, 9, 11], backward: [], desc: "提升交通效率與區域發展。" },
-  { name: "海綿城市計畫", forward: [11, 13], backward: [], desc: "建設兼具排水與蓄水功能的城市。" },
-  { name: "世界地球日", forward: [12, 14, 15], backward: [], desc: "倡導資源節約與環境保護。" },
-  { name: "禁用一次性塑膠", forward: [12, 14, 15], backward: [], desc: "推動減塑政策。" },
-  { name: "全球禁捕商業捕鯨", forward: [14], backward: [], desc: "保護鯨魚族群。" },
-  { name: "減塑淨灘活動", forward: [11, 14, 15], backward: [], desc: "清除海洋垃圾。" },
-  { name: "國家公園設立", forward: [15], backward: [], desc: "保護自然棲地。" },
-  { name: "復育瀕危物種", forward: [15], backward: [], desc: "保護生物多樣性。" },
-  { name: "世界人權宣言(1948)", forward: [5, 10, 16], backward: [], desc: "奠定全球人權保障基礎。" },
-  { name: "COVID-19疫苗國際合作", forward: [3, 17], backward: [], desc: "各國合作研發與分配疫苗。" },
-  { name: "人類基因組計畫", forward: [3, 9, 17], backward: [], desc: "成功解碼人類DNA，開創精準醫療。" },
-  { name: "大禹治水", forward: [6, 9, 11], backward: [], desc: "治理洪水興建水利，改善人民生活。" },
-  { name: "商鞅變法", forward: [8, 16], backward: [], desc: "推行改革制度，提升行政效率。" },
-  { name: "科舉制度建立", forward: [4, 8, 16], backward: [], desc: "以公開考試選拔人才，促進教育與公平。" },
-  { name: "雅典民主制度", forward: [10, 16], backward: [], desc: "建立公民參政制度，奠定民主政治基礎。" },
-  { name: "文藝復興", forward: [4, 9], backward: [], desc: "提倡人文精神，推動藝術與科學發展。" },
-  { name: "古騰堡活字印刷", forward: [4, 10], backward: [], desc: "普及知識，加速文化與教育傳播。" },
-  { name: "蒸汽機發明", forward: [7, 8], backward: [], desc: "提升機械效率，帶動工業革命。" },
-  { name: "工業革命", forward: [8], backward: [13], desc: "機械化生產興起，改變全球經濟與社會。" },
-  { name: "哥倫布發現新大陸", forward: [8, 17], backward: [10], desc: "開啟跨洲交流，深刻改變全球歷史。" },
-  { name: "社會住宅政策", forward: [1], backward: [], desc: "提供平價住宅，改善弱勢族群居住條件。" },
-  { name: "巴西「家庭補助金」", forward: [1, 2, 4], backward: [], desc: "補助改善弱勢家庭生活與教育。" },
-  { name: "國際稻米研究所成立", forward: [2, 9], backward: [], desc: "推動稻米研究，提高糧食生產與品質。" },
-  { name: "維基百科誕生", forward: [4, 17], backward: [], desc: "開放全民協作編輯，推廣知識自由共享。" },
-  { name: "冰島選出全球首位民選女性總統", forward: [5], backward: [], desc: "女性首度當選總統，象徵性別平權進展。" },
-  { name: "倫敦下水道系統建立", forward: [3, 6, 11], backward: [], desc: "完善污水系統，大幅改善城市公共衛生。" },
-  { name: "海水淡化技術普及", forward: [6, 9], backward: [], desc: "將海水轉為淡水，提升穩定供水能力。" },
-  { name: "LED照明普及", forward: [7, 12], backward: [], desc: "節能照明廣泛應用，降低能源消耗。" },
-  { name: "珊瑚礁復育計畫", forward: [13, 14], backward: [], desc: "修復受損珊瑚礁，恢復海洋生態多樣性。" },
-  { name: "禁用魚翅政策", forward: [12, 14], backward: [], desc: "禁止魚翅交易，保護鯊魚與海洋生態。" },
-  { name: "海龜保育計畫", forward: [14, 15], backward: [], desc: "保護海龜棲地，提升瀕危物種存活率。" },
-  { name: "天然林禁伐政策", forward: [13, 15], backward: [], desc: "禁止天然林砍伐，維護森林生態環境。" },
-  { name: "最低工資制度", forward: [1], backward: [], desc: "保障勞工基本薪資，改善生活與權益。" },
-  { name: "滴灌技術發明", forward: [2, 6], backward: [], desc: "精準灌溉農作物，提升用水效率與產量。" },
-  { name: "糧食銀行成立", forward: [1, 2, 12], backward: [], desc: "募集剩餘糧食，提供弱勢族群基本需求。" },
-  { name: "國際婦女節", forward: [5], backward: [], desc: "倡導女性權益，推動全球性別平等發展。" },
-  { name: "禁止童婚法", forward: [3, 5, 16], backward: [], desc: "禁止未成年婚姻，保障兒童與女性權益。" },
-  { name: "Girls Who Code成立", forward: [4, 5], backward: [], desc: "鼓勵女性學習程式，縮小科技性別落差。" },
-  { name: "雨水回收系統", forward: [6, 11], backward: [], desc: "收集雨水再利用，提高水資源使用效率。" }
+  { name:"金融海嘯(2008)", forward:[], backward:[1,8], desc:"全球金融市場崩盤，經濟大幅衰退。" },
+  { name:"莫拉克颱風(2009)", forward:[], backward:[11], desc:"重創台灣南部，引發嚴重水患與土石流。" },
+  { name:"焚書坑儒", forward:[], backward:[4], desc:"秦始皇焚毀典籍、迫害知識分子。" },
+  { name:"開普敦Day Zero(2018)", forward:[], backward:[6], desc:"水庫乾涸，城市面臨全面停水危機。" },
+  { name:"烏俄戰爭", forward:[], backward:[2,17], desc:"全球糧食供應受衝擊。" },
+  { name:"東非飢荒", forward:[17], backward:[1,2], desc:"乾旱造成嚴重糧食危機。" },
+  { name:"阿富汗限制女性受教育", forward:[], backward:[4,5,10], desc:"塔利班重新掌權後，女性受教權遭剝奪。" },
+  { name:"香港食水含鉛事件", forward:[], backward:[3,6,11], desc:"因焊料與老舊管線導致食水含鉛。" },
+  { name:"石油危機", forward:[7], backward:[9], desc:"能源供應受到衝擊。" },
+  { name:"COVID-19封城", forward:[3], backward:[8,17], desc:"大量企業停工失業。" },
+  { name:"福島核災", forward:[], backward:[3,7,14], desc:"地震引發核電廠事故。" },
+  { name:"種族隔離制度", forward:[], backward:[4,10,16], desc:"以法律區隔不同種族權利。" },
+  { name:"快時尚盛行", forward:[], backward:[12,13], desc:"大量消耗資源並增加廢棄物。" },
+  { name:"澳洲森林大火", forward:[], backward:[13,15], desc:"極端氣候造成大規模野火。" },
+  { name:"墨西哥灣漏油事故", forward:[], backward:[6,14], desc:"鑽油平台爆炸沉沒，釀史上最嚴重漏油。" },
+  { name:"山老鼠盛行", forward:[], backward:[12,15], desc:"非法砍伐並盜運國家珍貴林木。" },
+  { name:"黑死病", forward:[], backward:[1], desc:"14世紀瘟疫席捲歐亞，造成大量人口死亡。" },
+  { name:"冷戰", forward:[], backward:[9,17], desc:"美蘇長期政治軍事對峙，全球局勢緊張。" },
+  { name:"蘇伊士運河堵塞(2021)", forward:[], backward:[8,9,17], desc:"貨輪擱淺阻斷航運，全球供應鏈受衝擊。" },
+  { name:"裹小腳", forward:[], backward:[5,16], desc:"以纏足限制女性足部發育。" },
+  { name:"榮譽殺人", forward:[], backward:[5,16], desc:"以維護家族名譽為由殺害女性親屬。" },
+  { name:"大規模停電", forward:[], backward:[7], desc:"電力系統故障，造成大範圍供電中斷。" },
+  { name:"過度包裝文化", forward:[], backward:[12,15], desc:"商品包裝過多，增加資源浪費與垃圾量。" },
+  { name:"幽靈漁網", forward:[5,10,16], backward:[12,14], desc:"廢棄漁網持續捕殺海洋生物。" },
+  { name:"獵巫運動", forward:[], backward:[5], desc:"大量女性遭指控施巫術而受審與處決。" },
+  { name:"同性婚姻法通過", forward:[5,10,16], backward:[], desc:"台灣成為亞洲首個同性婚姻合法化國家。" },
+  { name:"建立自來水系統", forward:[3,6], backward:[], desc:"台灣於日治時期建立自來水系統。" },
+  { name:"世界關燈日", forward:[7,12,13], backward:[], desc:"全球自發熄燈，倡議節能減碳。" },
+  { name:"冰島同工同酬(2018)", forward:[5,10], backward:[], desc:"立法要求同工同酬，縮小薪資差距。" },
+  { name:"全民健保制度上路(1995)", forward:[3,10], backward:[], desc:"強制性社會保險，將全體國民納入保障網。" },
+  { name:"法國反食物浪費法", forward:[2,12], backward:[], desc:"禁止超市丟棄可食用食品，鼓勵捐贈。" },
+  { name:"歐盟2035禁售燃油車", forward:[7,11], backward:[], desc:"推動電動車轉型，減少碳排放。" },
+  { name:"大阪世博(2025)", forward:[9,17], backward:[], desc:"展示永續科技與國際合作成果。" },
+  { name:"Coldplay世界巡迴演唱會", forward:[7,13], backward:[], desc:"推動低碳巡演、鼓勵永續參與。" },
+  { name:"聯合國千禧年減貧計畫", forward:[1,8], backward:[], desc:"全球極端貧窮人口大幅下降。" },
+  { name:"綠色革命", forward:[1,2,9], backward:[], desc:"改良農作技術，提高糧食產量。" },
+  { name:"紐西蘭女性投票權(1893)", forward:[5,10,16], backward:[], desc:"全球首個女性普選國家。" },
+  { name:"網際網路普及", forward:[4,9], backward:[10], desc:"網路促進資訊交流與產業創新。" },
+  { name:"高速鐵路通車(2007)", forward:[8,9,11], backward:[], desc:"提升交通效率與區域發展。" },
+  { name:"海綿城市計畫", forward:[11,13], backward:[], desc:"建設兼具排水與蓄水功能的城市。" },
+  { name:"世界地球日", forward:[12,14,15], backward:[], desc:"倡導資源節約與環境保護。" },
+  { name:"禁用一次性塑膠", forward:[12,14,15], backward:[], desc:"推動減塑政策。" },
+  { name:"全球禁捕商業捕鯨", forward:[14], backward:[], desc:"保護鯨魚族群。" },
+  { name:"減塑淨灘活動", forward:[11,14,15], backward:[], desc:"清除海洋垃圾。" },
+  { name:"國家公園設立", forward:[15], backward:[], desc:"保護自然棲地。" },
+  { name:"復育瀕危物種", forward:[15], backward:[], desc:"保護生物多樣性。" },
+  { name:"世界人權宣言(1948)", forward:[5,10,16], backward:[], desc:"奠定全球人權保障基礎。" },
+  { name:"COVID-19疫苗國際合作", forward:[3,17], backward:[], desc:"各國合作研發與分配疫苗。" },
+  { name:"人類基因組計畫", forward:[3,9,17], backward:[], desc:"成功解碼人類DNA，開創精準醫療。" },
+  { name:"大禹治水", forward:[6,9,11], backward:[], desc:"治理洪水興建水利，改善人民生活。" },
+  { name:"商鞅變法", forward:[8,16], backward:[], desc:"推行改革制度，提升行政效率。" },
+  { name:"科舉制度建立", forward:[4,8,16], backward:[], desc:"以公開考試選拔人才，促進教育與公平。" },
+  { name:"雅典民主制度", forward:[10,16], backward:[], desc:"建立公民參政制度，奠定民主政治基礎。" },
+  { name:"文藝復興", forward:[4,9], backward:[], desc:"提倡人文精神，推動藝術與科學發展。" },
+  { name:"古騰堡活字印刷", forward:[4,10], backward:[], desc:"普及知識，加速文化與教育傳播。" },
+  { name:"蒸汽機發明", forward:[7,8], backward:[], desc:"提升機械效率，帶動工業革命。" },
+  { name:"工業革命", forward:[8], backward:[13], desc:"機械化生產興起，改變全球經濟與社會。" },
+  { name:"哥倫布發現新大陸", forward:[8,17], backward:[10], desc:"開啟跨洲交流，深刻改變全球歷史。" },
+  { name:"社會住宅政策", forward:[1], backward:[], desc:"提供平價住宅，改善弱勢族群居住條件。" },
+  { name:"巴西「家庭補助金」", forward:[1,2,4], backward:[], desc:"補助改善弱勢家庭生活與教育。" },
+  { name:"國際稻米研究所成立", forward:[2,9], backward:[], desc:"推動稻米研究，提高糧食生產與品質。" },
+  { name:"維基百科誕生", forward:[4,17], backward:[], desc:"開放全民協作編輯，推廣知識自由共享。" },
+  { name:"冰島選出全球首位民選女性總統", forward:[5], backward:[], desc:"女性首度當選總統，象徵性別平權進展。" },
+  { name:"倫敦下水道系統建立", forward:[3,6,11], backward:[], desc:"完善污水系統，大幅改善城市公共衛生。" },
+  { name:"海水淡化技術普及", forward:[6,9], backward:[], desc:"將海水轉為淡水，提升穩定供水能力。" },
+  { name:"LED照明普及", forward:[7,12], backward:[], desc:"節能照明廣泛應用，降低能源消耗。" },
+  { name:"珊瑚礁復育計畫", forward:[13,14], backward:[], desc:"修復受損珊瑚礁，恢復海洋生態多樣性。" },
+  { name:"禁用魚翅政策", forward:[12,14], backward:[], desc:"禁止魚翅交易，保護鯊魚與海洋生態。" },
+  { name:"海龜保育計畫", forward:[14,15], backward:[], desc:"保護海龜棲地，提升瀕危物種存活率。" },
+  { name:"天然林禁伐政策", forward:[13,15], backward:[], desc:"禁止天然林砍伐，維護森林生態環境。" },
+  { name:"最低工資制度", forward:[1], backward:[], desc:"保障勞工基本薪資，改善生活與權益。" },
+  { name:"滴灌技術發明", forward:[2,6], backward:[], desc:"精準灌溉農作物，提升用水效率與產量。" },
+  { name:"糧食銀行成立", forward:[1,2,12], backward:[], desc:"募集剩餘糧食，提供弱勢族群基本需求。" },
+  { name:"國際婦女節", forward:[5], backward:[], desc:"倡導女性權益，推動全球性別平等發展。" },
+  { name:"禁止童婚法", forward:[3,5,16], backward:[], desc:"禁止未成年婚姻，保障兒童與女性權益。" },
+  { name:"Girls Who Code成立", forward:[4,5], backward:[], desc:"鼓勵女性學習程式，縮小科技性別落差。" },
+  { name:"雨水回收系統", forward:[6,11], backward:[], desc:"收集雨水再利用，提高水資源使用效率。" }
 ];
-
 const specialCards = [
-  { name: "永續轉型", type: "sustain", desc: "從未使用的 SDG 牌堆抽 1 張，與自己 1 張 SDG 交換，保留當前步數。" },
-  { name: "否決權", type: "veto", desc: "當受到其他玩家負面效果時，可被動使用抵銷。" },
-  { name: "政策豁免", type: "immunity", desc: "指定自己 1 張 SDG，本回合不受任何負面效果影響。" },
-  { name: "凍結計畫", type: "freeze", desc: "指定任意 1 張 SDG，下回合前不能移動。" },
-  { name: "合作備忘錄", type: "tradeHand", desc: "與任一玩家交換 1 張自選手牌。" },
-  { name: "國際制裁", type: "sanction", desc: "指定一名玩家，下回合最多只能打 1 張功能/移動牌。" },
-  { name: "能力建構", type: "capacity", desc: "補牌階段可額外多抽 1 張，擇一棄置，其餘加入手牌。" },
-  { name: "國際援助請求", type: "aid", desc: "指定一名玩家，對方必須交出一張能讓自己某些 SDG 前進的移動牌（若無則失效）。" },
-  { name: "歷史借鏡", type: "history", desc: "從棄牌堆選擇一張卡牌加入手牌。" },
-  { name: "目標重整", type: "swapSDG", desc: "與另一名玩家交換一張 SDG，步數保留。" }
+  { name:"永續轉型", type:"sustain", desc:"從未使用的 SDG 牌堆抽 1 張，與自己 1 張 SDG 交換，保留當前步數。" },
+  { name:"否決權", type:"veto", desc:"當受到其他玩家負面效果時，可被動使用抵銷。" },
+  { name:"政策豁免", type:"immunity", desc:"指定自己 1 張 SDG，本回合不受任何負面效果影響。" },
+  { name:"凍結計畫", type:"freeze", desc:"指定任意 1 張 SDG，下回合前不能移動。" },
+  { name:"合作備忘錄", type:"tradeHand", desc:"與任一玩家交換 1 張自選手牌。" },
+  { name:"國際制裁", type:"sanction", desc:"指定一名玩家，下回合最多只能打 1 張功能/移動牌。" },
+  { name:"能力建構", type:"capacity", desc:"補牌階段可額外多抽 1 張，擇一棄置，其餘加入手牌。" },
+  { name:"國際援助請求", type:"aid", desc:"指定一名玩家，對方必須交出一張能讓自己某些 SDG 前進的移動牌（若無則失效）。" },
+  { name:"歷史借鏡", type:"history", desc:"從棄牌堆選擇一張卡牌加入手牌。" },
+  { name:"目標重整", type:"swapSDG", desc:"與另一名玩家交換一張 SDG，步數保留。" }
 ];
+const SDG_NAMES = {1:"消除貧窮",2:"消除飢餓",3:"健康與福祉",4:"優質教育",5:"性別平等",6:"淨水與衛生",7:"可負擔能源",8:"就業與經濟成長",9:"工業創新基礎建設",10:"減少不平等",11:"永續城市",12:"責任消費生產",13:"氣候行動",14:"海洋生態",15:"陸地生態",16:"和平正義制度",17:"全球夥伴"};
 
-const SDG_NAMES = {
-  1:"消除貧窮",2:"消除飢餓",3:"健康與福祉",4:"優質教育",5:"性別平等",6:"淨水與衛生",
-  7:"可負擔能源",8:"就業與經濟成長",9:"工業創新基礎建設",10:"減少不平等",11:"永續城市",
-  12:"責任消費生產",13:"氣候行動",14:"海洋生態",15:"陸地生態",16:"和平正義制度",17:"全球夥伴"
-};
-
-/* ============================================================
-   GLOBAL STATE
-   ============================================================ */
+/* ==================== STATE ==================== */
 let state = {
-  mode: "local",          // "local" | "online"
+  mode: "local",
   isHost: false,
   peer: null,
-  connections: {},        // peerId -> DataConnection
+  connections: {},          // peerId -> DataConnection
   myPeerId: null,
   roomId: null,
-  lobbyPlayers: [],       // { id, name, ready, isHost }
+  lobbyPlayers: [],
   maxPlayers: 4,
+  inputLocked: false,       // 卡牌動畫期間鎖定輸入
   // game
   players: [],
   currentPlayer: 0,
@@ -661,78 +596,84 @@ let state = {
   discard: [],
   unusedSDGs: [],
   selectedCards: [],
-  modeAction: null,       // "discard" | "play"
+  modeAction: null,
   maxPlay: 2,
   capacityActive: false,
   isAIThinking: false,
-  // draft
   draftAvailable: [],
   draftCurrentPlayer: 0,
-  draftSelected: [],      // array of up to 2 ids
+  draftSelected: [],
   previewDeltas: {}
 };
 
-/* ============================================================
-   UTILS
-   ============================================================ */
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-function log(msg, type = "") {
-  const el = document.getElementById("logContent");
-  if (!el) return;
-  const div = document.createElement("div");
-  div.className = "log-entry " + type;
-  div.textContent = msg;
-  el.appendChild(div);
-  el.scrollTop = el.scrollHeight;
-}
-function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-function showModal(title, bodyHtml, actions) {
-  document.getElementById("modalTitle").textContent = title;
-  document.getElementById("modalBody").innerHTML = bodyHtml;
-  const act = document.getElementById("modalActions");
-  act.innerHTML = "";
-  (actions || []).forEach(a => {
-    const btn = document.createElement("button");
-    btn.textContent = a.label;
-    if (a.class) btn.className = a.class;
-    btn.onclick = () => { hideModal(); a.fn(); };
-    act.appendChild(btn);
+/* ==================== UTILS ==================== */
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function log(msg,type=""){const el=document.getElementById("logContent");if(!el)return;const d=document.createElement("div");d.className="log-entry "+type;d.textContent=msg;el.appendChild(d);el.scrollTop=el.scrollHeight;}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+function showModal(title,body,actions){document.getElementById("modalTitle").textContent=title;document.getElementById("modalBody").innerHTML=body;const act=document.getElementById("modalActions");act.innerHTML="";(actions||[]).forEach(a=>{const b=document.createElement("button");b.textContent=a.label;if(a.class)b.className=a.class;b.onclick=()=>{hideModal();a.fn();};act.appendChild(b);});document.getElementById("modal").classList.add("show");}
+function hideModal(){document.getElementById("modal").classList.remove("show");}
+function getCurrentPlayer(){return state.players[state.currentPlayer];}
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+function randChoice(a){return a[Math.floor(Math.random()*a.length)];}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+function generateRoomId(){return "SDG-"+Math.floor(1000+Math.random()*9000);}
+
+/* ==================== CARD ANNOUNCEMENT ==================== */
+function showCardAnnouncement(playerName, card, affectedSDGs = []) {
+  return new Promise(resolve => {
+    state.inputLocked = true;
+    const modal = document.getElementById("card-play-modal");
+    document.getElementById("announcePlayer").textContent = playerName + " 打出了";
+    document.getElementById("announceCardName").textContent = card.name;
+    document.getElementById("announceDesc").textContent = card.desc || "";
+    const effectsEl = document.getElementById("announceEffects");
+    effectsEl.innerHTML = "";
+    if (card.kind === "event") {
+      (card.forward || []).forEach(id => {
+        const tag = document.createElement("span");
+        tag.className = "effect-tag up";
+        tag.textContent = `SDG ${id} 📈 +1`;
+        effectsEl.appendChild(tag);
+      });
+      (card.backward || []).forEach(id => {
+        const tag = document.createElement("span");
+        tag.className = "effect-tag down";
+        tag.textContent = `SDG ${id} 📉 -1`;
+        effectsEl.appendChild(tag);
+      });
+    } else {
+      const tag = document.createElement("span");
+      tag.className = "effect-tag special";
+      tag.textContent = "特殊效果";
+      effectsEl.appendChild(tag);
+    }
+    // also show computed affected if provided
+    affectedSDGs.forEach(a => {
+      const tag = document.createElement("span");
+      tag.className = "effect-tag " + (a.delta > 0 ? "up" : "down");
+      tag.textContent = `SDG ${a.id} ${a.delta > 0 ? "📈 +" : "📉 "}${a.delta}`;
+      effectsEl.appendChild(tag);
+    });
+
+    modal.classList.remove("fade-out");
+    modal.classList.add("show");
+
+    setTimeout(() => {
+      modal.classList.add("fade-out");
+      setTimeout(() => {
+        modal.classList.remove("show", "fade-out");
+        state.inputLocked = false;
+        resolve();
+      }, 350);
+    }, 3000);
   });
-  document.getElementById("modal").classList.add("show");
-}
-function hideModal() { document.getElementById("modal").classList.remove("show"); }
-function getCurrentPlayer() { return state.players[state.currentPlayer]; }
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-function randChoice(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-function generateRoomId() {
-  return "SDG-" + Math.floor(1000 + Math.random() * 9000);
 }
 
-/* ============================================================
-   NAVIGATION
-   ============================================================ */
-document.getElementById("btnPVC").onclick = () => {
-  state.mode = "local";
-  showScreen("setupScreen");
-  renderNameInputs();
-};
+/* ==================== NAV ==================== */
+document.getElementById("btnPVC").onclick = () => { state.mode="local"; showScreen("setupScreen"); renderNameInputs(); };
 document.getElementById("btnPVP").onclick = () => showScreen("pvpMenu");
 document.getElementById("btnBackMain").onclick = () => showScreen("mainMenu");
-document.getElementById("btnLocal").onclick = () => {
-  state.mode = "local";
-  showScreen("setupScreen");
-  renderNameInputs(true); // all human
-};
+document.getElementById("btnLocal").onclick = () => { state.mode="local"; showScreen("setupScreen"); renderNameInputs(true); };
 document.getElementById("btnOnline").onclick = () => showScreen("onlineMenu");
 document.getElementById("btnBackPVP").onclick = () => showScreen("pvpMenu");
 document.getElementById("btnCreateRoom").onclick = () => showScreen("createRoomScreen");
@@ -741,830 +682,602 @@ document.getElementById("btnBackOnline1").onclick = () => showScreen("onlineMenu
 document.getElementById("btnBackOnline2").onclick = () => showScreen("onlineMenu");
 document.getElementById("btnBackFromSetup").onclick = () => showScreen("mainMenu");
 
-/* ============================================================
-   SETUP (PVC / LOCAL)
-   ============================================================ */
-function renderNameInputs(allHuman = false) {
-  const count = +document.getElementById("playerCount").value;
-  const box = document.getElementById("nameInputs");
-  box.innerHTML = "";
-  for (let i = 0; i < count; i++) {
-    const div = document.createElement("div");
-    div.className = "player-setup";
-    const isHuman = allHuman || i === 0;
-    div.innerHTML = `
-      <label>玩家 ${i+1}</label>
-      <input type="text" id="pname${i}" value="${isHuman ? "玩家"+(i+1) : "AI"+(i)}" maxlength="12">
-      <select id="ptype${i}">
-        <option value="human" ${isHuman?"selected":""}>人類</option>
-        <option value="ai" ${!isHuman?"selected":""}>AI 機器人</option>
-      </select>
-      <select id="pdiff${i}" ${isHuman?"disabled":""}>
-        <option value="easy">Easy</option>
-        <option value="basic" selected>Basic</option>
-        <option value="advance">Advance</option>
-      </select>
-    `;
+/* ==================== SETUP ==================== */
+function renderNameInputs(allHuman=false){
+  const count=+document.getElementById("playerCount").value;
+  const box=document.getElementById("nameInputs");box.innerHTML="";
+  for(let i=0;i<count;i++){
+    const isHuman=allHuman||i===0;
+    const div=document.createElement("div");div.className="player-setup";
+    div.innerHTML=`<label>玩家 ${i+1}</label>
+      <input type="text" id="pname${i}" value="${isHuman?"玩家"+(i+1):"AI"+i}" maxlength="12">
+      <select id="ptype${i}"><option value="human"${isHuman?" selected":""}>人類</option><option value="ai"${!isHuman?" selected":""}>AI</option></select>
+      <select id="pdiff${i}" ${isHuman?"disabled":""}><option value="easy">Easy</option><option value="basic" selected>Basic</option><option value="advance">Advance</option></select>`;
     box.appendChild(div);
-    document.getElementById("ptype"+i).addEventListener("change", function() {
-      document.getElementById("pdiff"+i).disabled = this.value === "human";
-    });
+    document.getElementById("ptype"+i).onchange=function(){document.getElementById("pdiff"+i).disabled=this.value==="human";};
   }
 }
-document.getElementById("playerCount").addEventListener("change", () => renderNameInputs(state.mode === "local" && document.getElementById("btnLocal")));
+document.getElementById("playerCount").onchange=()=>renderNameInputs();
 renderNameInputs();
+document.getElementById("startBtn").onclick=startLocalDraft;
 
-document.getElementById("startBtn").onclick = startLocalDraft;
-
-function startLocalDraft() {
-  const count = +document.getElementById("playerCount").value;
-  const names = [], types = [], diffs = [];
-  for (let i = 0; i < count; i++) {
-    names.push(document.getElementById("pname"+i).value.trim() || `玩家${i+1}`);
+function startLocalDraft(){
+  const count=+document.getElementById("playerCount").value;
+  const names=[],types=[],diffs=[];
+  for(let i=0;i<count;i++){
+    names.push(document.getElementById("pname"+i).value.trim()||`玩家${i+1}`);
     types.push(document.getElementById("ptype"+i).value);
     diffs.push(document.getElementById("pdiff"+i).value);
   }
-  state.players = names.map((name, idx) => ({
-    name, isAI: types[idx]==="ai", difficulty: diffs[idx],
-    sdgs: [], hand: [], sanctioned: false, capacityNext: false
-  }));
-  state.draftAvailable = Array.from({length:17},(_,i)=>i+1);
-  shuffle(state.draftAvailable);
-  state.draftCurrentPlayer = 0;
-  state.draftSelected = [];
-  showScreen("draftScreen");
-  renderDraft();
+  state.players=names.map((n,i)=>({name:n,isAI:types[i]==="ai",difficulty:diffs[i],sdgs:[],hand:[],sanctioned:false,capacityNext:false}));
+  state.draftAvailable=Array.from({length:17},(_,i)=>i+1);shuffle(state.draftAvailable);
+  state.draftCurrentPlayer=0;state.draftSelected=[];
+  showScreen("draftScreen");renderDraft();
 }
 
-/* ============================================================
-   DRAFT (一次選 2 張)
-   ============================================================ */
-function renderDraft() {
-  const p = state.players[state.draftCurrentPlayer];
-  document.getElementById("draftStatus").textContent =
-    `輪到 ${p.name}${p.isAI?" (AI)":""} 挑選 2 張 SDG`;
-  document.getElementById("draftCount").textContent = `已選 ${state.draftSelected.length} / 2`;
-
-  const grid = document.getElementById("draftGrid");
-  grid.innerHTML = "";
-  for (let id = 1; id <= 17; id++) {
-    const available = state.draftAvailable.includes(id);
-    const selected = state.draftSelected.includes(id);
-    const div = document.createElement("div");
-    div.className = "sdg-pick" + (!available ? " disabled" : "") + (selected ? " selected" : "");
-    div.innerHTML = `<strong>SDG ${id}</strong><br><span style="font-size:0.78rem;color:#94a3b8;">${SDG_NAMES[id]}</span>`;
-    if (available && !p.isAI) {
-      div.onclick = () => toggleDraftSelect(id);
-    }
+/* ==================== DRAFT ==================== */
+function renderDraft(){
+  const p=state.players[state.draftCurrentPlayer];
+  document.getElementById("draftStatus").textContent=`輪到 ${p.name}${p.isAI?" (AI)":""} 挑選 2 張 SDG`;
+  document.getElementById("draftCount").textContent=`已選 ${state.draftSelected.length} / 2`;
+  const grid=document.getElementById("draftGrid");grid.innerHTML="";
+  for(let id=1;id<=17;id++){
+    const avail=state.draftAvailable.includes(id);
+    const sel=state.draftSelected.includes(id);
+    const div=document.createElement("div");
+    div.className="sdg-pick"+(!avail?" disabled":"")+(sel?" selected":"");
+    div.innerHTML=`<strong>SDG ${id}</strong><br><span style="font-size:0.78rem;color:#94a3b8;">${SDG_NAMES[id]}</span>`;
+    if(avail&&!p.isAI)div.onclick=()=>toggleDraftSelect(id);
     grid.appendChild(div);
   }
-
-  document.getElementById("draftPicks").textContent = state.players.map(pl => {
-    const s = pl.sdgs.map(x => "SDG "+x.id).join(", ") || "尚未選擇";
+  document.getElementById("draftPicks").textContent=state.players.map(pl=>{
+    const s=pl.sdgs.map(x=>"SDG "+x.id).join(", ")||"尚未選擇";
     return `${pl.name}: ${s}`;
   }).join(" ｜ ");
-
-  document.getElementById("btnConfirmDraft").disabled = state.draftSelected.length !== 2 || p.isAI;
-
-  if (p.isAI) setTimeout(aiDraftPick, 700 + Math.random()*500);
+  document.getElementById("btnConfirmDraft").disabled=state.draftSelected.length!==2||p.isAI;
+  if(p.isAI)setTimeout(aiDraftPick,700+Math.random()*400);
 }
-
-function toggleDraftSelect(id) {
-  const idx = state.draftSelected.indexOf(id);
-  if (idx >= 0) {
-    state.draftSelected.splice(idx, 1);
-  } else {
-    if (state.draftSelected.length >= 2) return;
-    state.draftSelected.push(id);
-  }
+function toggleDraftSelect(id){
+  const idx=state.draftSelected.indexOf(id);
+  if(idx>=0)state.draftSelected.splice(idx,1);
+  else if(state.draftSelected.length<2)state.draftSelected.push(id);
   renderDraft();
 }
-
-document.getElementById("btnConfirmDraft").onclick = () => {
-  if (state.draftSelected.length !== 2) return;
-  confirmDraftPick(state.draftSelected);
+document.getElementById("btnConfirmDraft").onclick=()=>{
+  if(state.draftSelected.length!==2)return;
+  if(state.mode==="online"&&!state.isHost){
+    sendToHost({type:"PLAYER_ACTION",playerId:state.myPeerId,actionData:{action:"draftConfirm",ids:[...state.draftSelected]}});
+  } else {
+    confirmDraftPick(state.draftSelected);
+  }
 };
-
-function confirmDraftPick(ids) {
-  const p = state.players[state.draftCurrentPlayer];
-  ids.forEach(id => {
-    p.sdgs.push({ id, progress: 0, frozen: false, immune: false });
-    state.draftAvailable = state.draftAvailable.filter(x => x !== id);
+function confirmDraftPick(ids){
+  const p=state.players[state.draftCurrentPlayer];
+  ids.forEach(id=>{
+    p.sdgs.push({id,progress:0,frozen:false,immune:false});
+    state.draftAvailable=state.draftAvailable.filter(x=>x!==id);
   });
-  state.draftSelected = [];
+  state.draftSelected=[];
   state.draftCurrentPlayer++;
-  if (state.draftCurrentPlayer >= state.players.length) {
+  if(state.draftCurrentPlayer>=state.players.length){
     startGameAfterDraft();
     return;
   }
   renderDraft();
+  if(state.mode==="online"&&state.isHost)broadcastFullState();
 }
-
-function aiDraftPick() {
-  const p = state.players[state.draftCurrentPlayer];
-  if (!p.isAI || state.draftAvailable.length < 2) return;
-  let picks = [];
-  if (p.difficulty === "easy") {
-    picks = shuffle([...state.draftAvailable]).slice(0, 2);
-  } else {
-    const weighted = state.draftAvailable.slice().sort((a,b)=>Math.abs(a-8.5)-Math.abs(b-8.5));
-    picks = weighted.slice(0, 2);
-  }
-  state.draftSelected = picks;
-  renderDraft();
-  setTimeout(() => confirmDraftPick(picks), 600);
+function aiDraftPick(){
+  const p=state.players[state.draftCurrentPlayer];
+  if(!p.isAI||state.draftAvailable.length<2)return;
+  let picks=p.difficulty==="easy"?shuffle([...state.draftAvailable]).slice(0,2):state.draftAvailable.slice().sort((a,b)=>Math.abs(a-8.5)-Math.abs(b-8.5)).slice(0,2);
+  state.draftSelected=picks;renderDraft();
+  setTimeout(()=>confirmDraftPick(picks),500);
 }
-
-function startGameAfterDraft() {
-  state.unusedSDGs = [...state.draftAvailable];
-  shuffle(state.unusedSDGs);
-  state.deck = [];
-  eventCards.forEach(c => state.deck.push({...c, kind:"event", id:Math.random().toString(36).slice(2)}));
-  specialCards.forEach(c => {
-    for (let i=0;i<2;i++) state.deck.push({...c, kind:"special", id:Math.random().toString(36).slice(2)+i});
-  });
-  shuffle(state.deck);
-  state.discard = [];
-  state.players.forEach(p => {
-    for (let i=0;i<5;i++) {
-      if (state.deck.length===0) reshuffle();
-      p.hand.push(state.deck.pop());
-    }
-  });
-  state.currentPlayer = 0;
-  state.phase = "action";
-  state.modeAction = null;
-  state.selectedCards = [];
-  state.maxPlay = 2;
-  state.capacityActive = false;
-  state.isAIThinking = false;
-  state.previewDeltas = {};
+function startGameAfterDraft(){
+  state.unusedSDGs=[...state.draftAvailable];shuffle(state.unusedSDGs);
+  state.deck=[];
+  eventCards.forEach(c=>state.deck.push({...c,kind:"event",id:Math.random().toString(36).slice(2)}));
+  specialCards.forEach(c=>{for(let i=0;i<2;i++)state.deck.push({...c,kind:"special",id:Math.random().toString(36).slice(2)+i});});
+  shuffle(state.deck);state.discard=[];
+  state.players.forEach(p=>{for(let i=0;i<5;i++){if(state.deck.length===0)reshuffle();p.hand.push(state.deck.pop());}});
+  state.currentPlayer=0;state.phase="action";state.modeAction=null;state.selectedCards=[];state.maxPlay=2;
+  state.capacityActive=false;state.isAIThinking=false;state.previewDeltas={};
   showScreen("gameScreen");
-  log("SDG 挑選完成，遊戲開始！", "sys");
-  log(`請 ${getCurrentPlayer().name} 開始行動。`, "sys");
+  log("SDG 挑選完成，遊戲開始！","sys");
+  log(`請 ${getCurrentPlayer().name} 開始行動。`,"sys");
   updateUI();
   maybeTriggerAI();
-  if (state.mode === "online" && state.isHost) broadcastState();
+  if(state.mode==="online"&&state.isHost)broadcastFullState();
 }
+function reshuffle(){if(state.discard.length===0)return;state.deck=state.discard.splice(0);shuffle(state.deck);log("抽牌堆用盡，已重新洗牌。","sys");}
 
-function reshuffle() {
-  if (state.discard.length === 0) return;
-  state.deck = state.discard.splice(0);
-  shuffle(state.deck);
-  log("抽牌堆用盡，棄牌堆已洗牌重來。", "sys");
+/* ==================== ONLINE / PeerJS ==================== */
+document.getElementById("btnDoCreate").onclick=createRoom;
+document.getElementById("btnDoJoin").onclick=joinRoom;
+document.getElementById("btnCopyRoom").onclick=()=>navigator.clipboard.writeText(state.roomId).then(()=>alert("已複製："+state.roomId));
+document.getElementById("btnLeaveLobby").onclick=leaveLobby;
+document.getElementById("btnReady").onclick=toggleReady;
+document.getElementById("btnStartGame").onclick=hostStartGame;
+
+function createRoom(){
+  const name=document.getElementById("hostName").value.trim()||"房主";
+  state.maxPlayers=+document.getElementById("onlinePlayerCount").value;
+  state.roomId=generateRoomId();
+  state.isHost=true;state.mode="online";
+  state.peer=new Peer(state.roomId,{debug:1});
+  state.peer.on("open",id=>{
+    state.myPeerId=id;
+    state.lobbyPlayers=[{id,name,ready:true,isHost:true}];
+    showScreen("lobbyScreen");updateLobbyUI();
+  });
+  state.peer.on("connection",conn=>setupConnection(conn));
+  state.peer.on("error",err=>{alert("建立失敗："+err.type);console.error(err);});
 }
-
-/* ============================================================
-   ONLINE (PeerJS)
-   ============================================================ */
-document.getElementById("btnDoCreate").onclick = createRoom;
-document.getElementById("btnDoJoin").onclick = joinRoom;
-document.getElementById("btnCopyRoom").onclick = () => {
-  navigator.clipboard.writeText(state.roomId).then(() => alert("已複製房間號碼：" + state.roomId));
-};
-document.getElementById("btnLeaveLobby").onclick = leaveLobby;
-document.getElementById("btnReady").onclick = toggleReady;
-document.getElementById("btnStartGame").onclick = hostStartGame;
-
-function createRoom() {
-  const name = document.getElementById("hostName").value.trim() || "房主";
-  state.maxPlayers = +document.getElementById("onlinePlayerCount").value;
-  state.roomId = generateRoomId();
-  state.isHost = true;
-  state.mode = "online";
-
-  state.peer = new Peer(state.roomId, { debug: 1 });
-  state.peer.on("open", id => {
-    state.myPeerId = id;
-    state.lobbyPlayers = [{ id, name, ready: true, isHost: true }];
-    showScreen("lobbyScreen");
-    updateLobbyUI();
+function joinRoom(){
+  const roomId=document.getElementById("joinRoomId").value.trim().toUpperCase();
+  const name=document.getElementById("joinName").value.trim()||"玩家";
+  if(!roomId){alert("請輸入房間號碼");return;}
+  state.roomId=roomId;state.isHost=false;state.mode="online";
+  state.peer=new Peer({debug:1});
+  state.peer.on("open",myId=>{
+    state.myPeerId=myId;
+    const conn=state.peer.connect(roomId,{reliable:true});
+    conn.on("open",()=>{setupConnection(conn);conn.send({type:"join",name,id:myId});});
+    conn.on("error",err=>alert("連線失敗"));
   });
-  state.peer.on("connection", conn => {
-    setupConnection(conn);
-  });
-  state.peer.on("error", err => {
-    alert("建立房間失敗：" + err.type);
-    console.error(err);
-  });
+  state.peer.on("error",()=>alert("加入失敗，請確認房間號碼"));
 }
-
-function joinRoom() {
-  const roomId = document.getElementById("joinRoomId").value.trim().toUpperCase();
-  const name = document.getElementById("joinName").value.trim() || "玩家";
-  if (!roomId) { alert("請輸入房間號碼"); return; }
-
-  state.roomId = roomId;
-  state.isHost = false;
-  state.mode = "online";
-  state.peer = new Peer({ debug: 1 });
-  state.peer.on("open", myId => {
-    state.myPeerId = myId;
-    const conn = state.peer.connect(roomId, { reliable: true });
-    conn.on("open", () => {
-      setupConnection(conn);
-      conn.send({ type: "join", name, id: myId });
-    });
-    conn.on("error", err => alert("連線失敗：" + err));
-  });
-  state.peer.on("error", err => {
-    alert("加入失敗，請確認房間號碼是否正確");
-    console.error(err);
-  });
-}
-
-function setupConnection(conn) {
-  state.connections[conn.peer] = conn;
-  conn.on("data", data => handleNetMessage(data, conn));
-  conn.on("close", () => {
+function setupConnection(conn){
+  state.connections[conn.peer]=conn;
+  conn.on("data",data=>handleNetMessage(data,conn));
+  conn.on("close",()=>{
     delete state.connections[conn.peer];
-    if (state.isHost) {
-      state.lobbyPlayers = state.lobbyPlayers.filter(p => p.id !== conn.peer);
-      broadcastLobby();
-      updateLobbyUI();
+    if(state.isHost){
+      state.lobbyPlayers=state.lobbyPlayers.filter(p=>p.id!==conn.peer);
+      broadcastLobby();updateLobbyUI();
     }
   });
 }
-
-function handleNetMessage(data, conn) {
-  if (state.isHost) {
-    // Host receives
-    if (data.type === "join") {
-      if (state.lobbyPlayers.length >= state.maxPlayers) {
-        conn.send({ type: "error", msg: "房間已滿" });
-        return;
-      }
-      state.lobbyPlayers.push({ id: data.id, name: data.name, ready: false, isHost: false });
-      broadcastLobby();
-      updateLobbyUI();
-    } else if (data.type === "ready") {
-      const p = state.lobbyPlayers.find(x => x.id === data.id);
-      if (p) p.ready = data.ready;
-      broadcastLobby();
-      updateLobbyUI();
-    } else if (data.type === "action") {
-      // client action → host applies then broadcast
-      applyClientAction(data);
+function sendToHost(msg){
+  const hostConn=Object.values(state.connections)[0];
+  if(hostConn)hostConn.send(msg);
+}
+function broadcastToAll(msg){
+  Object.values(state.connections).forEach(c=>{
+    try{c.send(msg);}catch(e){console.warn("broadcast fail",e);}
+  });
+}
+function broadcastFullState(){
+  if(!state.isHost)return;
+  const payload={
+    type:"FULL_STATE",
+    gameState:{
+      players:state.players,
+      currentPlayer:state.currentPlayer,
+      phase:state.phase,
+      deck:state.deck,
+      discard:state.discard,
+      unusedSDGs:state.unusedSDGs,
+      draftAvailable:state.draftAvailable,
+      draftCurrentPlayer:state.draftCurrentPlayer,
+      draftSelected:state.draftSelected,
+      modeAction:state.modeAction,
+      selectedCards:state.selectedCards,
+      maxPlay:state.maxPlay
+    }
+  };
+  broadcastToAll(payload);
+}
+function handleNetMessage(data,conn){
+  if(state.isHost){
+    if(data.type==="join"){
+      if(state.lobbyPlayers.length>=state.maxPlayers){conn.send({type:"error",msg:"房間已滿"});return;}
+      state.lobbyPlayers.push({id:data.id,name:data.name,ready:false,isHost:false});
+      broadcastLobby();updateLobbyUI();
+    } else if(data.type==="ready"){
+      const p=state.lobbyPlayers.find(x=>x.id===data.id);
+      if(p)p.ready=data.ready;
+      broadcastLobby();updateLobbyUI();
+    } else if(data.type==="PLAYER_ACTION"){
+      // 核心：收到客端行動 → 運算 → 廣播
+      processPlayerAction(data.playerId, data.actionData);
     }
   } else {
-    // Client receives
-    if (data.type === "lobby") {
-      state.lobbyPlayers = data.players;
-      state.maxPlayers = data.maxPlayers;
-      state.roomId = data.roomId;
-      showScreen("lobbyScreen");
-      updateLobbyUI();
-    } else if (data.type === "start") {
-      // full game init from host
-      state.players = data.players;
-      state.draftAvailable = data.draftAvailable;
-      state.draftCurrentPlayer = 0;
-      state.draftSelected = [];
-      showScreen("draftScreen");
-      renderDraft();
-    } else if (data.type === "state") {
-      // full state sync
-      Object.assign(state, data.state);
-      if (document.getElementById("gameScreen").classList.contains("active")) {
-        updateUI();
-      } else if (document.getElementById("draftScreen").classList.contains("active")) {
-        renderDraft();
-      }
-    } else if (data.type === "error") {
+    // Client
+    if(data.type==="lobby"){
+      state.lobbyPlayers=data.players;state.maxPlayers=data.maxPlayers;state.roomId=data.roomId;
+      showScreen("lobbyScreen");updateLobbyUI();
+    } else if(data.type==="start"){
+      state.players=data.players;
+      state.draftAvailable=data.draftAvailable;
+      state.draftCurrentPlayer=0;state.draftSelected=[];
+      showScreen("draftScreen");renderDraft();
+    } else if(data.type==="FULL_STATE"){
+      applyFullState(data.gameState);
+    } else if(data.type==="SHOW_CARD_ANIMATION"){
+      showCardAnnouncement(data.playerName, data.card, data.affectedSDGs || []).then(()=>{
+        // 動畫結束後再套用狀態（若有附帶）
+        if(data.gameState)applyFullState(data.gameState);
+      });
+    } else if(data.type==="error"){
       alert(data.msg);
     }
   }
 }
-
-function broadcastLobby() {
-  const msg = {
-    type: "lobby",
-    players: state.lobbyPlayers,
-    maxPlayers: state.maxPlayers,
-    roomId: state.roomId
-  };
-  Object.values(state.connections).forEach(c => c.send(msg));
+function applyFullState(gs){
+  if(!gs)return;
+  state.players=gs.players;
+  state.currentPlayer=gs.currentPlayer;
+  state.phase=gs.phase;
+  state.deck=gs.deck||state.deck;
+  state.discard=gs.discard||state.discard;
+  state.unusedSDGs=gs.unusedSDGs||state.unusedSDGs;
+  state.draftAvailable=gs.draftAvailable||state.draftAvailable;
+  state.draftCurrentPlayer=gs.draftCurrentPlayer??state.draftCurrentPlayer;
+  state.draftSelected=gs.draftSelected||[];
+  state.modeAction=gs.modeAction;
+  state.selectedCards=gs.selectedCards||[];
+  state.maxPlay=gs.maxPlay||2;
+  if(document.getElementById("gameScreen").classList.contains("active"))updateUI();
+  else if(document.getElementById("draftScreen").classList.contains("active"))renderDraft();
 }
-
-function updateLobbyUI() {
-  document.getElementById("lobbyRoomId").textContent = state.roomId || "----";
-  const list = document.getElementById("lobbyPlayers");
-  list.innerHTML = "";
-  state.lobbyPlayers.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "lobby-player" + (p.ready ? " ready" : "") + (p.isHost ? " host" : "");
-    div.innerHTML = `
-      <span><span class="status-dot ${p.ready?"ready":"wait"}"></span>${p.name}${p.isHost?" (房主)":""}</span>
-      <span style="font-size:0.85rem;color:var(--muted);">${p.ready?"已準備":"等待中"}</span>
-    `;
+function broadcastLobby(){
+  broadcastToAll({type:"lobby",players:state.lobbyPlayers,maxPlayers:state.maxPlayers,roomId:state.roomId});
+}
+function updateLobbyUI(){
+  document.getElementById("lobbyRoomId").textContent=state.roomId||"----";
+  const list=document.getElementById("lobbyPlayers");list.innerHTML="";
+  state.lobbyPlayers.forEach(p=>{
+    const div=document.createElement("div");
+    div.className="lobby-player"+(p.ready?" ready":"")+(p.isHost?" host":"");
+    div.innerHTML=`<span><span class="status-dot ${p.ready?"ready":"wait"}"></span>${p.name}${p.isHost?" (房主)":""}</span>
+      <span style="font-size:0.85rem;color:var(--muted);">${p.ready?"已準備":"等待中"}</span>`;
     list.appendChild(div);
   });
-  document.getElementById("lobbyStatus").textContent =
-    `玩家 ${state.lobbyPlayers.length} / ${state.maxPlayers}`;
-
-  const me = state.lobbyPlayers.find(p => p.id === state.myPeerId);
-  document.getElementById("btnReady").style.display = state.isHost ? "none" : "block";
-  document.getElementById("btnStartGame").style.display = state.isHost ? "block" : "none";
-  if (!state.isHost && me) {
-    document.getElementById("btnReady").textContent = me.ready ? "取消準備" : "準備就緒 (Ready)";
-  }
-  if (state.isHost) {
-    const allReady = state.lobbyPlayers.length >= 2 && state.lobbyPlayers.every(p => p.ready || p.isHost);
-    document.getElementById("btnStartGame").disabled = !allReady || state.lobbyPlayers.length < 2;
+  document.getElementById("lobbyStatus").textContent=`玩家 ${state.lobbyPlayers.length} / ${state.maxPlayers}`;
+  const me=state.lobbyPlayers.find(p=>p.id===state.myPeerId);
+  document.getElementById("btnReady").style.display=state.isHost?"none":"block";
+  document.getElementById("btnStartGame").style.display=state.isHost?"block":"none";
+  if(!state.isHost&&me)document.getElementById("btnReady").textContent=me.ready?"取消準備":"準備就緒";
+  if(state.isHost){
+    const allReady=state.lobbyPlayers.length>=2&&state.lobbyPlayers.every(p=>p.ready||p.isHost);
+    document.getElementById("btnStartGame").disabled=!allReady;
   }
 }
-
-function toggleReady() {
-  const me = state.lobbyPlayers.find(p => p.id === state.myPeerId);
-  if (!me) return;
-  const newReady = !me.ready;
-  // send to host
-  const hostConn = Object.values(state.connections)[0];
-  if (hostConn) hostConn.send({ type: "ready", id: state.myPeerId, ready: newReady });
+function toggleReady(){
+  const me=state.lobbyPlayers.find(p=>p.id===state.myPeerId);
+  if(!me)return;
+  sendToHost({type:"ready",id:state.myPeerId,ready:!me.ready});
 }
-
-function hostStartGame() {
-  if (!state.isHost) return;
-  // create players from lobby (all human)
-  state.players = state.lobbyPlayers.map(p => ({
-    name: p.name, isAI: false, difficulty: "basic",
-    sdgs: [], hand: [], sanctioned: false, capacityNext: false,
-    peerId: p.id
-  }));
-  state.draftAvailable = Array.from({length:17},(_,i)=>i+1);
-  shuffle(state.draftAvailable);
-  state.draftCurrentPlayer = 0;
-  state.draftSelected = [];
-
-  const msg = {
-    type: "start",
-    players: state.players,
-    draftAvailable: state.draftAvailable
-  };
-  Object.values(state.connections).forEach(c => c.send(msg));
-  showScreen("draftScreen");
-  renderDraft();
+function hostStartGame(){
+  if(!state.isHost)return;
+  state.players=state.lobbyPlayers.map(p=>({name:p.name,isAI:false,difficulty:"basic",sdgs:[],hand:[],sanctioned:false,capacityNext:false,peerId:p.id}));
+  state.draftAvailable=Array.from({length:17},(_,i)=>i+1);shuffle(state.draftAvailable);
+  state.draftCurrentPlayer=0;state.draftSelected=[];
+  broadcastToAll({type:"start",players:state.players,draftAvailable:state.draftAvailable});
+  showScreen("draftScreen");renderDraft();
 }
-
-function leaveLobby() {
-  if (state.peer) state.peer.destroy();
-  state.peer = null;
-  state.connections = {};
-  state.lobbyPlayers = [];
+function leaveLobby(){
+  if(state.peer)state.peer.destroy();
+  state.peer=null;state.connections={};state.lobbyPlayers=[];
   showScreen("onlineMenu");
 }
 
-function broadcastState() {
-  if (!state.isHost) return;
-  const msg = {
-    type: "state",
-    state: {
-      players: state.players,
-      currentPlayer: state.currentPlayer,
-      phase: state.phase,
-      deck: state.deck,
-      discard: state.discard,
-      unusedSDGs: state.unusedSDGs,
-      draftAvailable: state.draftAvailable,
-      draftCurrentPlayer: state.draftCurrentPlayer,
-      draftSelected: state.draftSelected
+/* Host 處理客端行動 */
+function processPlayerAction(playerId, actionData){
+  if(!state.isHost)return;
+  // 簡易對應：目前主要支援 draftConfirm 與 play/discard
+  if(actionData.action==="draftConfirm"){
+    // 確保是當前回合玩家
+    const p=state.players[state.draftCurrentPlayer];
+    if(p && p.peerId===playerId){
+      confirmDraftPick(actionData.ids);
     }
-  };
-  Object.values(state.connections).forEach(c => c.send(msg));
-}
-
-function applyClientAction(data) {
-  // simplified: host trusts client for draft/action, then rebroadcast
-  // In production would validate more strictly
-  if (data.action === "draftSelect") {
-    state.draftSelected = data.ids;
-    broadcastState();
-    renderDraft();
-  } else if (data.action === "draftConfirm") {
-    confirmDraftPick(data.ids);
-    broadcastState();
+  } else if(actionData.action==="playCards"){
+    // 客端傳來要打的牌 index 或卡牌資料
+    // 這裡簡化：Host 直接套用並廣播動畫+狀態
+    // 實際專案可再驗證手牌
+    const player=state.players.find(pl=>pl.peerId===playerId);
+    if(!player)return;
+    // 假設 actionData.cards 是卡牌物件陣列
+    (async()=>{
+      for(const card of (actionData.cards||[])){
+        // 移除手牌（簡化）
+        const idx=player.hand.findIndex(c=>c.name===card.name);
+        if(idx>=0)player.hand.splice(idx,1);
+        state.discard.push(card);
+        // 廣播動畫
+        const affected=[];
+        if(card.kind==="event"){
+          (card.forward||[]).forEach(id=>affected.push({id,delta:1}));
+          (card.backward||[]).forEach(id=>affected.push({id,delta:-1}));
+        }
+        broadcastToAll({
+          type:"SHOW_CARD_ANIMATION",
+          playerName:player.name,
+          card,
+          affectedSDGs:affected,
+          gameState:null // 先播動畫
+        });
+        await showCardAnnouncement(player.name, card, affected);
+        // 套用效果
+        await new Promise(r=>resolveCard(card,false,r));
+      }
+      // 結束回合等
+      endActionPhase();
+      broadcastFullState();
+    })();
+  } else if(actionData.action==="discard"){
+    // 類似處理
+    broadcastFullState();
   }
-  // more actions can be added similarly
 }
 
-/* ============================================================
-   GAME UI + LOGIC (core remains compatible)
-   ============================================================ */
-function computePreview() {
-  state.previewDeltas = {};
-  const p = getCurrentPlayer();
-  if (state.modeAction !== "play" || state.selectedCards.length === 0 || p.isAI) return;
-  state.selectedCards.forEach(idx => {
-    const card = p.hand[idx];
-    if (!card || card.kind !== "event") return;
-    card.forward.forEach(sdgId => {
-      state.players.forEach((pl, pi) => {
-        pl.sdgs.forEach((s, si) => {
-          if (s.id === sdgId && s.progress < 3 && !s.frozen) {
-            if (!state.previewDeltas[pi]) state.previewDeltas[pi] = {};
-            state.previewDeltas[pi][si] = (state.previewDeltas[pi][si] || 0) + 1;
-          }
-        });
-      });
+/* ==================== UI + CORE GAME ==================== */
+function computePreview(){
+  state.previewDeltas={};
+  const p=getCurrentPlayer();
+  if(state.modeAction!=="play"||!state.selectedCards.length||p.isAI)return;
+  state.selectedCards.forEach(idx=>{
+    const card=p.hand[idx];
+    if(!card||card.kind!=="event")return;
+    card.forward.forEach(id=>{
+      state.players.forEach((pl,pi)=>pl.sdgs.forEach((s,si)=>{
+        if(s.id===id&&s.progress<3&&!s.frozen){
+          if(!state.previewDeltas[pi])state.previewDeltas[pi]={};
+          state.previewDeltas[pi][si]=(state.previewDeltas[pi][si]||0)+1;
+        }
+      }));
     });
-    card.backward.forEach(sdgId => {
-      state.players.forEach((pl, pi) => {
-        pl.sdgs.forEach((s, si) => {
-          if (s.id === sdgId && s.progress < 3 && !s.frozen && !s.immune) {
-            if (!state.previewDeltas[pi]) state.previewDeltas[pi] = {};
-            state.previewDeltas[pi][si] = (state.previewDeltas[pi][si] || 0) - 1;
-          }
-        });
-      });
+    card.backward.forEach(id=>{
+      state.players.forEach((pl,pi)=>pl.sdgs.forEach((s,si)=>{
+        if(s.id===id&&s.progress<3&&!s.frozen&&!s.immune){
+          if(!state.previewDeltas[pi])state.previewDeltas[pi]={};
+          state.previewDeltas[pi][si]=(state.previewDeltas[pi][si]||0)-1;
+        }
+      }));
     });
   });
 }
+function updateUI(){
+  const p=getCurrentPlayer();if(!p)return;
+  document.getElementById("turnInfo").textContent=`目前回合：${p.name}${p.isAI?" (AI)":""}`;
+  document.getElementById("deckCount").textContent=state.deck.length;
+  document.getElementById("discardCount").textContent=state.discard.length;
+  document.getElementById("handCount").textContent=`(${p.hand.length}/5)`;
+  let phaseText="行動階段";
+  if(state.isAIThinking)phaseText="AI 思考中...";
+  else if(state.modeAction==="discard")phaseText="棄牌模式：選牌後確認";
+  else if(state.modeAction==="play")phaseText=`打牌模式（最多${state.maxPlay}張）`;
+  document.getElementById("phaseLabel").textContent=phaseText;
+  document.getElementById("phaseLabel").className="phase-label"+(state.isAIThinking?" ai-thinking":"");
 
-function updateUI() {
-  const p = getCurrentPlayer();
-  if (!p) return;
-  document.getElementById("turnInfo").textContent = `目前回合：${p.name}${p.isAI ? " (AI)" : ""}`;
-  document.getElementById("deckCount").textContent = state.deck.length;
-  document.getElementById("discardCount").textContent = state.discard.length;
-  document.getElementById("handCount").textContent = `(${p.hand.length}/5)`;
-
-  let phaseText = "行動階段：請選擇「棄牌」或「打出卡牌」";
-  if (state.isAIThinking) phaseText = "AI 思考中...";
-  else if (state.modeAction === "discard") phaseText = "棄牌模式：選擇要棄掉的手牌，再按確認";
-  else if (state.modeAction === "play") phaseText = `打牌模式：選擇最多 ${state.maxPlay} 張牌，再按確認`;
-  document.getElementById("phaseLabel").textContent = phaseText;
-  document.getElementById("phaseLabel").className = "phase-label" + (state.isAIThinking ? " ai-thinking" : "");
-
-  const humanTurn = !p.isAI && state.phase === "action" && !state.isAIThinking;
-  const btnDiscard = document.getElementById("btnDiscardMode");
-  const btnPlay = document.getElementById("btnPlayMode");
-  const btnCancel = document.getElementById("btnCancelAction");
-  const confirmBar = document.getElementById("confirmBar");
-
-  if (humanTurn && !state.modeAction) {
-    btnDiscard.style.display = "";
-    btnPlay.style.display = "";
-    btnCancel.style.display = "none";
-    confirmBar.style.display = "none";
-  } else if (humanTurn && (state.modeAction === "discard" || state.modeAction === "play")) {
-    btnDiscard.style.display = "none";
-    btnPlay.style.display = "none";
-    btnCancel.style.display = "";
-    confirmBar.style.display = state.selectedCards.length > 0 ? "flex" : "none";
-  } else {
-    btnDiscard.style.display = "none";
-    btnPlay.style.display = "none";
-    btnCancel.style.display = "none";
-    confirmBar.style.display = "none";
-  }
+  const humanTurn=!p.isAI&&state.phase==="action"&&!state.isAIThinking&&!state.inputLocked;
+  const btnD=document.getElementById("btnDiscardMode"),btnP=document.getElementById("btnPlayMode"),btnC=document.getElementById("btnCancelAction"),conf=document.getElementById("confirmBar");
+  if(humanTurn&&!state.modeAction){btnD.style.display="";btnP.style.display="";btnC.style.display="none";conf.style.display="none";}
+  else if(humanTurn&&(state.modeAction==="discard"||state.modeAction==="play")){btnD.style.display="none";btnP.style.display="none";btnC.style.display="";conf.style.display=state.selectedCards.length?"flex":"none";}
+  else{btnD.style.display="none";btnP.style.display="none";btnC.style.display="none";conf.style.display="none";}
 
   computePreview();
-
-  const grid = document.getElementById("playersGrid");
-  grid.innerHTML = "";
-  state.players.forEach((pl, idx) => {
-    const div = document.createElement("div");
-    div.className = "player-card" + (idx === state.currentPlayer ? " current" : "") +
-      (pl.sanctioned ? " sanctioned" : "") + (pl.isAI ? " ai-tag" : "");
-    let html = `<div class="player-name">${pl.name}${idx === state.currentPlayer ? " ▶" : ""}${pl.isAI ? " ["+pl.difficulty+"]" : ""}</div>`;
-    pl.sdgs.forEach((s, si) => {
-      const cur = s.progress;
-      const delta = (state.previewDeltas[idx] && state.previewDeltas[idx][si]) || 0;
-      const preview = clamp(cur + delta, -2, 3);
-      const pct = ((cur + 2) / 5) * 100;
-      const previewPct = ((preview + 2) / 5) * 100;
-      const isNeg = cur < 0;
-      html += `<div class="sdg-row">
-        <div class="sdg-badge ${cur>=3?"goal":""} ${s.frozen?"frozen":""}">SDG ${s.id}</div>
-        <div class="progress-bar">
-          <div class="progress-fill ${isNeg?"negative":""}" style="width:${pct}%"></div>
-          ${delta !== 0 ? `<div class="progress-preview ${delta<0?"negative":""}" style="left:0;width:${Math.max(pct,previewPct)}%;"></div>` : ""}
-          <div class="progress-text">${cur>=3?"GOAL":cur}${delta?` →${preview}`:""}${s.frozen?" ❄":""}${s.immune?" 🛡":""}</div>
-        </div>
-      </div>
-      <div style="font-size:0.7rem;color:#64748b;margin-bottom:4px;">${SDG_NAMES[s.id]||""}</div>`;
+  const grid=document.getElementById("playersGrid");grid.innerHTML="";
+  state.players.forEach((pl,idx)=>{
+    const div=document.createElement("div");
+    div.className="player-card"+(idx===state.currentPlayer?" current":"")+(pl.sanctioned?" sanctioned":"")+(pl.isAI?" ai-tag":"");
+    let html=`<div class="player-name">${pl.name}${idx===state.currentPlayer?" ▶":""}${pl.isAI?" ["+pl.difficulty+"]":""}</div>`;
+    pl.sdgs.forEach((s,si)=>{
+      const cur=s.progress,delta=(state.previewDeltas[idx]&&state.previewDeltas[idx][si])||0;
+      const preview=clamp(cur+delta,-2,3),pct=((cur+2)/5)*100,previewPct=((preview+2)/5)*100;
+      html+=`<div class="sdg-row"><div class="sdg-badge ${cur>=3?"goal":""} ${s.frozen?"frozen":""}">SDG ${s.id}</div>
+        <div class="progress-bar"><div class="progress-fill ${cur<0?"negative":""}" style="width:${pct}%"></div>
+        ${delta!==0?`<div class="progress-preview ${delta<0?"negative":""}" style="left:0;width:${Math.max(pct,previewPct)}%;"></div>`:""}
+        <div class="progress-text">${cur>=3?"GOAL":cur}${delta?` →${preview}`:""}${s.frozen?" ❄":""}${s.immune?" 🛡":""}</div></div></div>
+        <div style="font-size:0.7rem;color:#64748b;margin-bottom:4px;">${SDG_NAMES[s.id]||""}</div>`;
     });
-    div.innerHTML = html;
-    grid.appendChild(div);
+    div.innerHTML=html;grid.appendChild(div);
   });
-
-  const handEl = document.getElementById("handCards");
-  handEl.innerHTML = "";
-  p.hand.forEach((card, idx) => {
-    const isVeto = card.kind === "special" && card.type === "veto";
-    const cannotPlay = state.modeAction === "play" && isVeto;
-    const div = document.createElement("div");
-    div.className = "card " + (card.kind==="event"?"event":"special") +
-      (state.selectedCards.includes(idx)?" selected":"") + (cannotPlay?" disabled-card":"");
-    let effect = "";
-    if (card.kind === "event") {
-      effect = `<div class="card-fwd">${card.forward.length?"前進："+card.forward.join(","):""}</div>
-                <div class="card-bwd">${card.backward.length?"後退："+card.backward.join(","):""}</div>`;
-    } else {
-      effect = `<div class="card-effect">${card.desc}</div>`;
-    }
-    div.innerHTML = `<div class="card-name">${card.name}</div>${effect}`;
-    if (!p.isAI && !cannotPlay) div.onclick = () => onCardClick(idx);
+  const handEl=document.getElementById("handCards");handEl.innerHTML="";
+  p.hand.forEach((card,idx)=>{
+    const cannot=state.modeAction==="play"&&card.type==="veto";
+    const div=document.createElement("div");
+    div.className="card "+(card.kind==="event"?"event":"special")+(state.selectedCards.includes(idx)?" selected":"")+(cannot?" disabled-card":"");
+    let effect="";
+    if(card.kind==="event")effect=`<div class="card-fwd">${card.forward.length?"前進："+card.forward.join(","):""}</div><div class="card-bwd">${card.backward.length?"後退："+card.backward.join(","):""}</div>`;
+    else effect=`<div class="card-effect">${card.desc}</div>`;
+    div.innerHTML=`<div class="card-name">${card.name}</div>${effect}`;
+    if(!p.isAI&&!cannot&&!state.inputLocked)div.onclick=()=>onCardClick(idx);
     handEl.appendChild(div);
   });
 }
 
-/* Action buttons */
-document.getElementById("btnDiscardMode").onclick = () => {
-  state.modeAction = "discard";
-  state.selectedCards = [];
-  updateUI();
-};
-document.getElementById("btnPlayMode").onclick = () => {
-  state.modeAction = "play";
-  state.maxPlay = getCurrentPlayer().sanctioned ? 1 : 2;
-  state.selectedCards = [];
-  updateUI();
-};
-document.getElementById("btnCancelAction").onclick = () => {
-  state.modeAction = null;
-  state.selectedCards = [];
-  state.previewDeltas = {};
-  updateUI();
-};
-document.getElementById("btnConfirmAction").onclick = () => {
-  if (state.selectedCards.length === 0) return;
-  if (state.modeAction === "discard") executeDiscard();
-  else if (state.modeAction === "play") executePlay();
-};
-
-function onCardClick(idx) {
-  if (state.phase !== "action" || !state.modeAction || getCurrentPlayer().isAI) return;
-  const card = getCurrentPlayer().hand[idx];
-  if (state.modeAction === "play" && card.type === "veto") return;
-
-  if (state.modeAction === "discard") {
-    const pos = state.selectedCards.indexOf(idx);
-    if (pos >= 0) state.selectedCards.splice(pos, 1);
-    else state.selectedCards.push(idx);
-  } else {
-    const pos = state.selectedCards.indexOf(idx);
-    if (pos >= 0) state.selectedCards.splice(pos, 1);
-    else {
-      if (state.selectedCards.length >= state.maxPlay) state.selectedCards.shift();
-      state.selectedCards.push(idx);
-    }
-  }
-  updateUI();
-}
-
-function executeDiscard() {
-  const p = getCurrentPlayer();
-  [...state.selectedCards].sort((a,b)=>b-a).forEach(i => {
-    const card = p.hand.splice(i, 1)[0];
-    state.discard.push(card);
-    log(`${p.name} 棄掉了「${card.name}」。`);
-  });
-  state.selectedCards = [];
-  state.modeAction = null;
-  endActionPhase();
-}
-
-async function executePlay() {
-  const p = getCurrentPlayer();
-  const sorted = [...state.selectedCards].sort((a,b)=>b-a);
-  const cards = [];
-  sorted.forEach(i => cards.unshift(p.hand.splice(i,1)[0]));
-  cards.forEach(c => state.discard.push(c));
-  state.selectedCards = [];
-  state.modeAction = null;
-  for (const card of cards) {
-    log(`${p.name} 打出「${card.name}」。`);
-    updateUI();
-    await new Promise(r => resolveCard(card, false, r));
-    await delay(300);
-  }
-  endActionPhase();
-}
-
-function endActionPhase() {
-  state.modeAction = null;
-  state.selectedCards = [];
-  getCurrentPlayer().sdgs.forEach(s => s.immune = false);
-  state.phase = "draw";
-  doDrawPhase();
-}
-
-function doDrawPhase() {
-  const p = getCurrentPlayer();
-  let need = 5 - p.hand.length;
-  if (p.capacityNext) { need += 1; p.capacityNext = false; state.capacityActive = true; }
-  const drawn = [];
-  for (let i=0; i<need; i++) {
-    if (state.deck.length===0) reshuffle();
-    if (state.deck.length===0) break;
-    drawn.push(state.deck.pop());
-  }
-  if (state.capacityActive && drawn.length > 0) {
-    state.capacityActive = false;
-    if (p.isAI) {
-      const i = Math.floor(Math.random()*drawn.length);
-      state.discard.push(drawn.splice(i,1)[0]);
-      p.hand.push(...drawn);
-      finishTurn();
+document.getElementById("btnDiscardMode").onclick=()=>{if(state.inputLocked)return;state.modeAction="discard";state.selectedCards=[];updateUI();};
+document.getElementById("btnPlayMode").onclick=()=>{if(state.inputLocked)return;state.modeAction="play";state.maxPlay=getCurrentPlayer().sanctioned?1:2;state.selectedCards=[];updateUI();};
+document.getElementById("btnCancelAction").onclick=()=>{state.modeAction=null;state.selectedCards=[];state.previewDeltas={};updateUI();};
+document.getElementById("btnConfirmAction").onclick=()=>{
+  if(state.inputLocked||state.selectedCards.length===0)return;
+  if(state.mode==="online"&&!state.isHost){
+    // 客端發送行動給房主
+    const p=getCurrentPlayer();
+    if(state.modeAction==="play"){
+      const cards=state.selectedCards.map(i=>p.hand[i]);
+      sendToHost({type:"PLAYER_ACTION",playerId:state.myPeerId,actionData:{action:"playCards",cards}});
     } else {
-      showModal("能力建構：選擇一張棄置", drawn.map((c,i)=>`<button data-i="${i}">${c.name}</button>`).join(""), []);
-      setTimeout(() => {
-        document.querySelectorAll("#modalBody button").forEach(btn => {
-          btn.onclick = () => {
-            const i = +btn.dataset.i;
-            state.discard.push(drawn.splice(i,1)[0]);
-            p.hand.push(...drawn);
-            hideModal();
-            finishTurn();
-          };
-        });
-      }, 50);
+      sendToHost({type:"PLAYER_ACTION",playerId:state.myPeerId,actionData:{action:"discard",indices:state.selectedCards}});
     }
+    // 本地先清空選擇，等待 Host 廣播
+    state.selectedCards=[];state.modeAction=null;updateUI();
   } else {
-    p.hand.push(...drawn);
-    if (drawn.length) log(`${p.name} 補了 ${drawn.length} 張牌。`);
-    finishTurn();
+    if(state.modeAction==="discard")executeDiscard();
+    else executePlay();
   }
-}
-
-function finishTurn() {
-  const next = (state.currentPlayer + 1) % state.players.length;
-  getCurrentPlayer().sanctioned = false;
-  state.players[next].sdgs.forEach(s => s.frozen = false);
-  state.currentPlayer = next;
-  state.phase = "action";
-  state.modeAction = null;
-  log(`── 輪到 ${getCurrentPlayer().name} ──`, "sys");
-  checkWin();
+};
+function onCardClick(idx){
+  if(state.inputLocked||state.phase!=="action"||!state.modeAction||getCurrentPlayer().isAI)return;
+  const card=getCurrentPlayer().hand[idx];
+  if(state.modeAction==="play"&&card.type==="veto")return;
+  if(state.modeAction==="discard"){
+    const pos=state.selectedCards.indexOf(idx);
+    if(pos>=0)state.selectedCards.splice(pos,1);else state.selectedCards.push(idx);
+  } else {
+    const pos=state.selectedCards.indexOf(idx);
+    if(pos>=0)state.selectedCards.splice(pos,1);
+    else{if(state.selectedCards.length>=state.maxPlay)state.selectedCards.shift();state.selectedCards.push(idx);}
+  }
   updateUI();
-  maybeTriggerAI();
-  if (state.mode === "online" && state.isHost) broadcastState();
 }
-
-/* AI (簡化保留 Advance 強化版核心) */
-async function maybeTriggerAI() {
-  const p = getCurrentPlayer();
-  if (!p || !p.isAI || state.phase !== "action") return;
-  state.isAIThinking = true;
-  updateUI();
-  await delay(900 + Math.random()*500);
-  await executeAIMove(p);
-  state.isAIThinking = false;
+function executeDiscard(){
+  const p=getCurrentPlayer();
+  [...state.selectedCards].sort((a,b)=>b-a).forEach(i=>{const c=p.hand.splice(i,1)[0];state.discard.push(c);log(`${p.name} 棄掉「${c.name}」`);});
+  state.selectedCards=[];state.modeAction=null;endActionPhase();
 }
-
-function getAIBestMove(ai, diff) {
-  if (diff === "easy") {
-    const play = Math.random() < 0.8;
-    if (!play) return { action:"discard", indices: shuffle([...Array(ai.hand.length).keys()]).slice(0,2) };
-    const playable = ai.hand.map((c,i)=>i).filter(i => ai.hand[i].type !== "veto");
-    return { action:"play", indices: shuffle(playable).slice(0, ai.sanctioned?1:2) };
-  }
-  // basic / advance simplified
-  const scores = ai.hand.map((c,i) => ({i, s: c.type==="veto"?-50 : (c.kind==="event"?15:8)}));
-  scores.sort((a,b)=>b.s-a.s);
-  const maxP = ai.sanctioned ? 1 : 2;
-  if (scores[0].s > 0) return { action:"play", indices: scores.slice(0,maxP).map(x=>x.i) };
-  return { action:"discard", indices: scores.slice(-2).map(x=>x.i) };
-}
-
-async function executeAIMove(ai) {
-  const move = getAIBestMove(ai, ai.difficulty);
-  if (move.action === "discard") {
-    [...move.indices].sort((a,b)=>b-a).forEach(i => {
-      if (i < ai.hand.length) {
-        const c = ai.hand.splice(i,1)[0];
-        state.discard.push(c);
-        log(`${ai.name} 棄掉「${c.name}」`, "ai");
-      }
-    });
-    endActionPhase();
-    return;
-  }
-  const cards = [];
-  [...move.indices].sort((a,b)=>b-a).forEach(i => {
-    if (i < ai.hand.length) cards.unshift(ai.hand.splice(i,1)[0]);
-  });
-  cards.forEach(c => state.discard.push(c));
-  for (const card of cards) {
-    log(`${ai.name} 打出「${card.name}」`, "ai");
+async function executePlay(){
+  const p=getCurrentPlayer();
+  const sorted=[...state.selectedCards].sort((a,b)=>b-a);
+  const cards=[];sorted.forEach(i=>cards.unshift(p.hand.splice(i,1)[0]));
+  cards.forEach(c=>state.discard.push(c));
+  state.selectedCards=[];state.modeAction=null;
+  for(const card of cards){
+    log(`${p.name} 打出「${card.name}」`);
+    const affected=[];
+    if(card.kind==="event"){
+      (card.forward||[]).forEach(id=>affected.push({id,delta:1}));
+      (card.backward||[]).forEach(id=>affected.push({id,delta:-1}));
+    }
+    // 本地 + 線上廣播動畫
+    if(state.mode==="online"&&state.isHost){
+      broadcastToAll({type:"SHOW_CARD_ANIMATION",playerName:p.name,card,affectedSDGs:affected});
+    }
+    await showCardAnnouncement(p.name, card, affected);
     updateUI();
-    await new Promise(r => resolveCard(card, true, r));
-    await delay(350);
+    await new Promise(r=>resolveCard(card,false,r));
+    await delay(200);
   }
   endActionPhase();
+  if(state.mode==="online"&&state.isHost)broadcastFullState();
+}
+function endActionPhase(){
+  state.modeAction=null;state.selectedCards=[];
+  getCurrentPlayer().sdgs.forEach(s=>s.immune=false);
+  state.phase="draw";doDrawPhase();
+}
+function doDrawPhase(){
+  const p=getCurrentPlayer();
+  let need=5-p.hand.length;
+  if(p.capacityNext){need+=1;p.capacityNext=false;state.capacityActive=true;}
+  const drawn=[];
+  for(let i=0;i<need;i++){if(state.deck.length===0)reshuffle();if(state.deck.length===0)break;drawn.push(state.deck.pop());}
+  if(state.capacityActive&&drawn.length){
+    state.capacityActive=false;
+    if(p.isAI){const i=Math.floor(Math.random()*drawn.length);state.discard.push(drawn.splice(i,1)[0]);p.hand.push(...drawn);finishTurn();}
+    else{
+      showModal("能力建構：選擇棄置",drawn.map((c,i)=>`<button data-i="${i}">${c.name}</button>`).join(""),[]);
+      setTimeout(()=>document.querySelectorAll("#modalBody button").forEach(btn=>{
+        btn.onclick=()=>{state.discard.push(drawn.splice(+btn.dataset.i,1)[0]);p.hand.push(...drawn);hideModal();finishTurn();};
+      }),30);
+    }
+  } else {p.hand.push(...drawn);if(drawn.length)log(`${p.name} 補了 ${drawn.length} 張牌`);finishTurn();}
+}
+function finishTurn(){
+  const next=(state.currentPlayer+1)%state.players.length;
+  getCurrentPlayer().sanctioned=false;
+  state.players[next].sdgs.forEach(s=>s.frozen=false);
+  state.currentPlayer=next;state.phase="action";state.modeAction=null;
+  log(`── 輪到 ${getCurrentPlayer().name} ──`,"sys");
+  checkWin();updateUI();maybeTriggerAI();
+  if(state.mode==="online"&&state.isHost)broadcastFullState();
 }
 
-/* Card resolution (核心保留，精簡部分特殊卡以控制長度) */
-function isValidNegativeTarget(s) { return s.progress < 3 && !s.immune && !s.frozen; }
-
-function resolveCard(card, isAI, done) {
-  if (card.kind === "event") resolveEvent(card, isAI, done);
-  else resolveSpecial(card, isAI, done);
+/* AI 簡化 */
+async function maybeTriggerAI(){
+  const p=getCurrentPlayer();if(!p||!p.isAI||state.phase!=="action")return;
+  state.isAIThinking=true;updateUI();
+  await delay(800+Math.random()*400);
+  const playable=p.hand.map((c,i)=>i).filter(i=>p.hand[i].type!=="veto");
+  if(playable.length&&Math.random()>0.25){
+    const n=Math.min(playable.length,p.sanctioned?1:2);
+    const idxs=shuffle(playable).slice(0,n);
+    const cards=[];
+    [...idxs].sort((a,b)=>b-a).forEach(i=>cards.unshift(p.hand.splice(i,1)[0]));
+    cards.forEach(c=>state.discard.push(c));
+    for(const card of cards){
+      log(`${p.name} 打出「${card.name}」`,"ai");
+      const affected=[];
+      if(card.kind==="event"){(card.forward||[]).forEach(id=>affected.push({id,delta:1}));(card.backward||[]).forEach(id=>affected.push({id,delta:-1}));}
+      if(state.mode==="online"&&state.isHost)broadcastToAll({type:"SHOW_CARD_ANIMATION",playerName:p.name,card,affectedSDGs:affected});
+      await showCardAnnouncement(p.name,card,affected);
+      await new Promise(r=>resolveCard(card,true,r));
+    }
+  } else {
+    const n=Math.min(2,p.hand.length);
+    for(let i=0;i<n;i++){const c=p.hand.pop();state.discard.push(c);log(`${p.name} 棄掉「${c.name}」`,"ai");}
+  }
+  state.isAIThinking=false;endActionPhase();
 }
 
-function resolveEvent(card, isAI, done) {
-  card.forward.forEach(id => {
-    state.players.forEach(pl => {
-      pl.sdgs.forEach(s => {
-        if (s.id === id && s.progress < 3 && !s.frozen) {
-          s.progress = clamp(s.progress+1, -2, 3);
-          log(`${pl.name} 的 SDG ${id} 前進至 ${s.progress}！`);
-        }
-      });
-    });
+/* Resolve */
+function isValidNegativeTarget(s){return s.progress<3&&!s.immune&&!s.frozen;}
+function resolveCard(card,isAI,done){
+  if(card.kind==="event")resolveEvent(card,isAI,done);
+  else resolveSpecial(card,isAI,done);
+}
+function resolveEvent(card,isAI,done){
+  card.forward.forEach(id=>{
+    state.players.forEach(pl=>pl.sdgs.forEach(s=>{
+      if(s.id===id&&s.progress<3&&!s.frozen){s.progress=clamp(s.progress+1,-2,3);log(`${pl.name} 的 SDG ${id} → ${s.progress}`);}
+    }));
   });
-  if (card.backward.length === 0) { done(); return; }
-  const targets = [];
-  state.players.forEach((pl,pi) => {
-    pl.sdgs.forEach((s,si) => {
-      if (card.backward.includes(s.id) && isValidNegativeTarget(s)) targets.push({pl,s,pi,si});
-    });
-  });
-  if (targets.length === 0) { log("後退無有效目標"); done(); return; }
-  let i = 0;
-  function next() {
-    if (i >= targets.length) { done(); return; }
-    const t = targets[i++];
-    const vIdx = t.pl.hand.findIndex(c => c.type === "veto");
-    if (vIdx >= 0 && !t.pl.isAI) {
-      showModal("否決權", `<p>${t.pl.name} 的 SDG ${t.s.id} 即將後退，是否使用否決權？</p>`, [
-        {label:"使用", class:"success", fn:()=>{ t.pl.hand.splice(vIdx,1); state.discard.push({type:"veto"}); log(`${t.pl.name} 使用否決權`); next(); }},
-        {label:"不使用", class:"danger", fn:()=>{ t.s.progress=clamp(t.s.progress-1,-2,3); log(`${t.pl.name} SDG ${t.s.id} → ${t.s.progress}`); next(); }}
+  if(!card.backward.length){done();return;}
+  const targets=[];
+  state.players.forEach((pl,pi)=>pl.sdgs.forEach((s,si)=>{
+    if(card.backward.includes(s.id)&&isValidNegativeTarget(s))targets.push({pl,s});
+  }));
+  if(!targets.length){log("後退無有效目標");done();return;}
+  let i=0;
+  function next(){
+    if(i>=targets.length){done();return;}
+    const t=targets[i++];
+    const vIdx=t.pl.hand.findIndex(c=>c.type==="veto");
+    if(vIdx>=0&&!t.pl.isAI){
+      showModal("否決權",`<p>${t.pl.name} 的 SDG ${t.s.id} 即將後退，使用否決權？</p>`,[
+        {label:"使用",class:"success",fn:()=>{t.pl.hand.splice(vIdx,1);state.discard.push({type:"veto"});log(`${t.pl.name} 使用否決權`);next();}},
+        {label:"不使用",class:"danger",fn:()=>{t.s.progress=clamp(t.s.progress-1,-2,3);log(`${t.pl.name} SDG ${t.s.id} → ${t.s.progress}`);next();}}
       ]);
     } else {
-      if (vIdx >= 0 && t.pl.isAI && t.pl.difficulty === "advance") {
-        t.pl.hand.splice(vIdx,1);
-        log(`${t.pl.name} (AI) 使用否決權`, "ai");
-      } else {
-        t.s.progress = clamp(t.s.progress-1, -2, 3);
-        log(`${t.pl.name} 的 SDG ${t.s.id} 後退至 ${t.s.progress}`);
-      }
+      if(vIdx>=0&&t.pl.isAI&&t.pl.difficulty==="advance"){t.pl.hand.splice(vIdx,1);log(`${t.pl.name} (AI) 使用否決權`,"ai");}
+      else {t.s.progress=clamp(t.s.progress-1,-2,3);log(`${t.pl.name} 的 SDG ${t.s.id} → ${t.s.progress}`);}
       next();
     }
   }
   next();
 }
-
-function resolveSpecial(card, isAI, done) {
-  const p = getCurrentPlayer();
-  // 簡化實作：多數特殊卡自動或彈窗選擇
-  if (card.type === "capacity") {
-    p.capacityNext = true;
-    log(`${p.name} 獲得能力建構`);
-    done();
-  } else if (card.type === "immunity") {
-    if (isAI) {
-      p.sdgs[0].immune = true;
-      log(`${p.name} (AI) 獲得豁免`);
-      done();
-    } else {
-      showModal("政策豁免", p.sdgs.map((s,i)=>`<button data-i="${i}">SDG ${s.id}</button>`).join(""), []);
-      setTimeout(() => {
-        document.querySelectorAll("#modalBody button").forEach(btn => {
-          btn.onclick = () => {
-            p.sdgs[+btn.dataset.i].immune = true;
-            hideModal();
-            done();
-          };
-        });
-      }, 30);
+function resolveSpecial(card,isAI,done){
+  const p=getCurrentPlayer();
+  if(card.type==="capacity"){p.capacityNext=true;log(`${p.name} 獲得能力建構`);done();}
+  else if(card.type==="immunity"){
+    if(isAI){p.sdgs[0].immune=true;log(`${p.name} (AI) 獲得豁免`);done();}
+    else{
+      showModal("政策豁免",p.sdgs.map((s,i)=>`<button data-i="${i}">SDG ${s.id}</button>`).join(""),[]);
+      setTimeout(()=>document.querySelectorAll("#modalBody button").forEach(btn=>{
+        btn.onclick=()=>{p.sdgs[+btn.dataset.i].immune=true;hideModal();done();};
+      }),30);
     }
-  } else if (card.type === "freeze") {
-    // 簡化：打最高進度的非GOAL對手
-    let best = null;
-    state.players.forEach((pl,pi) => {
-      if (pl === p) return;
-      pl.sdgs.forEach((s,si) => {
-        if (isValidNegativeTarget(s) && (!best || s.progress > best.progress)) best = {pl,s,si};
-      });
-    });
-    if (best) {
-      best.s.frozen = true;
-      log(`${p.name} 凍結了 ${best.pl.name} 的 SDG ${best.s.id}`);
-    }
+  } else if(card.type==="freeze"){
+    let best=null;
+    state.players.forEach(pl=>{if(pl===p)return;pl.sdgs.forEach(s=>{if(isValidNegativeTarget(s)&&(!best||s.progress>best.progress))best={pl,s};});});
+    if(best){best.s.frozen=true;log(`${p.name} 凍結了 ${best.pl.name} 的 SDG ${best.s.id}`);}
     done();
-  } else if (card.type === "sanction") {
-    let best = null, max = -99;
-    state.players.forEach(pl => {
-      if (pl === p) return;
-      const t = pl.sdgs.reduce((a,s)=>a+s.progress,0);
-      if (t > max) { max = t; best = pl; }
-    });
-    if (best) { best.sanctioned = true; log(`${p.name} 制裁了 ${best.name}`); }
+  } else if(card.type==="sanction"){
+    let best=null,max=-99;
+    state.players.forEach(pl=>{if(pl===p)return;const t=pl.sdgs.reduce((a,s)=>a+s.progress,0);if(t>max){max=t;best=pl;}});
+    if(best){best.sanctioned=true;log(`${p.name} 制裁了 ${best.name}`);}
     done();
-  } else {
-    log(`「${card.name}」效果已觸發（簡化處理）`);
-    done();
-  }
+  } else {log(`「${card.name}」已觸發`);done();}
 }
-
-function checkWin() {
-  for (const pl of state.players) {
-    if (pl.sdgs.every(s => s.progress >= 3)) {
+function checkWin(){
+  for(const pl of state.players){
+    if(pl.sdgs.every(s=>s.progress>=3)){
       showScreen("winScreen");
-      document.getElementById("winnerText").textContent = `${pl.name} 率先完成兩項 SDG 目標！`;
-      log(`🏆 ${pl.name} 獲勝！`, "win");
+      document.getElementById("winnerText").textContent=`${pl.name} 率先完成兩項 SDG 目標！`;
+      log(`🏆 ${pl.name} 獲勝！`,"win");
       return;
     }
   }
