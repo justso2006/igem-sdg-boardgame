@@ -3,271 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SDG 永續桌遊 | iGEM Wiki</title>
+<title>SDG Board Game | iGEM Wiki</title>
 <style>
   :root {
-    --wood-light: #f4f1ea;
-    --wood-mid: #e8e5da;
-    --wood-dark: #d5cbb8;
-    --paper: #fcfbf7;
-    --ink: #3d3229;
-    --ink-soft: #5c4e42;
-    --border: #4a3b32;
-    --teal: #2a9d8f;
-    --teal-dark: #1f7a6f;
-    --blue: #457b9d;
-    --red: #c44536;
-    --gold: #c9a227;
-    --muted: #8a7a6a;
+    --wood-light: #f4f1ea; --wood-mid: #e8e5da; --wood-dark: #d5cbb8;
+    --paper: #fcfbf7; --ink: #3d3229; --ink-soft: #5c4e42; --border: #4a3b32;
+    --teal: #2a9d8f; --teal-dark: #1f7a6f; --blue: #457b9d; --red: #c44536;
+    --gold: #c9a227; --muted: #8a7a6a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Segoe UI", "Noto Sans TC", system-ui, sans-serif;
-    background: linear-gradient(160deg, var(--wood-light) 0%, var(--wood-mid) 45%, var(--wood-dark) 100%);
-    background-attachment: fixed;
-    color: var(--ink);
-    min-height: 100vh;
-    line-height: 1.5;
+    background: linear-gradient(160deg, var(--wood-light), var(--wood-mid), var(--wood-dark));
+    background-attachment: fixed; color: var(--ink); min-height: 100vh; line-height: 1.5;
   }
+  .lang-bar {
+    position: fixed; top: 10px; right: 14px; z-index: 50;
+    background: var(--paper); border: 2px solid var(--border); border-radius: 8px;
+    padding: 6px 12px; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .lang-bar select { border: 1px solid #c4b8a8; border-radius: 5px; padding: 3px 6px; background: #fff; }
   .screen { display: none; padding: 18px; max-width: 1380px; margin: 0 auto; }
   .screen.active { display: block; }
-  h1 {
-    text-align: center;
-    margin-bottom: 16px;
-    font-size: clamp(1.55rem, 3.8vw, 2.1rem);
-    color: var(--border);
-    font-weight: 700;
-  }
+  h1 { text-align: center; margin-bottom: 16px; font-size: clamp(1.5rem, 3.8vw, 2.1rem); color: var(--border); }
   h2 { margin: 12px 0 8px; color: var(--teal-dark); font-size: 1.1rem; }
   button {
-    background: var(--blue);
-    color: #fff;
-    border: 2px solid #3a6a88;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 600;
-    box-shadow: 0 3px 0 #2c5470;
-    transition: 0.12s;
+    background: var(--blue); color: #fff; border: 2px solid #3a6a88; padding: 10px 18px;
+    border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 600;
+    box-shadow: 0 3px 0 #2c5470; transition: 0.12s;
   }
   button:hover { filter: brightness(1.06); }
   button:active { transform: translateY(2px); box-shadow: 0 1px 0 #2c5470; }
   button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
   button.danger { background: var(--red); border-color: #a3382c; box-shadow: 0 3px 0 #8b2e24; }
-  button.danger:active { box-shadow: 0 1px 0 #8b2e24; }
-  button.success { background: var(--teal); border-color: #238b7f; box-shadow: 0 3px 0 #1a6b62; color: #fff; }
-  button.success:active { box-shadow: 0 1px 0 #1a6b62; }
-  button.large {
-    padding: 14px 26px;
-    font-size: 1.05rem;
-    width: 100%;
-    max-width: 340px;
-    margin: 8px auto;
-    display: block;
-  }
-  input, select {
-    background: var(--paper);
-    border: 2px solid #c4b8a8;
-    color: var(--ink);
-    padding: 8px 12px;
-    border-radius: 7px;
-    font-size: 0.95rem;
-  }
+  button.success { background: var(--teal); border-color: #238b7f; box-shadow: 0 3px 0 #1a6b62; }
+  button.large { padding: 14px 26px; font-size: 1.05rem; width: 100%; max-width: 340px; margin: 8px auto; display: block; }
+  input, select { background: var(--paper); border: 2px solid #c4b8a8; color: var(--ink); padding: 8px 12px; border-radius: 7px; font-size: 0.95rem; }
   .menu-box, .setup-box {
-    background: var(--paper);
-    padding: 26px;
-    border-radius: 12px;
-    max-width: 500px;
-    margin: 0 auto;
-    text-align: center;
-    border: 2px solid var(--border);
-    box-shadow: 0 6px 20px rgba(74, 59, 50, 0.12);
+    background: var(--paper); padding: 26px; border-radius: 12px; max-width: 500px; margin: 0 auto;
+    text-align: center; border: 2px solid var(--border); box-shadow: 0 6px 20px rgba(74,59,50,0.12);
   }
-  .player-setup {
-    margin: 10px 0;
-    display: grid;
-    grid-template-columns: 70px 1fr 160px;
-    gap: 8px;
-    align-items: center;
-    text-align: left;
-  }
+  .player-setup { margin: 10px 0; display: grid; grid-template-columns: 70px 1fr 160px; gap: 8px; align-items: center; text-align: left; }
   .player-setup label { font-size: 0.88rem; color: var(--muted); }
-
-  .draft-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
-    gap: 10px;
-    margin: 14px 0;
-  }
+  .draft-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; margin: 14px 0; }
   .sdg-pick {
-    background: var(--paper);
-    border: 2px solid #c4b8a8;
-    border-radius: 10px;
-    padding: 11px 7px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.15s;
-    user-select: none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    background: var(--paper); border: 2px solid #c4b8a8; border-radius: 10px; padding: 11px 7px;
+    text-align: center; cursor: pointer; transition: 0.15s; user-select: none;
   }
-  .sdg-pick:hover:not(.disabled):not(.selected) {
-    border-color: var(--teal);
-    transform: translateY(-2px);
-  }
+  .sdg-pick:hover:not(.disabled):not(.selected) { border-color: var(--teal); transform: translateY(-2px); }
   .sdg-pick.disabled { opacity: 0.35; cursor: not-allowed; }
-  .sdg-pick.selected {
-    border-color: var(--teal);
-    background: #e6f5f3;
-    box-shadow: 0 0 0 2px var(--teal);
-  }
-  .sdg-pick.selected::after {
-    content: "✓ 已選";
-    display: block;
-    font-size: 0.72rem;
-    color: var(--teal-dark);
-    margin-top: 3px;
-  }
+  .sdg-pick.selected { border-color: var(--teal); background: #e6f5f3; box-shadow: 0 0 0 2px var(--teal); }
+  .sdg-pick.selected::after { content: "✓"; display: block; font-size: 0.72rem; color: var(--teal-dark); margin-top: 3px; }
   .draft-status { text-align: center; margin: 10px 0; font-size: 1.08rem; color: var(--teal-dark); font-weight: 600; }
   .draft-selected-count { text-align: center; color: var(--muted); margin-bottom: 6px; }
-
-  .game-layout {
-    display: grid;
-    grid-template-columns: 1fr 290px;
-    gap: 14px;
-  }
-  @media (max-width: 960px) {
-    .game-layout { grid-template-columns: 1fr; }
-    .log-panel { max-height: 260px; }
-  }
-  .board {
-    background: var(--paper);
-    border-radius: 12px;
-    padding: 14px;
-    border: 2px solid var(--border);
-    box-shadow: 0 6px 18px rgba(74, 59, 50, 0.1);
-  }
-  .players-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .player-card {
-    background: #f9f7f2;
-    border: 2px solid #c4b8a8;
-    border-radius: 10px;
-    padding: 10px;
-    position: relative;
-  }
-  .player-card.current {
-    border-color: var(--teal);
-    box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.3);
-  }
-  .player-card.sanctioned::after {
-    content: "制裁中";
-    position: absolute; top: 5px; right: 7px;
-    background: var(--red); color: white; font-size: 0.65rem;
-    padding: 2px 6px; border-radius: 5px;
-  }
-  .player-card.ai-tag::before {
-    content: "Bot";
-    position: absolute; top: 5px; left: 7px;
-    background: #6b5b4f; color: white; font-size: 0.6rem;
-    padding: 2px 5px; border-radius: 4px;
-  }
+  .game-layout { display: grid; grid-template-columns: 1fr 290px; gap: 14px; }
+  @media (max-width: 960px) { .game-layout { grid-template-columns: 1fr; } .log-panel { max-height: 260px; } }
+  .board { background: var(--paper); border-radius: 12px; padding: 14px; border: 2px solid var(--border); box-shadow: 0 6px 18px rgba(74,59,50,0.1); }
+  .players-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .player-card { background: #f9f7f2; border: 2px solid #c4b8a8; border-radius: 10px; padding: 10px; position: relative; }
+  .player-card.current { border-color: var(--teal); box-shadow: 0 0 0 2px rgba(42,157,143,0.3); }
+  .player-card.sanctioned::after { content: attr(data-sanction); position: absolute; top: 5px; right: 7px; background: var(--red); color: #fff; font-size: 0.65rem; padding: 2px 6px; border-radius: 5px; }
+  .player-card.ai-tag::before { content: "Bot"; position: absolute; top: 5px; left: 7px; background: #6b5b4f; color: #fff; font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; }
   .player-name { font-weight: 700; font-size: 0.98rem; margin-bottom: 6px; padding-left: 24px; }
   .sdg-row { display: flex; gap: 6px; margin-bottom: 3px; align-items: center; }
-  .sdg-badge {
-    background: #e8e0d4;
-    border: 1px solid #c4b8a8;
-    border-radius: 6px;
-    padding: 3px 6px;
-    font-size: 0.78rem;
-    min-width: 60px;
-    text-align: center;
-    font-weight: 600;
-  }
-  .sdg-badge.goal {
-    background: linear-gradient(135deg, #e8c547, #c9a227);
-    border-color: #a88b1a;
-    color: #3d3229;
-  }
+  .sdg-badge { background: #e8e0d4; border: 1px solid #c4b8a8; border-radius: 6px; padding: 3px 6px; font-size: 0.78rem; min-width: 60px; text-align: center; font-weight: 600; }
+  .sdg-badge.goal { background: linear-gradient(135deg, #e8c547, #c9a227); border-color: #a88b1a; }
   .sdg-badge.frozen { outline: 2px solid #457b9d; }
-  .progress-bar {
-    flex: 1;
-    height: 18px;
-    background: #e5dfd4;
-    border-radius: 9px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid #c4b8a8;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #2a9d8f, #40b5a6);
-    transition: width 0.5s ease;
-  }
-  .progress-fill.negative {
-    background: linear-gradient(90deg, #c44536, #e06b5e);
-  }
-  .progress-preview {
-    position: absolute; top: 0; bottom: 0;
-    background: repeating-linear-gradient(90deg, rgba(42,157,143,0.35), rgba(42,157,143,0.35) 4px, rgba(42,157,143,0.12) 4px, rgba(42,157,143,0.12) 8px);
-    border: 2px dashed #2a9d8f;
-    border-radius: 9px;
-    pointer-events: none;
-  }
-  .progress-preview.negative {
-    background: repeating-linear-gradient(90deg, rgba(196,69,54,0.4), rgba(196,69,54,0.4) 4px, rgba(196,69,54,0.15) 4px, rgba(196,69,54,0.15) 8px);
-    border-color: #c44536;
-  }
-  .progress-text {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.7rem; font-weight: 700; z-index: 2;
-  }
-  .progress-labels {
-    display: flex; justify-content: space-between;
-    font-size: 0.58rem; color: var(--muted); margin-top: 1px; padding: 0 2px;
-  }
-
-  .hand-area {
-    background: #f5f2eb;
-    border-radius: 10px;
-    padding: 12px;
-    margin-top: 10px;
-    border: 1px solid #d5cbb8;
-  }
+  .progress-bar { flex: 1; height: 18px; background: #e5dfd4; border-radius: 9px; overflow: hidden; position: relative; border: 1px solid #c4b8a8; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #2a9d8f, #40b5a6); transition: width 0.5s ease; }
+  .progress-fill.negative { background: linear-gradient(90deg, #c44536, #e06b5e); }
+  .progress-preview { position: absolute; top: 0; bottom: 0; background: repeating-linear-gradient(90deg, rgba(42,157,143,0.35), rgba(42,157,143,0.35) 4px, rgba(42,157,143,0.12) 4px, rgba(42,157,143,0.12) 8px); border: 2px dashed #2a9d8f; border-radius: 9px; pointer-events: none; }
+  .progress-preview.negative { background: repeating-linear-gradient(90deg, rgba(196,69,54,0.4), rgba(196,69,54,0.4) 4px, rgba(196,69,54,0.15) 4px, rgba(196,69,54,0.15) 8px); border-color: #c44536; }
+  .progress-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; z-index: 2; }
+  .progress-labels { display: flex; justify-content: space-between; font-size: 0.58rem; color: var(--muted); margin-top: 1px; padding: 0 2px; }
+  .hand-area { background: #f5f2eb; border-radius: 10px; padding: 12px; margin-top: 10px; border: 1px solid #d5cbb8; }
   .hand-cards { display: flex; flex-wrap: wrap; gap: 10px; min-height: 115px; }
   .card {
-    background: var(--paper);
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    padding: 0;
-    width: 142px;
-    font-size: 0.74rem;
-    cursor: pointer;
-    transition: 0.18s ease;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(74, 59, 50, 0.12);
+    background: var(--paper); border: 2px solid var(--border); border-radius: 10px; padding: 0; width: 142px;
+    font-size: 0.74rem; cursor: pointer; transition: 0.18s; overflow: hidden; box-shadow: 0 4px 10px rgba(74,59,50,0.12);
   }
-  .card:hover {
-    transform: translateY(-8px) scale(1.04);
-    box-shadow: 0 10px 22px rgba(74, 59, 50, 0.18);
-    border-color: var(--gold);
-  }
-  .card.selected {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 2px var(--gold), 0 8px 18px rgba(201, 162, 39, 0.2);
-    transform: translateY(-6px) scale(1.03);
-  }
+  .card:hover { transform: translateY(-8px) scale(1.04); border-color: var(--gold); }
+  .card.selected { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); transform: translateY(-6px); }
   .card.disabled-card { opacity: 0.4; cursor: not-allowed; transform: none !important; }
-  .card-header {
-    padding: 4px 8px;
-    font-size: 0.65rem;
-    font-weight: 700;
-  }
+  .card-header { padding: 4px 8px; font-size: 0.65rem; font-weight: 700; }
   .card.event .card-header { background: #e8a54b; color: #3d3229; }
   .card.special .card-header { background: #7b6b9e; color: #fff; }
   .card-body { padding: 7px; }
@@ -275,41 +93,13 @@
   .card-effect { color: var(--muted); font-size: 0.68rem; }
   .card-fwd { color: #1f7a6f; }
   .card-bwd { color: #a3382c; }
-
   .deck-info { display: flex; gap: 14px; margin: 10px 0; font-size: 0.88rem; color: var(--muted); }
-  .phase-bar {
-    background: #ebe6dc;
-    padding: 10px 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    border: 1px solid #d5cbb8;
-  }
+  .phase-bar { background: #ebe6dc; padding: 10px 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border: 1px solid #d5cbb8; }
   .phase-label { font-weight: 700; color: var(--teal-dark); }
   .ai-thinking { color: #6b5b4f; animation: pulse 1.2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-
-  .log-panel {
-    background: var(--paper);
-    border-radius: 12px;
-    padding: 12px;
-    height: calc(100vh - 40px);
-    max-height: 840px;
-    display: flex;
-    flex-direction: column;
-    border: 2px solid var(--border);
-    box-shadow: 0 6px 18px rgba(74, 59, 50, 0.1);
-  }
-  .log-content {
-    flex: 1;
-    overflow-y: auto;
-    font-size: 0.8rem;
-    color: var(--ink-soft);
-  }
+  .log-panel { background: var(--paper); border-radius: 12px; padding: 12px; height: calc(100vh - 40px); max-height: 840px; display: flex; flex-direction: column; border: 2px solid var(--border); }
+  .log-content { flex: 1; overflow-y: auto; font-size: 0.8rem; color: var(--ink-soft); }
   .log-entry { padding: 4px 0; border-bottom: 1px solid #ebe6dc; }
   .log-entry.sys { color: var(--blue); }
   .log-entry.win { color: var(--teal-dark); font-weight: 700; }
@@ -317,51 +107,26 @@
   .log-entry.up { color: #1f7a6f; }
   .log-entry.down { color: #a3382c; }
   .log-entry.special { color: #8b6914; }
-
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(61, 50, 41, 0.45);
-    display: none; align-items: center; justify-content: center; z-index: 100;
-  }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(61,50,41,0.45); display: none; align-items: center; justify-content: center; z-index: 100; }
   .modal-overlay.show { display: flex; }
-  .modal {
-    background: var(--paper);
-    border-radius: 12px;
-    padding: 22px;
-    max-width: 440px;
-    width: 90%;
-    max-height: 85vh;
-    overflow-y: auto;
-    border: 2px solid var(--border);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  }
+  .modal { background: var(--paper); border-radius: 12px; padding: 22px; max-width: 480px; width: 92%; max-height: 85vh; overflow-y: auto; border: 2px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
   .modal h3 { margin-bottom: 12px; color: var(--teal-dark); }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
-
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; flex-wrap: wrap; }
+  .modal-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; max-height: 280px; overflow-y: auto; }
+  .modal-list button { font-size: 0.82rem; padding: 8px 12px; }
   .win-screen { text-align: center; padding: 48px 20px; }
   .win-screen h1 { color: var(--gold); }
   .confirm-bar { margin-top: 10px; display: flex; gap: 10px; justify-content: center; }
-
   #card-play-modal {
-    position: fixed; inset: 0;
-    background: rgba(61, 50, 41, 0.4);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 9999;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease;
+    position: fixed; inset: 0; background: rgba(61,50,41,0.4); display: flex; align-items: center; justify-content: center;
+    z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s;
   }
   #card-play-modal.show { opacity: 1; pointer-events: auto; }
   #card-play-modal.fade-out { opacity: 0; }
   .card-announce-box {
-    background: var(--paper);
-    border: 3px solid var(--border);
-    border-radius: 14px;
-    padding: 28px 36px;
-    max-width: 420px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 12px 32px rgba(74, 59, 50, 0.2);
-    transform: scale(0.92);
-    transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+    background: var(--paper); border: 3px solid var(--border); border-radius: 14px; padding: 28px 36px;
+    max-width: 420px; width: 90%; text-align: center; box-shadow: 0 12px 32px rgba(74,59,50,0.2);
+    transform: scale(0.92); transition: transform 0.35s cubic-bezier(0.34,1.4,0.64,1);
   }
   #card-play-modal.show .card-announce-box { transform: scale(1); }
   .card-announce-player { font-size: 1rem; color: var(--blue); margin-bottom: 4px; font-weight: 600; }
@@ -369,20 +134,31 @@
   .card-announce-target { font-size: 0.92rem; color: var(--gold); margin-bottom: 8px; font-weight: 600; display: none; }
   .card-announce-desc { font-size: 0.88rem; color: var(--ink-soft); margin-bottom: 14px; }
   .card-announce-effects { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; }
-  .effect-tag {
-    background: #f0ebe3;
-    border: 1.5px solid #c4b8a8;
-    border-radius: 16px;
-    padding: 4px 11px;
-    font-size: 0.82rem;
-    font-weight: 600;
-  }
+  .effect-tag { background: #f0ebe3; border: 1.5px solid #c4b8a8; border-radius: 16px; padding: 4px 11px; font-size: 0.82rem; font-weight: 600; }
   .effect-tag.up { color: #1f7a6f; border-color: #2a9d8f; }
   .effect-tag.down { color: #a3382c; border-color: #c44536; }
-  .effect-tag.special { color: #6b5b4f; border-color: #8a7a6a; }
+  .effect-tag.special { color: #6b5b4f; }
+  #ai-notice {
+    position: fixed; inset: 0; background: rgba(61,50,41,0.35); display: none; align-items: center; justify-content: center; z-index: 9000;
+  }
+  #ai-notice.show { display: flex; }
+  .ai-notice-box {
+    background: var(--paper); border: 3px solid var(--border); border-radius: 12px; padding: 22px 32px;
+    max-width: 420px; text-align: center; font-size: 1.05rem; font-weight: 600; color: var(--ink);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.15);
+  }
 </style>
 </head>
 <body>
+
+<div class="lang-bar">
+  🌐 <select id="langSelect">
+    <option value="zh">繁體中文</option>
+    <option value="en">English</option>
+  </select>
+</div>
+
+<div id="ai-notice"><div class="ai-notice-box" id="aiNoticeText"></div></div>
 
 <div id="card-play-modal">
   <div class="card-announce-box">
@@ -395,46 +171,46 @@
 </div>
 
 <div id="mainMenu" class="screen active">
-  <h1>🌍 SDG 永續桌遊</h1>
+  <h1 data-i18n="title">🌍 SDG 永續桌遊</h1>
   <div class="menu-box">
-    <p style="color:var(--muted);margin-bottom:16px;">選擇遊戲模式</p>
-    <button class="large success" id="btnPVC">單人 / 機器人模式 (PVC)</button>
-    <button class="large" id="btnPVP">多人對戰模式 (PVP)</button>
+    <p style="color:var(--muted);margin-bottom:16px;" data-i18n="chooseMode">選擇遊戲模式</p>
+    <button class="large success" id="btnPVC" data-i18n="pvc">單人 / 機器人模式 (PVC)</button>
+    <button class="large" id="btnPVP" data-i18n="pvp">多人對戰模式 (PVP)</button>
   </div>
 </div>
 
 <div id="pvpMenu" class="screen">
-  <h1>多人對戰</h1>
+  <h1 data-i18n="pvpTitle">多人對戰</h1>
   <div class="menu-box">
-    <button class="large success" id="btnLocal">同一裝置遊玩 (Local)</button>
-    <button class="large" id="btnOnline">跨裝置線上連線 (Online)</button>
-    <button class="large danger" id="btnBackMain" style="margin-top:16px;">返回主選單</button>
+    <button class="large success" id="btnLocal" data-i18n="localPlay">同一裝置遊玩 (Local)</button>
+    <button class="large" id="btnOnline" data-i18n="onlinePlay">跨裝置線上連線 (Online)</button>
+    <button class="large danger" id="btnBackMain" style="margin-top:16px;" data-i18n="back">返回主選單</button>
   </div>
 </div>
 
 <div id="setupScreen" class="screen">
-  <h1>遊戲設定</h1>
+  <h1 data-i18n="setup">遊戲設定</h1>
   <div class="setup-box">
-    <h2>玩家人數</h2>
+    <h2 data-i18n="playerCount">玩家人數</h2>
     <select id="playerCount">
-      <option value="3">3 人</option>
-      <option value="4" selected>4 人</option>
-      <option value="5">5 人</option>
-      <option value="6">6 人</option>
+      <option value="3">3</option>
+      <option value="4" selected>4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
     </select>
     <div id="nameInputs" style="margin-top:14px;"></div>
-    <button id="startBtn" class="success" style="width:100%;margin-top:16px;padding:12px;font-size:1.05rem;">進入 SDG 挑選</button>
-    <button class="danger" id="btnBackFromSetup" style="width:100%;margin-top:8px;">返回</button>
+    <button id="startBtn" class="success" style="width:100%;margin-top:16px;padding:12px;" data-i18n="enterDraft">進入 SDG 挑選</button>
+    <button class="danger" id="btnBackFromSetup" style="width:100%;margin-top:8px;" data-i18n="back">返回</button>
   </div>
 </div>
 
 <div id="draftScreen" class="screen">
-  <h1>🎯 SDG 目標挑選</h1>
-  <div class="draft-status" id="draftStatus">輪到 玩家1 挑選 2 張 SDG</div>
-  <div class="draft-selected-count" id="draftCount">已選 0 / 2</div>
+  <h1 data-i18n="draftTitle">🎯 SDG 目標挑選</h1>
+  <div class="draft-status" id="draftStatus"></div>
+  <div class="draft-selected-count" id="draftCount"></div>
   <div class="draft-grid" id="draftGrid"></div>
   <div style="text-align:center;margin-top:12px;">
-    <button id="btnConfirmDraft" class="success" disabled>確認選擇 SDG</button>
+    <button id="btnConfirmDraft" class="success" disabled data-i18n="confirmSDG">確認選擇 SDG</button>
   </div>
   <div id="draftPicks" style="margin-top:14px;text-align:center;color:var(--muted);"></div>
 </div>
@@ -444,30 +220,30 @@
     <div class="board">
       <div class="phase-bar">
         <div>
-          <span class="phase-label" id="phaseLabel">行動階段</span>
+          <span class="phase-label" id="phaseLabel"></span>
           <span id="turnInfo" style="margin-left:10px;"></span>
         </div>
         <div id="actionButtons">
-          <button id="btnDiscardMode">棄牌模式</button>
-          <button id="btnPlayMode" class="success">打出卡牌</button>
-          <button id="btnCancelAction" style="display:none;">取消選擇</button>
+          <button id="btnDiscardMode" data-i18n="discardMode">棄牌模式</button>
+          <button id="btnPlayMode" class="success" data-i18n="playMode">打出卡牌</button>
+          <button id="btnCancelAction" style="display:none;" data-i18n="cancel">取消選擇</button>
         </div>
       </div>
       <div class="players-grid" id="playersGrid"></div>
       <div class="deck-info">
-        <span>抽牌堆：<strong id="deckCount">0</strong></span>
-        <span>棄牌堆：<strong id="discardCount">0</strong></span>
+        <span><span data-i18n="deck">抽牌堆</span>：<strong id="deckCount">0</strong></span>
+        <span><span data-i18n="discard">棄牌堆</span>：<strong id="discardCount">0</strong></span>
       </div>
       <div class="hand-area">
-        <h2>目前玩家手牌 <span id="handCount"></span></h2>
+        <h2><span data-i18n="hand">目前玩家手牌</span> <span id="handCount"></span></h2>
         <div class="hand-cards" id="handCards"></div>
         <div class="confirm-bar" id="confirmBar" style="display:none;">
-          <button id="btnConfirmAction" class="success">確認執行行動</button>
+          <button id="btnConfirmAction" class="success" data-i18n="confirmAction">確認執行行動</button>
         </div>
       </div>
     </div>
     <div class="log-panel">
-      <h2>遊戲歷程</h2>
+      <h2 data-i18n="log">遊戲歷程</h2>
       <div class="log-content" id="logContent"></div>
     </div>
   </div>
@@ -475,9 +251,9 @@
 
 <div id="winScreen" class="screen">
   <div class="win-screen">
-    <h1>🏆 勝利！</h1>
+    <h1 data-i18n="victory">🏆 勝利！</h1>
     <p id="winnerText" style="font-size:1.3rem;margin:16px 0;"></p>
-    <button onclick="location.reload()" class="success">再玩一次</button>
+    <button onclick="location.reload()" class="success" data-i18n="playAgain">再玩一次</button>
   </div>
 </div>
 
@@ -490,124 +266,206 @@
 </div>
 
 <script>
-const eventCards = [
-  {name:"金融海嘯(2008)",forward:[],backward:[1,8],desc:"全球金融市場崩盤，經濟大幅衰退。"},
-  {name:"莫拉克颱風(2009)",forward:[],backward:[11],desc:"重創台灣南部，引發嚴重水患與土石流。"},
-  {name:"焚書坑儒",forward:[],backward:[4],desc:"秦始皇焚毀典籍、迫害知識分子。"},
-  {name:"開普敦Day Zero(2018)",forward:[],backward:[6],desc:"水庫乾涸，城市面臨全面停水危機。"},
-  {name:"烏俄戰爭",forward:[],backward:[2,17],desc:"全球糧食供應受衝擊。"},
-  {name:"東非飢荒",forward:[17],backward:[1,2],desc:"乾旱造成嚴重糧食危機。"},
-  {name:"阿富汗限制女性受教育",forward:[],backward:[4,5,10],desc:"塔利班重新掌權後，女性受教權遭剝奪。"},
-  {name:"香港食水含鉛事件",forward:[],backward:[3,6,11],desc:"因焊料與老舊管線導致食水含鉛。"},
-  {name:"石油危機",forward:[7],backward:[9],desc:"能源供應受到衝擊。"},
-  {name:"COVID-19封城",forward:[3],backward:[8,17],desc:"大量企業停工失業。"},
-  {name:"福島核災",forward:[],backward:[3,7,14],desc:"地震引發核電廠事故。"},
-  {name:"種族隔離制度",forward:[],backward:[4,10,16],desc:"以法律區隔不同種族權利。"},
-  {name:"快時尚盛行",forward:[],backward:[12,13],desc:"大量消耗資源並增加廢棄物。"},
-  {name:"澳洲森林大火",forward:[],backward:[13,15],desc:"極端氣候造成大規模野火。"},
-  {name:"墨西哥灣漏油事故",forward:[],backward:[6,14],desc:"鑽油平台爆炸沉沒，釀史上最嚴重漏油。"},
-  {name:"山老鼠盛行",forward:[],backward:[12,15],desc:"非法砍伐並盜運國家珍貴林木。"},
-  {name:"黑死病",forward:[],backward:[1],desc:"14世紀瘟疫席捲歐亞，造成大量人口死亡。"},
-  {name:"冷戰",forward:[],backward:[9,17],desc:"美蘇長期政治軍事對峙，全球局勢緊張。"},
-  {name:"蘇伊士運河堵塞(2021)",forward:[],backward:[8,9,17],desc:"貨輪擱淺阻斷航運，全球供應鏈受衝擊。"},
-  {name:"裹小腳",forward:[],backward:[5,16],desc:"以纏足限制女性足部發育。"},
-  {name:"榮譽殺人",forward:[],backward:[5,16],desc:"以維護家族名譽為由殺害女性親屬。"},
-  {name:"大規模停電",forward:[],backward:[7],desc:"電力系統故障，造成大範圍供電中斷。"},
-  {name:"過度包裝文化",forward:[],backward:[12,15],desc:"商品包裝過多，增加資源浪費與垃圾量。"},
-  {name:"幽靈漁網",forward:[5,10,16],backward:[12,14],desc:"廢棄漁網持續捕殺海洋生物。"},
-  {name:"獵巫運動",forward:[],backward:[5],desc:"大量女性遭指控施巫術而受審與處決。"},
-  {name:"同性婚姻法通過",forward:[5,10,16],backward:[],desc:"台灣成為亞洲首個同性婚姻合法化國家。"},
-  {name:"建立自來水系統",forward:[3,6],backward:[],desc:"台灣於日治時期建立自來水系統。"},
-  {name:"世界關燈日",forward:[7,12,13],backward:[],desc:"全球自發熄燈，倡議節能減碳。"},
-  {name:"冰島同工同酬(2018)",forward:[5,10],backward:[],desc:"立法要求同工同酬，縮小薪資差距。"},
-  {name:"全民健保制度上路(1995)",forward:[3,10],backward:[],desc:"強制性社會保險，將全體國民納入保障網。"},
-  {name:"法國反食物浪費法",forward:[2,12],backward:[],desc:"禁止超市丟棄可食用食品，鼓勵捐贈。"},
-  {name:"歐盟2035禁售燃油車",forward:[7,11],backward:[],desc:"推動電動車轉型，減少碳排放。"},
-  {name:"大阪世博(2025)",forward:[9,17],backward:[],desc:"展示永續科技與國際合作成果。"},
-  {name:"Coldplay世界巡迴演唱會",forward:[7,13],backward:[],desc:"推動低碳巡演、鼓勵永續參與。"},
-  {name:"聯合國千禧年減貧計畫",forward:[1,8],backward:[],desc:"全球極端貧窮人口大幅下降。"},
-  {name:"綠色革命",forward:[1,2,9],backward:[],desc:"改良農作技術，提高糧食產量。"},
-  {name:"紐西蘭女性投票權(1893)",forward:[5,10,16],backward:[],desc:"全球首個女性普選國家。"},
-  {name:"網際網路普及",forward:[4,9],backward:[10],desc:"網路促進資訊交流與產業創新。"},
-  {name:"高速鐵路通車(2007)",forward:[8,9,11],backward:[],desc:"提升交通效率與區域發展。"},
-  {name:"海綿城市計畫",forward:[11,13],backward:[],desc:"建設兼具排水與蓄水功能的城市。"},
-  {name:"世界地球日",forward:[12,14,15],backward:[],desc:"倡導資源節約與環境保護。"},
-  {name:"禁用一次性塑膠",forward:[12,14,15],backward:[],desc:"推動減塑政策。"},
-  {name:"全球禁捕商業捕鯨",forward:[14],backward:[],desc:"保護鯨魚族群。"},
+/* ========== i18n ========== */
+var translations = {
+  zh: {
+    title: "🌍 SDG 永續桌遊", chooseMode: "選擇遊戲模式", pvc: "單人 / 機器人模式 (PVC)", pvp: "多人對戰模式 (PVP)",
+    pvpTitle: "多人對戰", localPlay: "同一裝置遊玩 (Local)", onlinePlay: "跨裝置線上連線 (Online)", back: "返回",
+    setup: "遊戲設定", playerCount: "玩家人數", enterDraft: "進入 SDG 挑選", draftTitle: "🎯 SDG 目標挑選",
+    confirmSDG: "確認選擇 SDG", discardMode: "棄牌模式", playMode: "打出卡牌", cancel: "取消選擇",
+    deck: "抽牌堆", discard: "棄牌堆", hand: "目前玩家手牌", confirmAction: "確認執行行動", log: "遊戲歷程",
+    victory: "🏆 勝利！", playAgain: "再玩一次", human: "人類玩家", easyBot: "Easy Bot", basicBot: "Basic Bot", advanceBot: "Advance Bot",
+    player: "玩家", turnOf: "輪到", select2: "挑選 2 張 SDG", selected: "已選", actionPhase: "行動階段",
+    botThinking: "Bot 思考中...", discardPhase: "棄牌模式：選牌後確認", playPhase: "打牌模式（最多", cards: "張）",
+    gameStart: "SDG 挑選完成，遊戲開始！", pleaseStart: "請開始行動。", reshuffle: "抽牌堆用盡，已重新洗牌。",
+    discarded: "棄掉", played: "打出了", forward: "前進", backward: "後退", special: "特殊效果",
+    historyEvent: "歷史事件", specialCard: "特殊功能", sanctioned: "制裁中", goal: "GOAL",
+    selectTarget: "選擇目標玩家", selectOwnCard: "選擇自己要給出的手牌", selectTheirCard: "選擇要拿取的手牌",
+    selectOwnSDG: "選擇自己的 SDG", selectTheirSDG: "選擇對手的 SDG", selectFromDiscard: "從棄牌堆選擇一張",
+    selectSDGSwap: "選擇要交換的 SDG", noValid: "無符合條件的卡牌", aidChoose: "請交出一張能讓對方前進的移動牌",
+    useVeto: "使用否決權？", yes: "使用", no: "不使用", capacityChoose: "能力建構：選擇棄置一張",
+    aiDraft: "正在思考要選擇哪 2 張 SDG 目標...", aiPlay: "正在決定出牌...", aiTarget: "正在選擇目標...",
+    onlineSoon: "線上模式架構已保留，目前以本地模式為主。"
+  },
+  en: {
+    title: "🌍 SDG Board Game", chooseMode: "Choose Game Mode", pvc: "Solo / Bot Mode (PVC)", pvp: "Multiplayer (PVP)",
+    pvpTitle: "Multiplayer", localPlay: "Same Device (Local)", onlinePlay: "Online Rooms", back: "Back",
+    setup: "Game Setup", playerCount: "Players", enterDraft: "Enter SDG Draft", draftTitle: "🎯 SDG Goal Draft",
+    confirmSDG: "Confirm SDG Selection", discardMode: "Discard Mode", playMode: "Play Cards", cancel: "Cancel",
+    deck: "Deck", discard: "Discard", hand: "Current Hand", confirmAction: "Confirm Action", log: "Game Log",
+    victory: "🏆 Victory!", playAgain: "Play Again", human: "Human", easyBot: "Easy Bot", basicBot: "Basic Bot", advanceBot: "Advance Bot",
+    player: "Player", turnOf: "Turn:", select2: "pick 2 SDGs", selected: "Selected", actionPhase: "Action Phase",
+    botThinking: "Bot thinking...", discardPhase: "Discard: select then confirm", playPhase: "Play mode (max", cards: "cards)",
+    gameStart: "Draft complete. Game start!", pleaseStart: "Please take action.", reshuffle: "Deck empty. Reshuffled.",
+    discarded: "discarded", played: "played", forward: "Forward", backward: "Backward", special: "Special",
+    historyEvent: "Event", specialCard: "Special", sanctioned: "Sanctioned", goal: "GOAL",
+    selectTarget: "Select target player", selectOwnCard: "Select your card to give", selectTheirCard: "Select card to take",
+    selectOwnSDG: "Select your SDG", selectTheirSDG: "Select opponent's SDG", selectFromDiscard: "Pick a card from discard",
+    selectSDGSwap: "Select SDG to swap", noValid: "No valid cards", aidChoose: "Hand over a move card that helps them",
+    useVeto: "Use Veto?", yes: "Yes", no: "No", capacityChoose: "Capacity: choose one to discard",
+    aiDraft: "is choosing 2 SDG goals...", aiPlay: "is deciding plays...", aiTarget: "is selecting targets...",
+    onlineSoon: "Online mode scaffold reserved. Local play for now."
+  }
+};
+
+var cardNameEN = {
+  "金融海嘯(2008)":"2008 Financial Crisis","莫拉克颱風(2009)":"Typhoon Morakot (2009)","焚書坑儒":"Burning of Books","開普敦Day Zero(2018)":"Cape Town Day Zero","烏俄戰爭":"Ukraine War","東非飢荒":"East Africa Famine",
+  "阿富汗限制女性受教育":"Afghanistan Girls Education Ban","香港食水含鉛事件":"HK Lead Water Scandal","石油危機":"Oil Crisis","COVID-19封城":"COVID Lockdowns","福島核災":"Fukushima Disaster","種族隔離制度":"Apartheid",
+  "快時尚盛行":"Fast Fashion Boom","澳洲森林大火":"Australia Bushfires","墨西哥灣漏油事故":"Gulf Oil Spill","山老鼠盛行":"Illegal Logging","黑死病":"Black Death","冷戰":"Cold War",
+  "蘇伊士運河堵塞(2021)":"Suez Blockage 2021","裹小腳":"Foot Binding","榮譽殺人":"Honor Killing","大規模停電":"Blackout","過度包裝文化":"Over-packaging","幽靈漁網":"Ghost Nets","獵巫運動":"Witch Hunts",
+  "同性婚姻法通過":"Same-sex Marriage Law","建立自來水系統":"Public Water System","世界關燈日":"Earth Hour","冰島同工同酬(2018)":"Iceland Equal Pay","全民健保制度上路(1995)":"Universal Healthcare 1995",
+  "法國反食物浪費法":"France Anti-Waste Law","歐盟2035禁售燃油車":"EU 2035 ICE Ban","大阪世博(2025)":"Expo 2025 Osaka","Coldplay世界巡迴演唱會":"Coldplay Tour","聯合國千禧年減貧計畫":"MDG Poverty Drive",
+  "綠色革命":"Green Revolution","紐西蘭女性投票權(1893)":"NZ Women Vote 1893","網際網路普及":"Internet Boom","高速鐵路通車(2007)":"HSR Launch 2007","海綿城市計畫":"Sponge City","世界地球日":"Earth Day",
+  "禁用一次性塑膠":"Single-use Plastic Ban","全球禁捕商業捕鯨":"Whaling Ban","減塑淨灘活動":"Beach Cleanup","國家公園設立":"National Parks","復育瀕危物種":"Species Recovery","世界人權宣言(1948)":"UDHR 1948",
+  "COVID-19疫苗國際合作":"COVID Vaccine Co-op","人類基因組計畫":"Human Genome Project","大禹治水":"Yu the Great Flood Control","商鞅變法":"Shang Yang Reforms","科舉制度建立":"Imperial Exam System",
+  "雅典民主制度":"Athenian Democracy","文藝復興":"Renaissance","古騰堡活字印刷":"Gutenberg Press","蒸汽機發明":"Steam Engine","工業革命":"Industrial Revolution","哥倫布發現新大陸":"Columbus 1492",
+  "社會住宅政策":"Social Housing","巴西「家庭補助金」":"Bolsa Família","國際稻米研究所成立":"IRRI Founded","維基百科誕生":"Wikipedia Launch","冰島選出全球首位民選女性總統":"Iceland First Elected Woman President",
+  "倫敦下水道系統建立":"London Sewer System","海水淡化技術普及":"Desalination Spread","LED照明普及":"LED Lighting","珊瑚礁復育計畫":"Coral Restoration","禁用魚翅政策":"Shark Fin Ban","海龜保育計畫":"Sea Turtle Protection",
+  "天然林禁伐政策":"Natural Forest Ban","最低工資制度":"Minimum Wage","滴灌技術發明":"Drip Irrigation","糧食銀行成立":"Food Bank","國際婦女節":"International Women's Day","禁止童婚法":"Child Marriage Ban",
+  "Girls Who Code成立":"Girls Who Code","雨水回收系統":"Rainwater Harvesting",
+  "永續轉型":"Sustainable Transition","否決權":"Veto","政策豁免":"Policy Immunity","凍結計畫":"Freeze Plan","合作備忘錄":"MOU","國際制裁":"International Sanction",
+  "能力建構":"Capacity Building","國際援助請求":"Aid Request","歷史借鏡":"History Mirror","目標重整":"Goal Realignment"
+};
+
+var currentLang = localStorage.getItem("sdg_lang") || "zh";
+
+function t(key) {
+  return (translations[currentLang] && translations[currentLang][key]) || translations.zh[key] || key;
+}
+
+function cardName(name) {
+  if (currentLang === "en" && cardNameEN[name]) return cardNameEN[name];
+  return name;
+}
+
+function applyI18n() {
+  document.querySelectorAll("[data-i18n]").forEach(function(el) {
+    var key = el.getAttribute("data-i18n");
+    if (translations[currentLang][key]) el.textContent = translations[currentLang][key];
+  });
+  document.getElementById("langSelect").value = currentLang;
+  if (document.getElementById("gameScreen").classList.contains("active")) updateUI();
+  if (document.getElementById("draftScreen").classList.contains("active")) renderDraft();
+  if (document.getElementById("setupScreen").classList.contains("active")) {
+    renderNameInputs(state.mode === "pvp-local" ? "pvp" : "pvc");
+  }
+}
+
+document.getElementById("langSelect").onchange = function() {
+  currentLang = this.value;
+  localStorage.setItem("sdg_lang", currentLang);
+  applyI18n();
+};
+
+/* ========== DATA ========== */
+var eventCards = [
+  {name:"金融海嘯(2008)",forward:[],backward:[1,8],desc:"全球金融市場崩盤。"},
+  {name:"莫拉克颱風(2009)",forward:[],backward:[11],desc:"重創台灣南部。"},
+  {name:"焚書坑儒",forward:[],backward:[4],desc:"焚毀典籍、迫害知識分子。"},
+  {name:"開普敦Day Zero(2018)",forward:[],backward:[6],desc:"水庫乾涸危機。"},
+  {name:"烏俄戰爭",forward:[],backward:[2,17],desc:"糧食供應受衝擊。"},
+  {name:"東非飢荒",forward:[17],backward:[1,2],desc:"乾旱糧食危機。"},
+  {name:"阿富汗限制女性受教育",forward:[],backward:[4,5,10],desc:"女性受教權遭剝奪。"},
+  {name:"香港食水含鉛事件",forward:[],backward:[3,6,11],desc:"食水含鉛。"},
+  {name:"石油危機",forward:[7],backward:[9],desc:"能源供應衝擊。"},
+  {name:"COVID-19封城",forward:[3],backward:[8,17],desc:"企業停工失業。"},
+  {name:"福島核災",forward:[],backward:[3,7,14],desc:"核電廠事故。"},
+  {name:"種族隔離制度",forward:[],backward:[4,10,16],desc:"種族權利區隔。"},
+  {name:"快時尚盛行",forward:[],backward:[12,13],desc:"資源消耗增加。"},
+  {name:"澳洲森林大火",forward:[],backward:[13,15],desc:"大規模野火。"},
+  {name:"墨西哥灣漏油事故",forward:[],backward:[6,14],desc:"史上嚴重漏油。"},
+  {name:"山老鼠盛行",forward:[],backward:[12,15],desc:"非法砍伐。"},
+  {name:"黑死病",forward:[],backward:[1],desc:"瘟疫大量死亡。"},
+  {name:"冷戰",forward:[],backward:[9,17],desc:"美蘇對峙。"},
+  {name:"蘇伊士運河堵塞(2021)",forward:[],backward:[8,9,17],desc:"供應鏈受衝擊。"},
+  {name:"裹小腳",forward:[],backward:[5,16],desc:"限制女性。"},
+  {name:"榮譽殺人",forward:[],backward:[5,16],desc:"殺害女性親屬。"},
+  {name:"大規模停電",forward:[],backward:[7],desc:"供電中斷。"},
+  {name:"過度包裝文化",forward:[],backward:[12,15],desc:"資源浪費。"},
+  {name:"幽靈漁網",forward:[5,10,16],backward:[12,14],desc:"持續捕殺海洋生物。"},
+  {name:"獵巫運動",forward:[],backward:[5],desc:"女性遭處決。"},
+  {name:"同性婚姻法通過",forward:[5,10,16],backward:[],desc:"同性婚姻合法。"},
+  {name:"建立自來水系統",forward:[3,6],backward:[],desc:"自來水系統。"},
+  {name:"世界關燈日",forward:[7,12,13],backward:[],desc:"倡議節能減碳。"},
+  {name:"冰島同工同酬(2018)",forward:[5,10],backward:[],desc:"同工同酬。"},
+  {name:"全民健保制度上路(1995)",forward:[3,10],backward:[],desc:"全民健保。"},
+  {name:"法國反食物浪費法",forward:[2,12],backward:[],desc:"禁止丟棄可食用食品。"},
+  {name:"歐盟2035禁售燃油車",forward:[7,11],backward:[],desc:"電動車轉型。"},
+  {name:"大阪世博(2025)",forward:[9,17],backward:[],desc:"永續科技展示。"},
+  {name:"Coldplay世界巡迴演唱會",forward:[7,13],backward:[],desc:"低碳巡演。"},
+  {name:"聯合國千禧年減貧計畫",forward:[1,8],backward:[],desc:"貧窮人口下降。"},
+  {name:"綠色革命",forward:[1,2,9],backward:[],desc:"提高糧食產量。"},
+  {name:"紐西蘭女性投票權(1893)",forward:[5,10,16],backward:[],desc:"女性普選。"},
+  {name:"網際網路普及",forward:[4,9],backward:[10],desc:"資訊交流創新。"},
+  {name:"高速鐵路通車(2007)",forward:[8,9,11],backward:[],desc:"交通效率提升。"},
+  {name:"海綿城市計畫",forward:[11,13],backward:[],desc:"排水蓄水城市。"},
+  {name:"世界地球日",forward:[12,14,15],backward:[],desc:"環境保護。"},
+  {name:"禁用一次性塑膠",forward:[12,14,15],backward:[],desc:"減塑政策。"},
+  {name:"全球禁捕商業捕鯨",forward:[14],backward:[],desc:"保護鯨魚。"},
   {name:"減塑淨灘活動",forward:[11,14,15],backward:[],desc:"清除海洋垃圾。"},
   {name:"國家公園設立",forward:[15],backward:[],desc:"保護自然棲地。"},
-  {name:"復育瀕危物種",forward:[15],backward:[],desc:"保護生物多樣性。"},
-  {name:"世界人權宣言(1948)",forward:[5,10,16],backward:[],desc:"奠定全球人權保障基礎。"},
-  {name:"COVID-19疫苗國際合作",forward:[3,17],backward:[],desc:"各國合作研發與分配疫苗。"},
-  {name:"人類基因組計畫",forward:[3,9,17],backward:[],desc:"成功解碼人類DNA，開創精準醫療。"},
-  {name:"大禹治水",forward:[6,9,11],backward:[],desc:"治理洪水興建水利，改善人民生活。"},
-  {name:"商鞅變法",forward:[8,16],backward:[],desc:"推行改革制度，提升行政效率。"},
-  {name:"科舉制度建立",forward:[4,8,16],backward:[],desc:"以公開考試選拔人才，促進教育與公平。"},
-  {name:"雅典民主制度",forward:[10,16],backward:[],desc:"建立公民參政制度，奠定民主政治基礎。"},
-  {name:"文藝復興",forward:[4,9],backward:[],desc:"提倡人文精神，推動藝術與科學發展。"},
-  {name:"古騰堡活字印刷",forward:[4,10],backward:[],desc:"普及知識，加速文化與教育傳播。"},
-  {name:"蒸汽機發明",forward:[7,8],backward:[],desc:"提升機械效率，帶動工業革命。"},
-  {name:"工業革命",forward:[8],backward:[13],desc:"機械化生產興起，改變全球經濟與社會。"},
-  {name:"哥倫布發現新大陸",forward:[8,17],backward:[10],desc:"開啟跨洲交流，深刻改變全球歷史。"},
-  {name:"社會住宅政策",forward:[1],backward:[],desc:"提供平價住宅，改善弱勢族群居住條件。"},
-  {name:"巴西「家庭補助金」",forward:[1,2,4],backward:[],desc:"補助改善弱勢家庭生活與教育。"},
-  {name:"國際稻米研究所成立",forward:[2,9],backward:[],desc:"推動稻米研究，提高糧食生產與品質。"},
-  {name:"維基百科誕生",forward:[4,17],backward:[],desc:"開放全民協作編輯，推廣知識自由共享。"},
-  {name:"冰島選出全球首位民選女性總統",forward:[5],backward:[],desc:"女性首度當選總統，象徵性別平權進展。"},
-  {name:"倫敦下水道系統建立",forward:[3,6,11],backward:[],desc:"完善污水系統，大幅改善城市公共衛生。"},
-  {name:"海水淡化技術普及",forward:[6,9],backward:[],desc:"將海水轉為淡水，提升穩定供水能力。"},
-  {name:"LED照明普及",forward:[7,12],backward:[],desc:"節能照明廣泛應用，降低能源消耗。"},
-  {name:"珊瑚礁復育計畫",forward:[13,14],backward:[],desc:"修復受損珊瑚礁，恢復海洋生態多樣性。"},
-  {name:"禁用魚翅政策",forward:[12,14],backward:[],desc:"禁止魚翅交易，保護鯊魚與海洋生態。"},
-  {name:"海龜保育計畫",forward:[14,15],backward:[],desc:"保護海龜棲地，提升瀕危物種存活率。"},
-  {name:"天然林禁伐政策",forward:[13,15],backward:[],desc:"禁止天然林砍伐，維護森林生態環境。"},
-  {name:"最低工資制度",forward:[1],backward:[],desc:"保障勞工基本薪資，改善生活與權益。"},
-  {name:"滴灌技術發明",forward:[2,6],backward:[],desc:"精準灌溉農作物，提升用水效率與產量。"},
-  {name:"糧食銀行成立",forward:[1,2,12],backward:[],desc:"募集剩餘糧食，提供弱勢族群基本需求。"},
-  {name:"國際婦女節",forward:[5],backward:[],desc:"倡導女性權益，推動全球性別平等發展。"},
-  {name:"禁止童婚法",forward:[3,5,16],backward:[],desc:"禁止未成年婚姻，保障兒童與女性權益。"},
-  {name:"Girls Who Code成立",forward:[4,5],backward:[],desc:"鼓勵女性學習程式，縮小科技性別落差。"},
-  {name:"雨水回收系統",forward:[6,11],backward:[],desc:"收集雨水再利用，提高水資源使用效率。"}
+  {name:"復育瀕危物種",forward:[15],backward:[],desc:"生物多樣性。"},
+  {name:"世界人權宣言(1948)",forward:[5,10,16],backward:[],desc:"人權保障。"},
+  {name:"COVID-19疫苗國際合作",forward:[3,17],backward:[],desc:"疫苗合作。"},
+  {name:"人類基因組計畫",forward:[3,9,17],backward:[],desc:"解碼人類DNA。"},
+  {name:"大禹治水",forward:[6,9,11],backward:[],desc:"治理洪水。"},
+  {name:"商鞅變法",forward:[8,16],backward:[],desc:"改革制度。"},
+  {name:"科舉制度建立",forward:[4,8,16],backward:[],desc:"公開考試選才。"},
+  {name:"雅典民主制度",forward:[10,16],backward:[],desc:"公民參政。"},
+  {name:"文藝復興",forward:[4,9],backward:[],desc:"人文精神。"},
+  {name:"古騰堡活字印刷",forward:[4,10],backward:[],desc:"知識普及。"},
+  {name:"蒸汽機發明",forward:[7,8],backward:[],desc:"工業革命動力。"},
+  {name:"工業革命",forward:[8],backward:[13],desc:"機械化生產。"},
+  {name:"哥倫布發現新大陸",forward:[8,17],backward:[10],desc:"跨洲交流。"},
+  {name:"社會住宅政策",forward:[1],backward:[],desc:"平價住宅。"},
+  {name:"巴西「家庭補助金」",forward:[1,2,4],backward:[],desc:"弱勢家庭補助。"},
+  {name:"國際稻米研究所成立",forward:[2,9],backward:[],desc:"稻米研究。"},
+  {name:"維基百科誕生",forward:[4,17],backward:[],desc:"知識共享。"},
+  {name:"冰島選出全球首位民選女性總統",forward:[5],backward:[],desc:"女性總統。"},
+  {name:"倫敦下水道系統建立",forward:[3,6,11],backward:[],desc:"污水系統。"},
+  {name:"海水淡化技術普及",forward:[6,9],backward:[],desc:"海水轉淡水。"},
+  {name:"LED照明普及",forward:[7,12],backward:[],desc:"節能照明。"},
+  {name:"珊瑚礁復育計畫",forward:[13,14],backward:[],desc:"修復珊瑚礁。"},
+  {name:"禁用魚翅政策",forward:[12,14],backward:[],desc:"保護鯊魚。"},
+  {name:"海龜保育計畫",forward:[14,15],backward:[],desc:"保護海龜。"},
+  {name:"天然林禁伐政策",forward:[13,15],backward:[],desc:"禁止砍伐。"},
+  {name:"最低工資制度",forward:[1],backward:[],desc:"保障薪資。"},
+  {name:"滴灌技術發明",forward:[2,6],backward:[],desc:"精準灌溉。"},
+  {name:"糧食銀行成立",forward:[1,2,12],backward:[],desc:"募集剩餘糧食。"},
+  {name:"國際婦女節",forward:[5],backward:[],desc:"倡導女性權益。"},
+  {name:"禁止童婚法",forward:[3,5,16],backward:[],desc:"禁止未成年婚姻。"},
+  {name:"Girls Who Code成立",forward:[4,5],backward:[],desc:"鼓勵女性學程式。"},
+  {name:"雨水回收系統",forward:[6,11],backward:[],desc:"收集雨水再利用。"}
 ];
 
-const specialCards = [
-  {name:"永續轉型",type:"sustain",desc:"從未使用的 SDG 牌堆抽 1 張，與自己 1 張 SDG 交換，保留當前步數。"},
-  {name:"否決權",type:"veto",desc:"當受到其他玩家負面效果時，可被動使用抵銷。"},
-  {name:"政策豁免",type:"immunity",desc:"指定自己 1 張 SDG，本回合不受任何負面效果影響。"},
+var specialCards = [
+  {name:"永續轉型",type:"sustain",desc:"從未使用的 SDG 與自己 1 張交換，保留步數。"},
+  {name:"否決權",type:"veto",desc:"被動抵銷負面效果。"},
+  {name:"政策豁免",type:"immunity",desc:"指定自己 1 張 SDG 本回合不受負面影響。"},
   {name:"凍結計畫",type:"freeze",desc:"指定任意 1 張 SDG，下回合前不能移動。"},
   {name:"合作備忘錄",type:"tradeHand",desc:"與任一玩家交換 1 張自選手牌。"},
-  {name:"國際制裁",type:"sanction",desc:"指定一名玩家，下回合最多只能打 1 張功能/移動牌。"},
-  {name:"能力建構",type:"capacity",desc:"補牌階段可額外多抽 1 張，擇一棄置，其餘加入手牌。"},
-  {name:"國際援助請求",type:"aid",desc:"指定一名玩家，對方必須交出一張能讓自己某些 SDG 前進的移動牌（若無則失效）。"},
-  {name:"歷史借鏡",type:"history",desc:"從棄牌堆選擇一張卡牌加入手牌。"},
+  {name:"國際制裁",type:"sanction",desc:"指定玩家下回合最多打 1 張牌。"},
+  {name:"能力建構",type:"capacity",desc:"補牌時多抽 1 張，擇一棄置。"},
+  {name:"國際援助請求",type:"aid",desc:"指定玩家交出一張能讓自己前進的移動牌。"},
+  {name:"歷史借鏡",type:"history",desc:"從棄牌堆選一張加入手牌。"},
   {name:"目標重整",type:"swapSDG",desc:"與另一名玩家交換一張 SDG，步數保留。"}
 ];
 
-const SDG_NAMES = {
-  1:"消除貧窮",2:"消除飢餓",3:"健康與福祉",4:"優質教育",5:"性別平等",6:"淨水與衛生",
-  7:"可負擔能源",8:"就業與經濟成長",9:"工業創新基礎建設",10:"減少不平等",11:"永續城市",
-  12:"責任消費生產",13:"氣候行動",14:"海洋生態",15:"陸地生態",16:"和平正義制度",17:"全球夥伴"
-};
+var SDG_NAMES = {1:"消除貧窮",2:"消除飢餓",3:"健康與福祉",4:"優質教育",5:"性別平等",6:"淨水與衛生",7:"可負擔能源",8:"就業與經濟成長",9:"工業創新基礎建設",10:"減少不平等",11:"永續城市",12:"責任消費生產",13:"氣候行動",14:"海洋生態",15:"陸地生態",16:"和平正義制度",17:"全球夥伴"};
+var SDG_NAMES_EN = {1:"No Poverty",2:"Zero Hunger",3:"Good Health",4:"Quality Education",5:"Gender Equality",6:"Clean Water",7:"Affordable Energy",8:"Decent Work",9:"Industry Innovation",10:"Reduced Inequalities",11:"Sustainable Cities",12:"Responsible Consumption",13:"Climate Action",14:"Life Below Water",15:"Life on Land",16:"Peace & Justice",17:"Partnerships"};
 
-let state = {
-  mode: "local",
-  isGameOver: false,
-  timers: [],
-  inputLocked: false,
-  players: [],
-  currentPlayer: 0,
-  phase: "action",
-  deck: [],
-  discard: [],
-  unusedSDGs: [],
-  selectedCards: [],
-  modeAction: null,
-  maxPlay: 2,
-  capacityActive: false,
-  isAIThinking: false,
-  draftAvailable: [],
-  draftCurrentPlayer: 0,
-  draftSelected: [],
+function sdgName(id) {
+  return currentLang === "en" ? (SDG_NAMES_EN[id] || id) : (SDG_NAMES[id] || id);
+}
+
+/* ========== STATE ========== */
+var state = {
+  mode: "local", isGameOver: false, timers: [], inputLocked: false,
+  players: [], currentPlayer: 0, phase: "action",
+  deck: [], discard: [], unusedSDGs: [],
+  selectedCards: [], modeAction: null, maxPlay: 2,
+  capacityActive: false, isAIThinking: false,
+  draftAvailable: [], draftCurrentPlayer: 0, draftSelected: [],
   previewDeltas: {}
 };
 
@@ -620,22 +478,17 @@ function trackTimeout(fn, ms) {
   state.timers.push(id);
   return id;
 }
-
 function clearAllTimers() {
   state.timers.forEach(function(id) { clearTimeout(id); });
   state.timers = [];
 }
-
-function shuffle(arr) {
-  for (var i = arr.length - 1; i > 0; i--) {
+function shuffle(a) {
+  for (var i = a.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
-    var tmp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = tmp;
+    var t = a[i]; a[i] = a[j]; a[j] = t;
   }
-  return arr;
+  return a;
 }
-
 function log(msg, type) {
   type = type || "";
   var el = document.getElementById("logContent");
@@ -646,83 +499,59 @@ function log(msg, type) {
   el.appendChild(d);
   el.scrollTop = el.scrollHeight;
 }
-
-function clamp(v, min, max) {
-  return Math.max(min, Math.min(max, v));
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(function(s) { s.classList.remove("active"); });
+  document.getElementById(id).classList.add("active");
 }
+function getCurrentPlayer() { return state.players[state.currentPlayer]; }
+function delay(ms) { return new Promise(function(r) { trackTimeout(r, ms); }); }
+function randChoice(a) { return a[Math.floor(Math.random() * a.length)]; }
 
-function showModal(title, body, actions) {
+function showModal(title, bodyHtml, actions) {
   if (state.isGameOver) return;
   document.getElementById("modalTitle").textContent = title;
-  document.getElementById("modalBody").innerHTML = body;
+  document.getElementById("modalBody").innerHTML = bodyHtml;
   var act = document.getElementById("modalActions");
   act.innerHTML = "";
   (actions || []).forEach(function(a) {
     var b = document.createElement("button");
     b.textContent = a.label;
     if (a.class) b.className = a.class;
-    b.onclick = function() {
-      hideModal();
-      a.fn();
-    };
+    b.onclick = function() { hideModal(); a.fn(); };
     act.appendChild(b);
   });
   document.getElementById("modal").classList.add("show");
 }
+function hideModal() { document.getElementById("modal").classList.remove("show"); }
 
-function hideModal() {
-  document.getElementById("modal").classList.remove("show");
+function showAINotice(text) {
+  document.getElementById("aiNoticeText").textContent = text;
+  document.getElementById("ai-notice").classList.add("show");
 }
-
-function getCurrentPlayer() {
-  return state.players[state.currentPlayer];
-}
-
-function delay(ms) {
-  return new Promise(function(resolve) {
-    trackTimeout(resolve, ms);
-  });
-}
-
-function randChoice(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(function(s) {
-    s.classList.remove("active");
-  });
-  document.getElementById(id).classList.add("active");
+function hideAINotice() {
+  document.getElementById("ai-notice").classList.remove("show");
 }
 
 function showCardAnnouncement(playerName, card, options) {
   options = options || {};
   return new Promise(function(resolve) {
-    if (state.isGameOver) {
-      resolve();
-      return;
-    }
+    if (state.isGameOver) { resolve(); return; }
     state.inputLocked = true;
-    var modal = document.getElementById("card-play-modal");
-    document.getElementById("announcePlayer").textContent = playerName + " 打出了";
-    document.getElementById("announceCardName").textContent = card.name;
-
+    document.getElementById("announcePlayer").textContent = playerName + " " + t("played");
+    document.getElementById("announceCardName").textContent = cardName(card.name);
     var targetEl = document.getElementById("announceTarget");
     if (options.targetName) {
       targetEl.style.display = "block";
-      targetEl.textContent = "➤ 目標：" + options.targetName;
+      targetEl.textContent = "➤ " + options.targetName;
     } else {
       targetEl.style.display = "none";
-      targetEl.textContent = "";
     }
-
     document.getElementById("announceDesc").textContent = card.desc || "";
-
     var effectsEl = document.getElementById("announceEffects");
     effectsEl.innerHTML = "";
-
     var affected = options.affectedSDGs || [];
-    if (affected.length > 0) {
+    if (affected.length) {
       affected.forEach(function(a) {
         var tag = document.createElement("span");
         tag.className = "effect-tag " + (a.delta > 0 ? "up" : "down");
@@ -745,13 +574,12 @@ function showCardAnnouncement(playerName, card, options) {
     } else {
       var tag = document.createElement("span");
       tag.className = "effect-tag special";
-      tag.textContent = "特殊效果";
+      tag.textContent = t("special");
       effectsEl.appendChild(tag);
     }
-
+    var modal = document.getElementById("card-play-modal");
     modal.classList.remove("fade-out");
     modal.classList.add("show");
-
     trackTimeout(function() {
       modal.classList.add("fade-out");
       trackTimeout(function() {
@@ -763,29 +591,21 @@ function showCardAnnouncement(playerName, card, options) {
   });
 }
 
-/* 導航 */
+/* ========== NAV ========== */
 document.getElementById("btnPVC").onclick = function() {
   state.mode = "local";
   showScreen("setupScreen");
   renderNameInputs("pvc");
 };
-document.getElementById("btnPVP").onclick = function() {
-  showScreen("pvpMenu");
-};
-document.getElementById("btnBackMain").onclick = function() {
-  showScreen("mainMenu");
-};
+document.getElementById("btnPVP").onclick = function() { showScreen("pvpMenu"); };
+document.getElementById("btnBackMain").onclick = function() { showScreen("mainMenu"); };
 document.getElementById("btnLocal").onclick = function() {
   state.mode = "pvp-local";
   showScreen("setupScreen");
   renderNameInputs("pvp");
 };
-document.getElementById("btnOnline").onclick = function() {
-  alert("線上模式架構已保留，目前以本地模式為主進行測試。");
-};
-document.getElementById("btnBackFromSetup").onclick = function() {
-  showScreen("mainMenu");
-};
+document.getElementById("btnOnline").onclick = function() { alert(t("onlineSoon")); };
+document.getElementById("btnBackFromSetup").onclick = function() { showScreen("mainMenu"); };
 
 function renderNameInputs(mode) {
   var count = parseInt(document.getElementById("playerCount").value, 10);
@@ -795,53 +615,37 @@ function renderNameInputs(mode) {
     var div = document.createElement("div");
     div.className = "player-setup";
     if (mode === "pvp") {
-      div.innerHTML =
-        '<label>玩家 ' + (i + 1) + '</label>' +
-        '<input type="text" id="pname' + i + '" value="玩家' + (i + 1) + '" maxlength="12">' +
-        '<select id="ptype' + i + '" disabled><option value="human" selected>人類玩家</option></select>';
+      div.innerHTML = "<label>" + t("player") + " " + (i+1) + "</label>" +
+        "<input type=\"text\" id=\"pname" + i + "\" value=\"" + t("player") + (i+1) + "\" maxlength=\"12\">" +
+        "<select id=\"ptype" + i + "\" disabled><option value=\"human\" selected>" + t("human") + "</option></select>";
     } else {
-      var defaultType = i === 0 ? "human" : "basic";
-      div.innerHTML =
-        '<label>玩家 ' + (i + 1) + '</label>' +
-        '<input type="text" id="pname' + i + '" value="' + (i === 0 ? "玩家1" : "Bot" + i) + '" maxlength="12">' +
-        '<select id="ptype' + i + '">' +
-        '<option value="human"' + (defaultType === "human" ? " selected" : "") + '>人類玩家</option>' +
-        '<option value="easy">Easy Bot</option>' +
-        '<option value="basic"' + (defaultType === "basic" ? " selected" : "") + '>Basic Bot</option>' +
-        '<option value="advance">Advance Bot</option>' +
-        '</select>';
+      var def = i === 0 ? "human" : "basic";
+      div.innerHTML = "<label>" + t("player") + " " + (i+1) + "</label>" +
+        "<input type=\"text\" id=\"pname" + i + "\" value=\"" + (i===0 ? t("player")+"1" : "Bot"+i) + "\" maxlength=\"12\">" +
+        "<select id=\"ptype" + i + "\">" +
+        "<option value=\"human\"" + (def==="human"?" selected":"") + ">" + t("human") + "</option>" +
+        "<option value=\"easy\">" + t("easyBot") + "</option>" +
+        "<option value=\"basic\"" + (def==="basic"?" selected":"") + ">" + t("basicBot") + "</option>" +
+        "<option value=\"advance\">" + t("advanceBot") + "</option></select>";
     }
     box.appendChild(div);
   }
 }
-
 document.getElementById("playerCount").onchange = function() {
-  var isPvp = state.mode === "pvp-local";
-  renderNameInputs(isPvp ? "pvp" : "pvc");
+  renderNameInputs(state.mode === "pvp-local" ? "pvp" : "pvc");
 };
-
 document.getElementById("startBtn").onclick = startLocalDraft;
 
 function startLocalDraft() {
   var count = parseInt(document.getElementById("playerCount").value, 10);
-  var names = [];
-  var types = [];
+  var names = [], types = [];
   for (var i = 0; i < count; i++) {
-    names.push(document.getElementById("pname" + i).value.trim() || ("玩家" + (i + 1)));
-    types.push(document.getElementById("ptype" + i).value);
+    names.push(document.getElementById("pname"+i).value.trim() || (t("player")+(i+1)));
+    types.push(document.getElementById("ptype"+i).value);
   }
   state.players = names.map(function(n, i) {
-    var t = types[i];
-    var isAI = t !== "human";
-    return {
-      name: n,
-      isAI: isAI,
-      difficulty: isAI ? t : "basic",
-      sdgs: [],
-      hand: [],
-      sanctioned: false,
-      capacityNext: false
-    };
+    var isAI = types[i] !== "human";
+    return { name: n, isAI: isAI, difficulty: isAI ? types[i] : "basic", sdgs: [], hand: [], sanctioned: false, capacityNext: false };
   });
   state.isGameOver = false;
   clearAllTimers();
@@ -854,13 +658,12 @@ function startLocalDraft() {
   renderDraft();
 }
 
+/* ========== DRAFT ========== */
 function renderDraft() {
   if (state.isGameOver) return;
   var p = state.players[state.draftCurrentPlayer];
-  document.getElementById("draftStatus").textContent =
-    "輪到 " + p.name + (p.isAI ? " (Bot)" : "") + " 挑選 2 張 SDG";
-  document.getElementById("draftCount").textContent = "已選 " + state.draftSelected.length + " / 2";
-
+  document.getElementById("draftStatus").textContent = t("turnOf") + " " + p.name + (p.isAI ? " (Bot)" : "") + " " + t("select2");
+  document.getElementById("draftCount").textContent = t("selected") + " " + state.draftSelected.length + " / 2";
   var grid = document.getElementById("draftGrid");
   grid.innerHTML = "";
   for (var id = 1; id <= 17; id++) {
@@ -868,42 +671,35 @@ function renderDraft() {
     var sel = state.draftSelected.indexOf(id) !== -1;
     var div = document.createElement("div");
     div.className = "sdg-pick" + (!avail ? " disabled" : "") + (sel ? " selected" : "");
-    div.innerHTML = "<strong>SDG " + id + "</strong><br><span style=\"font-size:0.74rem;color:#8a7a6a;\">" + (SDG_NAMES[id] || "") + "</span>";
+    div.innerHTML = "<strong>SDG " + id + "</strong><br><span style=\"font-size:0.74rem;color:#8a7a6a;\">" + sdgName(id) + "</span>";
     if (avail && !p.isAI) {
-      (function(sid) {
-        div.onclick = function() { toggleDraftSelect(sid); };
-      })(id);
+      (function(sid) { div.onclick = function() { toggleDraftSelect(sid); }; })(id);
     }
     grid.appendChild(div);
   }
-
   document.getElementById("draftPicks").textContent = state.players.map(function(pl) {
-    var s = pl.sdgs.map(function(x) { return "SDG " + x.id; }).join(", ") || "尚未選擇";
-    return pl.name + ": " + s;
+    return pl.name + ": " + (pl.sdgs.map(function(x){return "SDG "+x.id;}).join(", ") || "—");
   }).join(" ｜ ");
-
   document.getElementById("btnConfirmDraft").disabled = state.draftSelected.length !== 2 || p.isAI;
-
   if (p.isAI) {
-    trackTimeout(aiDraftPick, 550 + Math.random() * 350);
+    showAINotice("[" + p.name + "] " + t("aiDraft"));
+    log("[" + p.name + "] " + t("aiDraft"), "ai");
+    trackTimeout(function() {
+      hideAINotice();
+      aiDraftPick();
+    }, 1000);
   }
 }
-
 function toggleDraftSelect(id) {
   var idx = state.draftSelected.indexOf(id);
-  if (idx >= 0) {
-    state.draftSelected.splice(idx, 1);
-  } else if (state.draftSelected.length < 2) {
-    state.draftSelected.push(id);
-  }
+  if (idx >= 0) state.draftSelected.splice(idx, 1);
+  else if (state.draftSelected.length < 2) state.draftSelected.push(id);
   renderDraft();
 }
-
 document.getElementById("btnConfirmDraft").onclick = function() {
   if (state.draftSelected.length !== 2) return;
   confirmDraftPick(state.draftSelected.slice());
 };
-
 function confirmDraftPick(ids) {
   var p = state.players[state.draftCurrentPlayer];
   ids.forEach(function(id) {
@@ -918,24 +714,16 @@ function confirmDraftPick(ids) {
   }
   renderDraft();
 }
-
 function aiDraftPick() {
   if (state.isGameOver) return;
   var p = state.players[state.draftCurrentPlayer];
   if (!p.isAI || state.draftAvailable.length < 2) return;
-  var picks;
-  if (p.difficulty === "easy") {
-    picks = shuffle(state.draftAvailable.slice()).slice(0, 2);
-  } else {
-    picks = state.draftAvailable.slice().sort(function(a, b) {
-      return Math.abs(a - 8.5) - Math.abs(b - 8.5);
-    }).slice(0, 2);
-  }
+  var picks = p.difficulty === "easy"
+    ? shuffle(state.draftAvailable.slice()).slice(0, 2)
+    : state.draftAvailable.slice().sort(function(a,b){ return Math.abs(a-8.5)-Math.abs(b-8.5); }).slice(0, 2);
   state.draftSelected = picks;
   renderDraft();
-  trackTimeout(function() {
-    confirmDraftPick(picks);
-  }, 400);
+  trackTimeout(function() { confirmDraftPick(picks); }, 400);
 }
 
 function startGameAfterDraft() {
@@ -943,17 +731,11 @@ function startGameAfterDraft() {
   shuffle(state.unusedSDGs);
   state.deck = [];
   eventCards.forEach(function(c) {
-    state.deck.push({
-      name: c.name, forward: c.forward.slice(), backward: c.backward.slice(),
-      desc: c.desc, kind: "event", id: Math.random().toString(36).slice(2)
-    });
+    state.deck.push({ name: c.name, forward: c.forward.slice(), backward: c.backward.slice(), desc: c.desc, kind: "event", id: Math.random().toString(36).slice(2) });
   });
   specialCards.forEach(function(c) {
     for (var i = 0; i < 2; i++) {
-      state.deck.push({
-        name: c.name, type: c.type, desc: c.desc,
-        kind: "special", id: Math.random().toString(36).slice(2) + i
-      });
+      state.deck.push({ name: c.name, type: c.type, desc: c.desc, kind: "special", id: Math.random().toString(36).slice(2) + i });
     }
   });
   shuffle(state.deck);
@@ -974,23 +756,23 @@ function startGameAfterDraft() {
   state.previewDeltas = {};
   state.isGameOver = false;
   showScreen("gameScreen");
-  log("SDG 挑選完成，遊戲開始！", "sys");
-  log("請 " + getCurrentPlayer().name + " 開始行動。", "sys");
+  log(t("gameStart"), "sys");
+  log(getCurrentPlayer().name + " " + t("pleaseStart"), "sys");
   updateUI();
   maybeTriggerAI();
 }
-
 function reshuffle() {
   if (state.discard.length === 0) return;
   state.deck = state.discard.splice(0);
   shuffle(state.deck);
-  log("抽牌堆用盡，已重新洗牌。", "sys");
+  log(t("reshuffle"), "sys");
 }
 
+/* ========== UI ========== */
 function computePreview() {
   state.previewDeltas = {};
   var p = getCurrentPlayer();
-  if (state.modeAction !== "play" || state.selectedCards.length === 0 || p.isAI) return;
+  if (state.modeAction !== "play" || !state.selectedCards.length || p.isAI) return;
   state.selectedCards.forEach(function(idx) {
     var card = p.hand[idx];
     if (!card || card.kind !== "event") return;
@@ -1021,16 +803,14 @@ function updateUI() {
   if (state.isGameOver) return;
   var p = getCurrentPlayer();
   if (!p) return;
-
-  document.getElementById("turnInfo").textContent = "目前回合：" + p.name + (p.isAI ? " (Bot)" : "");
+  document.getElementById("turnInfo").textContent = t("turnOf") + " " + p.name + (p.isAI ? " (Bot)" : "");
   document.getElementById("deckCount").textContent = state.deck.length;
   document.getElementById("discardCount").textContent = state.discard.length;
   document.getElementById("handCount").textContent = "(" + p.hand.length + "/5)";
-
-  var phaseText = "行動階段";
-  if (state.isAIThinking) phaseText = "Bot 思考中...";
-  else if (state.modeAction === "discard") phaseText = "棄牌模式：選牌後確認";
-  else if (state.modeAction === "play") phaseText = "打牌模式（最多 " + state.maxPlay + " 張）";
+  var phaseText = t("actionPhase");
+  if (state.isAIThinking) phaseText = t("botThinking");
+  else if (state.modeAction === "discard") phaseText = t("discardPhase");
+  else if (state.modeAction === "play") phaseText = t("playPhase") + " " + state.maxPlay + " " + t("cards");
   document.getElementById("phaseLabel").textContent = phaseText;
   document.getElementById("phaseLabel").className = "phase-label" + (state.isAIThinking ? " ai-thinking" : "");
 
@@ -1039,53 +819,35 @@ function updateUI() {
   var btnP = document.getElementById("btnPlayMode");
   var btnC = document.getElementById("btnCancelAction");
   var conf = document.getElementById("confirmBar");
-
   if (humanTurn && !state.modeAction) {
-    btnD.style.display = "";
-    btnP.style.display = "";
-    btnC.style.display = "none";
-    conf.style.display = "none";
+    btnD.style.display = ""; btnP.style.display = ""; btnC.style.display = "none"; conf.style.display = "none";
   } else if (humanTurn && (state.modeAction === "discard" || state.modeAction === "play")) {
-    btnD.style.display = "none";
-    btnP.style.display = "none";
-    btnC.style.display = "";
-    conf.style.display = state.selectedCards.length > 0 ? "flex" : "none";
+    btnD.style.display = "none"; btnP.style.display = "none"; btnC.style.display = "";
+    conf.style.display = state.selectedCards.length ? "flex" : "none";
   } else {
-    btnD.style.display = "none";
-    btnP.style.display = "none";
-    btnC.style.display = "none";
-    conf.style.display = "none";
+    btnD.style.display = "none"; btnP.style.display = "none"; btnC.style.display = "none"; conf.style.display = "none";
   }
 
   computePreview();
-
   var grid = document.getElementById("playersGrid");
   grid.innerHTML = "";
   state.players.forEach(function(pl, idx) {
     var div = document.createElement("div");
-    div.className = "player-card" +
-      (idx === state.currentPlayer ? " current" : "") +
-      (pl.sanctioned ? " sanctioned" : "") +
-      (pl.isAI ? " ai-tag" : "");
-    var html = '<div class="player-name">' + pl.name +
-      (idx === state.currentPlayer ? " ▶" : "") +
-      (pl.isAI ? " [" + pl.difficulty + "]" : "") + "</div>";
+    div.className = "player-card" + (idx === state.currentPlayer ? " current" : "") + (pl.sanctioned ? " sanctioned" : "") + (pl.isAI ? " ai-tag" : "");
+    div.setAttribute("data-sanction", t("sanctioned"));
+    var html = "<div class=\"player-name\">" + pl.name + (idx === state.currentPlayer ? " ▶" : "") + (pl.isAI ? " [" + pl.difficulty + "]" : "") + "</div>";
     pl.sdgs.forEach(function(s, si) {
       var cur = s.progress;
       var delta = (state.previewDeltas[idx] && state.previewDeltas[idx][si]) || 0;
       var preview = clamp(cur + delta, -2, 3);
       var pct = ((cur + 2) / 5) * 100;
       var previewPct = ((preview + 2) / 5) * 100;
-      html += '<div class="sdg-row">' +
-        '<div class="sdg-badge ' + (cur >= 3 ? "goal" : "") + (s.frozen ? " frozen" : "") + '">SDG ' + s.id + '</div>' +
-        '<div class="progress-bar">' +
-        '<div class="progress-fill ' + (cur < 0 ? "negative" : "") + '" style="width:' + pct + '%"></div>' +
-        (delta !== 0 ? '<div class="progress-preview ' + (delta < 0 ? "negative" : "") + '" style="left:0;width:' + Math.max(pct, previewPct) + '%;"></div>' : "") +
-        '<div class="progress-text">' + (cur >= 3 ? "GOAL" : cur) +
-        (delta ? " →" + preview : "") +
-        (s.frozen ? " ❄" : "") + (s.immune ? " 🛡" : "") + '</div></div></div>' +
-        '<div class="progress-labels"><span>-2</span><span>-1</span><span>0</span><span>1</span><span>2</span><span>GOAL</span></div>' +
-        '<div style="font-size:0.66rem;color:#8a7a6a;margin-bottom:2px;">' + (SDG_NAMES[s.id] || "") + '</div>';
+      html += "<div class=\"sdg-row\"><div class=\"sdg-badge " + (cur >= 3 ? "goal" : "") + (s.frozen ? " frozen" : "") + "\">SDG " + s.id + "</div>" +
+        "<div class=\"progress-bar\"><div class=\"progress-fill " + (cur < 0 ? "negative" : "") + "\" style=\"width:" + pct + "%\"></div>" +
+        (delta !== 0 ? "<div class=\"progress-preview " + (delta < 0 ? "negative" : "") + "\" style=\"left:0;width:" + Math.max(pct, previewPct) + "%;\"></div>" : "") +
+        "<div class=\"progress-text\">" + (cur >= 3 ? t("goal") : cur) + (delta ? " →" + preview : "") + (s.frozen ? " ❄" : "") + (s.immune ? " 🛡" : "") + "</div></div></div>" +
+        "<div class=\"progress-labels\"><span>-2</span><span>-1</span><span>0</span><span>1</span><span>2</span><span>GOAL</span></div>" +
+        "<div style=\"font-size:0.66rem;color:#8a7a6a;margin-bottom:2px;\">" + sdgName(s.id) + "</div>";
     });
     div.innerHTML = html;
     grid.appendChild(div);
@@ -1097,48 +859,39 @@ function updateUI() {
     var cannot = state.modeAction === "play" && card.type === "veto";
     var div = document.createElement("div");
     div.className = "card " + (card.kind === "event" ? "event" : "special") +
-      (state.selectedCards.indexOf(idx) !== -1 ? " selected" : "") +
-      (cannot ? " disabled-card" : "");
+      (state.selectedCards.indexOf(idx) !== -1 ? " selected" : "") + (cannot ? " disabled-card" : "");
     var effect = "";
     if (card.kind === "event") {
-      effect = '<div class="card-fwd">' + (card.forward.length ? "前進：" + card.forward.join(",") : "") + '</div>' +
-               '<div class="card-bwd">' + (card.backward.length ? "後退：" + card.backward.join(",") : "") + '</div>';
+      effect = "<div class=\"card-fwd\">" + (card.forward.length ? t("forward") + ":" + card.forward.join(",") : "") + "</div>" +
+               "<div class=\"card-bwd\">" + (card.backward.length ? t("backward") + ":" + card.backward.join(",") : "") + "</div>";
     } else {
-      effect = '<div class="card-effect">' + (card.desc || "") + '</div>';
+      effect = "<div class=\"card-effect\">" + (card.desc || "") + "</div>";
     }
-    div.innerHTML =
-      '<div class="card-header">' + (card.kind === "event" ? "歷史事件" : "特殊功能") + '</div>' +
-      '<div class="card-body"><div class="card-name">' + card.name + '</div>' + effect + '</div>';
+    div.innerHTML = "<div class=\"card-header\">" + (card.kind === "event" ? t("historyEvent") : t("specialCard")) + "</div>" +
+      "<div class=\"card-body\"><div class=\"card-name\">" + cardName(card.name) + "</div>" + effect + "</div>";
     if (!p.isAI && !cannot && !state.inputLocked && !state.isGameOver) {
-      (function(i) {
-        div.onclick = function() { onCardClick(i); };
-      })(idx);
+      (function(i) { div.onclick = function() { onCardClick(i); }; })(idx);
     }
     handEl.appendChild(div);
   });
 }
 
+/* ========== ACTIONS ========== */
 document.getElementById("btnDiscardMode").onclick = function() {
   if (state.inputLocked || state.isGameOver) return;
-  state.modeAction = "discard";
-  state.selectedCards = [];
-  updateUI();
+  state.modeAction = "discard"; state.selectedCards = []; updateUI();
 };
 document.getElementById("btnPlayMode").onclick = function() {
   if (state.inputLocked || state.isGameOver) return;
   state.modeAction = "play";
   state.maxPlay = getCurrentPlayer().sanctioned ? 1 : 2;
-  state.selectedCards = [];
-  updateUI();
+  state.selectedCards = []; updateUI();
 };
 document.getElementById("btnCancelAction").onclick = function() {
-  state.modeAction = null;
-  state.selectedCards = [];
-  state.previewDeltas = {};
-  updateUI();
+  state.modeAction = null; state.selectedCards = []; state.previewDeltas = {}; updateUI();
 };
 document.getElementById("btnConfirmAction").onclick = function() {
-  if (state.inputLocked || state.isGameOver || state.selectedCards.length === 0) return;
+  if (state.inputLocked || state.isGameOver || !state.selectedCards.length) return;
   if (state.modeAction === "discard") executeDiscard();
   else executePlay();
 };
@@ -1149,13 +902,11 @@ function onCardClick(idx) {
   if (state.modeAction === "play" && card.type === "veto") return;
   if (state.modeAction === "discard") {
     var pos = state.selectedCards.indexOf(idx);
-    if (pos >= 0) state.selectedCards.splice(pos, 1);
-    else state.selectedCards.push(idx);
+    if (pos >= 0) state.selectedCards.splice(pos, 1); else state.selectedCards.push(idx);
   } else {
     var pos2 = state.selectedCards.indexOf(idx);
-    if (pos2 >= 0) {
-      state.selectedCards.splice(pos2, 1);
-    } else {
+    if (pos2 >= 0) state.selectedCards.splice(pos2, 1);
+    else {
       if (state.selectedCards.length >= state.maxPlay) state.selectedCards.shift();
       state.selectedCards.push(idx);
     }
@@ -1165,40 +916,32 @@ function onCardClick(idx) {
 
 function executeDiscard() {
   var p = getCurrentPlayer();
-  var sorted = state.selectedCards.slice().sort(function(a, b) { return b - a; });
-  sorted.forEach(function(i) {
+  state.selectedCards.slice().sort(function(a,b){return b-a;}).forEach(function(i) {
     var c = p.hand.splice(i, 1)[0];
     state.discard.push(c);
-    log(p.name + " 棄掉「" + c.name + "」");
+    log(p.name + " " + t("discarded") + "「" + cardName(c.name) + "」");
   });
-  state.selectedCards = [];
-  state.modeAction = null;
+  state.selectedCards = []; state.modeAction = null;
   endActionPhase();
 }
 
 async function executePlay() {
   var p = getCurrentPlayer();
-  var sorted = state.selectedCards.slice().sort(function(a, b) { return b - a; });
+  var sorted = state.selectedCards.slice().sort(function(a,b){return b-a;});
   var cards = [];
-  sorted.forEach(function(i) {
-    cards.unshift(p.hand.splice(i, 1)[0]);
-  });
-  cards.forEach(function(c) {
-    state.discard.push(c);
-  });
-  state.selectedCards = [];
-  state.modeAction = null;
-
+  sorted.forEach(function(i) { cards.unshift(p.hand.splice(i, 1)[0]); });
+  cards.forEach(function(c) { state.discard.push(c); });
+  state.selectedCards = []; state.modeAction = null;
   for (var ci = 0; ci < cards.length; ci++) {
     if (state.isGameOver) break;
     var card = cards[ci];
     var affected = [];
     if (card.kind === "event") {
-      (card.forward || []).forEach(function(id) { affected.push({ id: id, delta: 1 }); });
-      (card.backward || []).forEach(function(id) { affected.push({ id: id, delta: -1 }); });
+      (card.forward || []).forEach(function(id) { affected.push({id:id, delta:1}); });
+      (card.backward || []).forEach(function(id) { affected.push({id:id, delta:-1}); });
     }
     await showCardAnnouncement(p.name, card, { affectedSDGs: affected });
-    log(p.name + " 打出「" + card.name + "」", card.kind === "event" ? "up" : "special");
+    log(p.name + " " + t("played") + "「" + cardName(card.name) + "」", card.kind === "event" ? "up" : "special");
     updateUI();
     await new Promise(function(r) { resolveCard(card, false, r); });
     await delay(120);
@@ -1208,8 +951,7 @@ async function executePlay() {
 
 function endActionPhase() {
   if (state.isGameOver) return;
-  state.modeAction = null;
-  state.selectedCards = [];
+  state.modeAction = null; state.selectedCards = [];
   getCurrentPlayer().sdgs.forEach(function(s) { s.immune = false; });
   state.phase = "draw";
   doDrawPhase();
@@ -1219,18 +961,14 @@ function doDrawPhase() {
   if (state.isGameOver) return;
   var p = getCurrentPlayer();
   var need = 5 - p.hand.length;
-  if (p.capacityNext) {
-    need += 1;
-    p.capacityNext = false;
-    state.capacityActive = true;
-  }
+  if (p.capacityNext) { need += 1; p.capacityNext = false; state.capacityActive = true; }
   var drawn = [];
   for (var i = 0; i < need; i++) {
     if (state.deck.length === 0) reshuffle();
     if (state.deck.length === 0) break;
     drawn.push(state.deck.pop());
   }
-  if (state.capacityActive && drawn.length > 0) {
+  if (state.capacityActive && drawn.length) {
     state.capacityActive = false;
     if (p.isAI) {
       var ri = Math.floor(Math.random() * drawn.length);
@@ -1238,10 +976,10 @@ function doDrawPhase() {
       p.hand = p.hand.concat(drawn);
       finishTurn();
     } else {
-      var body = drawn.map(function(c, i) {
-        return '<button data-i="' + i + '">' + c.name + '</button>';
-      }).join("");
-      showModal("能力建構：選擇棄置", body, []);
+      var body = "<div class=\"modal-list\">" + drawn.map(function(c, i) {
+        return "<button data-i=\"" + i + "\">" + cardName(c.name) + "</button>";
+      }).join("") + "</div>";
+      showModal(t("capacityChoose"), body, []);
       setTimeout(function() {
         document.querySelectorAll("#modalBody button").forEach(function(btn) {
           btn.onclick = function() {
@@ -1256,7 +994,7 @@ function doDrawPhase() {
     }
   } else {
     p.hand = p.hand.concat(drawn);
-    if (drawn.length > 0) log(p.name + " 補了 " + drawn.length + " 張牌");
+    if (drawn.length) log(p.name + " +" + drawn.length);
     finishTurn();
   }
 }
@@ -1269,48 +1007,43 @@ function finishTurn() {
   state.currentPlayer = next;
   state.phase = "action";
   state.modeAction = null;
-  log("── 輪到 " + getCurrentPlayer().name + " ──", "sys");
+  log("── " + t("turnOf") + " " + getCurrentPlayer().name + " ──", "sys");
   checkWin();
-  if (!state.isGameOver) {
-    updateUI();
-    maybeTriggerAI();
-  }
+  if (!state.isGameOver) { updateUI(); maybeTriggerAI(); }
 }
 
+/* ========== AI ========== */
 async function maybeTriggerAI() {
   if (state.isGameOver) return;
   var p = getCurrentPlayer();
   if (!p || !p.isAI || state.phase !== "action") return;
   state.isAIThinking = true;
   updateUI();
-  await delay(650 + Math.random() * 350);
+  showAINotice("[" + p.name + "] " + t("aiPlay"));
+  log("[" + p.name + "] " + t("aiPlay"), "ai");
+  await delay(1000);
+  hideAINotice();
   if (state.isGameOver) return;
 
   var playable = [];
-  p.hand.forEach(function(c, i) {
-    if (c.type !== "veto") playable.push(i);
-  });
-
-  if (playable.length > 0 && Math.random() > 0.28) {
+  p.hand.forEach(function(c, i) { if (c.type !== "veto") playable.push(i); });
+  if (playable.length && Math.random() > 0.28) {
     var n = Math.min(playable.length, p.sanctioned ? 1 : 2);
     shuffle(playable);
     var idxs = playable.slice(0, n);
     var cards = [];
-    idxs.sort(function(a, b) { return b - a; }).forEach(function(i) {
-      cards.unshift(p.hand.splice(i, 1)[0]);
-    });
+    idxs.sort(function(a,b){return b-a;}).forEach(function(i) { cards.unshift(p.hand.splice(i, 1)[0]); });
     cards.forEach(function(c) { state.discard.push(c); });
-
     for (var ci = 0; ci < cards.length; ci++) {
       if (state.isGameOver) break;
       var card = cards[ci];
       var affected = [];
       if (card.kind === "event") {
-        (card.forward || []).forEach(function(id) { affected.push({ id: id, delta: 1 }); });
-        (card.backward || []).forEach(function(id) { affected.push({ id: id, delta: -1 }); });
+        (card.forward || []).forEach(function(id) { affected.push({id:id, delta:1}); });
+        (card.backward || []).forEach(function(id) { affected.push({id:id, delta:-1}); });
       }
       await showCardAnnouncement(p.name, card, { affectedSDGs: affected });
-      log(p.name + " 打出「" + card.name + "」", "ai");
+      log(p.name + " " + t("played") + "「" + cardName(card.name) + "」", "ai");
       await new Promise(function(r) { resolveCard(card, true, r); });
     }
   } else {
@@ -1318,22 +1051,18 @@ async function maybeTriggerAI() {
     for (var j = 0; j < n2; j++) {
       var c = p.hand.pop();
       state.discard.push(c);
-      log(p.name + " 棄掉「" + c.name + "」", "ai");
+      log(p.name + " " + t("discarded") + "「" + cardName(c.name) + "」", "ai");
     }
   }
   state.isAIThinking = false;
   if (!state.isGameOver) endActionPhase();
 }
 
-function isValidNegativeTarget(s) {
-  return s.progress < 3 && !s.immune && !s.frozen;
-}
+/* ========== RESOLVE + INTERACTIVE MODALS ========== */
+function isValidNegativeTarget(s) { return s.progress < 3 && !s.immune && !s.frozen; }
 
 function resolveCard(card, isAI, done) {
-  if (state.isGameOver) {
-    done();
-    return;
-  }
+  if (state.isGameOver) { done(); return; }
   if (card.kind === "event") resolveEvent(card, isAI, done);
   else resolveSpecial(card, isAI, done);
 }
@@ -1344,76 +1073,48 @@ function resolveEvent(card, isAI, done) {
       pl.sdgs.forEach(function(s) {
         if (s.id === id && s.progress < 3 && !s.frozen) {
           s.progress = clamp(s.progress + 1, -2, 3);
-          log(pl.name + " 的 SDG " + id + " 前進至 " + s.progress, "up");
+          log(pl.name + " SDG " + id + " → " + s.progress, "up");
         }
       });
     });
   });
-
-  if (!card.backward || card.backward.length === 0) {
-    done();
-    return;
-  }
-
+  if (!card.backward || !card.backward.length) { done(); return; }
   var targets = [];
   state.players.forEach(function(pl) {
     pl.sdgs.forEach(function(s) {
-      if (card.backward.indexOf(s.id) !== -1 && isValidNegativeTarget(s)) {
-        targets.push({ pl: pl, s: s });
-      }
+      if (card.backward.indexOf(s.id) !== -1 && isValidNegativeTarget(s)) targets.push({pl:pl, s:s});
     });
   });
-
-  if (targets.length === 0) {
-    log("後退無有效目標");
-    done();
-    return;
-  }
-
+  if (!targets.length) { log(t("noValid")); done(); return; }
   var i = 0;
   function next() {
-    if (state.isGameOver || i >= targets.length) {
-      done();
-      return;
-    }
-    var t = targets[i++];
+    if (state.isGameOver || i >= targets.length) { done(); return; }
+    var tObj = targets[i++];
     var vIdx = -1;
-    for (var vi = 0; vi < t.pl.hand.length; vi++) {
-      if (t.pl.hand[vi].type === "veto") {
-        vIdx = vi;
-        break;
-      }
+    for (var vi = 0; vi < tObj.pl.hand.length; vi++) {
+      if (tObj.pl.hand[vi].type === "veto") { vIdx = vi; break; }
     }
-
-    if (vIdx >= 0 && !t.pl.isAI) {
-      showModal("否決權", "<p>" + t.pl.name + " 的 SDG " + t.s.id + " 即將後退，是否使用否決權？</p>", [
-        {
-          label: "使用",
-          class: "success",
-          fn: function() {
-            t.pl.hand.splice(vIdx, 1);
-            state.discard.push({ type: "veto" });
-            log(t.pl.name + " 使用否決權", "special");
-            next();
-          }
-        },
-        {
-          label: "不使用",
-          class: "danger",
-          fn: function() {
-            t.s.progress = clamp(t.s.progress - 1, -2, 3);
-            log(t.pl.name + " 的 SDG " + t.s.id + " 後退至 " + t.s.progress, "down");
-            next();
-          }
-        }
+    if (vIdx >= 0 && !tObj.pl.isAI) {
+      showModal(t("useVeto"), "<p>" + tObj.pl.name + " SDG " + tObj.s.id + "</p>", [
+        { label: t("yes"), class: "success", fn: function() {
+          tObj.pl.hand.splice(vIdx, 1);
+          state.discard.push({type:"veto"});
+          log(tObj.pl.name + " Veto", "special");
+          next();
+        }},
+        { label: t("no"), class: "danger", fn: function() {
+          tObj.s.progress = clamp(tObj.s.progress - 1, -2, 3);
+          log(tObj.pl.name + " SDG " + tObj.s.id + " → " + tObj.s.progress, "down");
+          next();
+        }}
       ]);
     } else {
-      if (vIdx >= 0 && t.pl.isAI && t.pl.difficulty === "advance") {
-        t.pl.hand.splice(vIdx, 1);
-        log(t.pl.name + " (Bot) 使用否決權", "ai");
+      if (vIdx >= 0 && tObj.pl.isAI && tObj.pl.difficulty === "advance") {
+        tObj.pl.hand.splice(vIdx, 1);
+        log(tObj.pl.name + " Veto", "ai");
       } else {
-        t.s.progress = clamp(t.s.progress - 1, -2, 3);
-        log(t.pl.name + " 的 SDG " + t.s.id + " 後退至 " + t.s.progress, "down");
+        tObj.s.progress = clamp(tObj.s.progress - 1, -2, 3);
+        log(tObj.pl.name + " SDG " + tObj.s.id + " → " + tObj.s.progress, "down");
       }
       next();
     }
@@ -1423,108 +1124,395 @@ function resolveEvent(card, isAI, done) {
 
 function resolveSpecial(card, isAI, done) {
   var p = getCurrentPlayer();
+
   if (card.type === "capacity") {
     p.capacityNext = true;
-    log(p.name + " 獲得【能力建構】", "special");
+    log(p.name + " Capacity", "special");
     done();
-  } else if (card.type === "immunity") {
+    return;
+  }
+
+  if (card.type === "immunity") {
     if (isAI) {
       p.sdgs[0].immune = true;
-      log(p.name + " (Bot) 獲得豁免", "ai");
+      log(p.name + " Immunity", "ai");
       done();
     } else {
-      var body = p.sdgs.map(function(s, i) {
-        return '<button data-i="' + i + '">SDG ' + s.id + '</button>';
-      }).join("");
-      showModal("政策豁免", body, []);
+      var body = "<div class=\"modal-list\">" + p.sdgs.map(function(s, i) {
+        return "<button data-i=\"" + i + "\">SDG " + s.id + " (" + sdgName(s.id) + ")</button>";
+      }).join("") + "</div>";
+      showModal(t("selectOwnSDG"), body, []);
       setTimeout(function() {
         document.querySelectorAll("#modalBody button").forEach(function(btn) {
           btn.onclick = function() {
             var i = parseInt(btn.getAttribute("data-i"), 10);
             p.sdgs[i].immune = true;
-            log(p.name + " 的 SDG " + p.sdgs[i].id + " 獲得豁免", "special");
+            log(p.name + " SDG " + p.sdgs[i].id + " immune", "special");
             hideModal();
             done();
           };
         });
       }, 30);
     }
-  } else if (card.type === "freeze") {
-    var best = null;
-    state.players.forEach(function(pl) {
-      if (pl === p) return;
-      pl.sdgs.forEach(function(s) {
-        if (isValidNegativeTarget(s) && (!best || s.progress > best.progress)) {
-          best = { pl: pl, s: s };
-        }
-      });
-    });
-    if (best) {
-      best.s.frozen = true;
-      log("[" + p.name + "] 對 [" + best.pl.name + "] 使用了【凍結計畫】！", "special");
-    }
-    done();
-  } else if (card.type === "sanction") {
-    var bestP = null;
-    var max = -99;
-    state.players.forEach(function(pl) {
-      if (pl === p) return;
-      var t = pl.sdgs.reduce(function(a, s) { return a + s.progress; }, 0);
-      if (t > max) {
-        max = t;
-        bestP = pl;
-      }
-    });
-    if (bestP) {
-      bestP.sanctioned = true;
-      log("[" + p.name + "] 對 [" + bestP.name + "] 使用了【國際制裁】！", "special");
-    }
-    done();
-  } else if (card.type === "tradeHand") {
-    var opps = state.players.filter(function(pl) {
-      return pl !== p && pl.hand.length > 0;
-    });
-    if (opps.length > 0 && p.hand.length > 0) {
-      var target = randChoice(opps);
-      var myC = p.hand.pop();
-      var tC = target.hand.pop();
-      p.hand.push(tC);
-      target.hand.push(myC);
-      log("[" + p.name + "] 與 [" + target.name + "] 交換了手牌！", "special");
-    }
-    done();
-  } else if (card.type === "swapSDG") {
-    var opps2 = state.players.filter(function(pl) { return pl !== p; });
-    if (opps2.length > 0) {
-      var target2 = randChoice(opps2);
-      var tmp = p.sdgs[0];
-      p.sdgs[0] = target2.sdgs[0];
-      target2.sdgs[0] = tmp;
-      log("[" + p.name + "] 與 [" + target2.name + "] 交換了 SDG！", "special");
-    }
-    done();
-  } else {
-    log("「" + card.name + "」效果已觸發", "special");
-    done();
+    return;
   }
+
+  if (card.type === "freeze" || card.type === "sanction") {
+    var opps = state.players.filter(function(pl) { return pl !== p; });
+    if (isAI) {
+      showAINotice("[" + p.name + "] " + t("aiTarget"));
+      trackTimeout(function() {
+        hideAINotice();
+        if (card.type === "freeze") {
+          var best = null;
+          opps.forEach(function(pl) {
+            pl.sdgs.forEach(function(s) {
+              if (isValidNegativeTarget(s) && (!best || s.progress > best.s.progress)) best = {pl:pl, s:s};
+            });
+          });
+          if (best) { best.s.frozen = true; log("[" + p.name + "] → [" + best.pl.name + "] Freeze", "special"); }
+        } else {
+          var bestP = null, max = -99;
+          opps.forEach(function(pl) {
+            var tot = pl.sdgs.reduce(function(a,s){return a+s.progress;},0);
+            if (tot > max) { max = tot; bestP = pl; }
+          });
+          if (bestP) { bestP.sanctioned = true; log("[" + p.name + "] → [" + bestP.name + "] Sanction", "special"); }
+        }
+        done();
+      }, 1000);
+    } else {
+      var body = "<div class=\"modal-list\">" + opps.map(function(pl, i) {
+        return "<button data-i=\"" + state.players.indexOf(pl) + "\">" + pl.name + "</button>";
+      }).join("") + "</div>";
+      showModal(t("selectTarget"), body, []);
+      setTimeout(function() {
+        document.querySelectorAll("#modalBody button").forEach(function(btn) {
+          btn.onclick = function() {
+            var ti = parseInt(btn.getAttribute("data-i"), 10);
+            var target = state.players[ti];
+            hideModal();
+            if (card.type === "freeze") {
+              var valid = target.sdgs.filter(function(s) { return isValidNegativeTarget(s); });
+              if (!valid.length) { log(t("noValid")); done(); return; }
+              var body2 = "<div class=\"modal-list\">" + target.sdgs.map(function(s, si) {
+                if (!isValidNegativeTarget(s)) return "";
+                return "<button data-si=\"" + si + "\">SDG " + s.id + "</button>";
+              }).join("") + "</div>";
+              showModal("Freeze SDG", body2, []);
+              setTimeout(function() {
+                document.querySelectorAll("#modalBody button").forEach(function(b2) {
+                  b2.onclick = function() {
+                    var si = parseInt(b2.getAttribute("data-si"), 10);
+                    target.sdgs[si].frozen = true;
+                    log("[" + p.name + "] → [" + target.name + "] Freeze SDG " + target.sdgs[si].id, "special");
+                    hideModal();
+                    done();
+                  };
+                });
+              }, 30);
+            } else {
+              target.sanctioned = true;
+              log("[" + p.name + "] → [" + target.name + "] Sanction", "special");
+              done();
+            }
+          };
+        });
+      }, 30);
+    }
+    return;
+  }
+
+  /* 合作備忘錄 MOU */
+  if (card.type === "tradeHand") {
+    var opps = state.players.filter(function(pl) { return pl !== p && pl.hand.length > 0; });
+    if (!opps.length || !p.hand.length) { log(t("noValid")); done(); return; }
+    if (isAI) {
+      showAINotice("[" + p.name + "] " + t("aiTarget"));
+      trackTimeout(function() {
+        hideAINotice();
+        var target = randChoice(opps);
+        var myC = p.hand.pop();
+        var tC = target.hand.pop();
+        p.hand.push(tC);
+        target.hand.push(myC);
+        log("[" + p.name + "] ↔ [" + target.name + "] MOU", "special");
+        done();
+      }, 1000);
+    } else {
+      var body = "<div class=\"modal-list\">" + opps.map(function(pl) {
+        return "<button data-i=\"" + state.players.indexOf(pl) + "\">" + pl.name + "</button>";
+      }).join("") + "</div>";
+      showModal(t("selectTarget"), body, []);
+      setTimeout(function() {
+        document.querySelectorAll("#modalBody button").forEach(function(btn) {
+          btn.onclick = function() {
+            var ti = parseInt(btn.getAttribute("data-i"), 10);
+            var target = state.players[ti];
+            hideModal();
+            var body2 = "<div class=\"modal-list\">" + p.hand.map(function(c, i) {
+              return "<button data-i=\"" + i + "\">" + cardName(c.name) + "</button>";
+            }).join("") + "</div>";
+            showModal(t("selectOwnCard"), body2, []);
+            setTimeout(function() {
+              document.querySelectorAll("#modalBody button").forEach(function(b2) {
+                b2.onclick = function() {
+                  var mi = parseInt(b2.getAttribute("data-i"), 10);
+                  hideModal();
+                  var body3 = "<div class=\"modal-list\">" + target.hand.map(function(c, i) {
+                    return "<button data-i=\"" + i + "\">" + cardName(c.name) + "</button>";
+                  }).join("") + "</div>";
+                  showModal(t("selectTheirCard"), body3, []);
+                  setTimeout(function() {
+                    document.querySelectorAll("#modalBody button").forEach(function(b3) {
+                      b3.onclick = function() {
+                        var ti2 = parseInt(b3.getAttribute("data-i"), 10);
+                        var myC = p.hand.splice(mi, 1)[0];
+                        var tC = target.hand.splice(ti2, 1)[0];
+                        p.hand.push(tC);
+                        target.hand.push(myC);
+                        log("[" + p.name + "] ↔ [" + target.name + "] MOU", "special");
+                        hideModal();
+                        done();
+                      };
+                    });
+                  }, 30);
+                };
+              });
+            }, 30);
+          };
+        });
+      }, 30);
+    }
+    return;
+  }
+
+  /* 目標重整 */
+  if (card.type === "swapSDG") {
+    var opps = state.players.filter(function(pl) { return pl !== p; });
+    if (!opps.length) { done(); return; }
+    if (isAI) {
+      showAINotice("[" + p.name + "] " + t("aiTarget"));
+      trackTimeout(function() {
+        hideAINotice();
+        var target = randChoice(opps);
+        var tmp = p.sdgs[0];
+        p.sdgs[0] = target.sdgs[0];
+        target.sdgs[0] = tmp;
+        log("[" + p.name + "] ↔ [" + target.name + "] Goal Realignment", "special");
+        done();
+      }, 1000);
+    } else {
+      var body = "<div class=\"modal-list\">" + opps.map(function(pl) {
+        return "<button data-i=\"" + state.players.indexOf(pl) + "\">" + pl.name + "</button>";
+      }).join("") + "</div>";
+      showModal(t("selectTarget"), body, []);
+      setTimeout(function() {
+        document.querySelectorAll("#modalBody button").forEach(function(btn) {
+          btn.onclick = function() {
+            var ti = parseInt(btn.getAttribute("data-i"), 10);
+            var target = state.players[ti];
+            hideModal();
+            var body2 = "<div class=\"modal-list\">" + p.sdgs.map(function(s, i) {
+              return "<button data-i=\"" + i + "\">SDG " + s.id + " (" + s.progress + ")</button>";
+            }).join("") + "</div>";
+            showModal(t("selectOwnSDG"), body2, []);
+            setTimeout(function() {
+              document.querySelectorAll("#modalBody button").forEach(function(b2) {
+                b2.onclick = function() {
+                  var mi = parseInt(b2.getAttribute("data-i"), 10);
+                  hideModal();
+                  var body3 = "<div class=\"modal-list\">" + target.sdgs.map(function(s, i) {
+                    return "<button data-i=\"" + i + "\">SDG " + s.id + " (" + s.progress + ")</button>";
+                  }).join("") + "</div>";
+                  showModal(t("selectTheirSDG"), body3, []);
+                  setTimeout(function() {
+                    document.querySelectorAll("#modalBody button").forEach(function(b3) {
+                      b3.onclick = function() {
+                        var ti2 = parseInt(b3.getAttribute("data-i"), 10);
+                        var tmp = p.sdgs[mi];
+                        p.sdgs[mi] = target.sdgs[ti2];
+                        target.sdgs[ti2] = tmp;
+                        log("[" + p.name + "] ↔ [" + target.name + "] Goal Realignment", "special");
+                        hideModal();
+                        done();
+                      };
+                    });
+                  }, 30);
+                };
+              });
+            }, 30);
+          };
+        });
+      }, 30);
+    }
+    return;
+  }
+
+  /* 歷史借鏡 */
+  if (card.type === "history") {
+    if (!state.discard.length) { log(t("noValid")); done(); return; }
+    if (isAI) {
+      showAINotice("[" + p.name + "] " + t("aiTarget"));
+      trackTimeout(function() {
+        hideAINotice();
+        var c = state.discard.pop();
+        p.hand.push(c);
+        log(p.name + " History Mirror: " + cardName(c.name), "special");
+        done();
+      }, 1000);
+    } else {
+      var body = "<div class=\"modal-list\">" + state.discard.map(function(c, i) {
+        return "<button data-i=\"" + i + "\">" + cardName(c.name) + "</button>";
+      }).join("") + "</div>";
+      showModal(t("selectFromDiscard"), body, []);
+      setTimeout(function() {
+        document.querySelectorAll("#modalBody button").forEach(function(btn) {
+          btn.onclick = function() {
+            var i = parseInt(btn.getAttribute("data-i"), 10);
+            var c = state.discard.splice(i, 1)[0];
+            p.hand.push(c);
+            log(p.name + " History Mirror: " + cardName(c.name), "special");
+            hideModal();
+            done();
+          };
+        });
+      }, 30);
+    }
+    return;
+  }
+
+  /* 永續轉型 */
+  if (card.type === "sustain") {
+    if (!state.unusedSDGs.length) { log(t("noValid")); done(); return; }
+    if (isAI) {
+      showAINotice("[" + p.name + "] " + t("aiTarget"));
+      trackTimeout(function() {
+        hideAINotice();
+        var newId = state.unusedSDGs.pop();
+        var old = p.sdgs[0];
+        state.unusedSDGs.push(old.id);
+        p.sdgs[0] = { id: newId, progress: old.progress, frozen: false, immune: false };
+        log(p.name + " Sustainable Transition → SDG " + newId, "special");
+        done();
+      }, 1000);
+    } else {
+      var body = "<div class=\"modal-list\">" + p.sdgs.map(function(s, i) {
+        return "<button data-i=\"" + i + "\">SDG " + s.id + " (" + s.progress + ")</button>";
+      }).join("") + "</div>";
+      showModal(t("selectSDGSwap"), body, []);
+      setTimeout(function() {
+        document.querySelectorAll("#modalBody button").forEach(function(btn) {
+          btn.onclick = function() {
+            var i = parseInt(btn.getAttribute("data-i"), 10);
+            var old = p.sdgs[i];
+            var newId = state.unusedSDGs.pop();
+            state.unusedSDGs.push(old.id);
+            p.sdgs[i] = { id: newId, progress: old.progress, frozen: false, immune: false };
+            log(p.name + " Sustainable Transition → SDG " + newId, "special");
+            hideModal();
+            done();
+          };
+        });
+      }, 30);
+    }
+    return;
+  }
+
+  /* 國際援助請求 */
+  if (card.type === "aid") {
+    var opps = state.players.filter(function(pl) { return pl !== p; });
+    if (isAI) {
+      showAINotice("[" + p.name + "] " + t("aiTarget"));
+      trackTimeout(function() {
+        hideAINotice();
+        var target = randChoice(opps);
+        var myIds = p.sdgs.map(function(s) { return s.id; });
+        var valid = [];
+        target.hand.forEach(function(c, i) {
+          if (c.kind === "event" && c.forward && c.forward.some(function(f) { return myIds.indexOf(f) !== -1; })) valid.push(i);
+        });
+        if (valid.length) {
+          var idx = randChoice(valid);
+          var c = target.hand.splice(idx, 1)[0];
+          p.hand.push(c);
+          log("[" + target.name + "] → [" + p.name + "] Aid: " + cardName(c.name), "special");
+        } else log(t("noValid"));
+        done();
+      }, 1000);
+    } else {
+      var body = "<div class=\"modal-list\">" + opps.map(function(pl) {
+        return "<button data-i=\"" + state.players.indexOf(pl) + "\">" + pl.name + "</button>";
+      }).join("") + "</div>";
+      showModal(t("selectTarget"), body, []);
+      setTimeout(function() {
+        document.querySelectorAll("#modalBody button").forEach(function(btn) {
+          btn.onclick = function() {
+            var ti = parseInt(btn.getAttribute("data-i"), 10);
+            var target = state.players[ti];
+            hideModal();
+            var myIds = p.sdgs.map(function(s) { return s.id; });
+            var valid = [];
+            target.hand.forEach(function(c, i) {
+              if (c.kind === "event" && c.forward && c.forward.some(function(f) { return myIds.indexOf(f) !== -1; })) {
+                valid.push({ i: i, c: c });
+              }
+            });
+            if (!valid.length) { log(t("noValid")); done(); return; }
+            if (target.isAI) {
+              var pick = randChoice(valid);
+              var c = target.hand.splice(pick.i, 1)[0];
+              p.hand.push(c);
+              log("[" + target.name + "] → [" + p.name + "] Aid", "special");
+              done();
+            } else {
+              var body2 = "<div class=\"modal-list\">" + valid.map(function(v) {
+                return "<button data-i=\"" + v.i + "\">" + cardName(v.c.name) + "</button>";
+              }).join("") + "</div>";
+              showModal(t("aidChoose") + " (" + target.name + ")", body2, []);
+              setTimeout(function() {
+                document.querySelectorAll("#modalBody button").forEach(function(b2) {
+                  b2.onclick = function() {
+                    var i = parseInt(b2.getAttribute("data-i"), 10);
+                    var c = target.hand.splice(i, 1)[0];
+                    p.hand.push(c);
+                    log("[" + target.name + "] → [" + p.name + "] Aid: " + cardName(c.name), "special");
+                    hideModal();
+                    done();
+                  };
+                });
+              }, 30);
+            }
+          };
+        });
+      }, 30);
+    }
+    return;
+  }
+
+  log(cardName(card.name) + " OK", "special");
+  done();
 }
 
 function checkWin() {
   for (var i = 0; i < state.players.length; i++) {
     var pl = state.players[i];
-    var allGoal = pl.sdgs.every(function(s) { return s.progress >= 3; });
-    if (allGoal) {
+    if (pl.sdgs.every(function(s) { return s.progress >= 3; })) {
       state.isGameOver = true;
       clearAllTimers();
       state.isAIThinking = false;
       state.inputLocked = true;
+      hideAINotice();
       showScreen("winScreen");
-      document.getElementById("winnerText").textContent = pl.name + " 率先完成兩項 SDG 目標！";
-      log("🏆 " + pl.name + " 獲勝！遊戲結束。", "win");
+      document.getElementById("winnerText").textContent = pl.name + (currentLang === "en" ? " wins!" : " 率先完成兩項 SDG 目標！");
+      log("🏆 " + pl.name + " WIN", "win");
       return;
     }
   }
 }
+
+/* init */
+applyI18n();
 </script>
 </body>
 </html>
