@@ -4,418 +4,386 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SDG 永續桌遊 | iGEM Wiki</title>
-<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <style>
   :root {
-    --bg1: #0f2027;
-    --bg2: #203a43;
-    --bg3: #2c5364;
-    --card: rgba(30, 41, 59, 0.85);
-    --accent: #2ec4b6;
-    --accent2: #3b82f6;
-    --gold: #fbbf24;
-    --danger: #e63946;
-    --warn: #f59e0b;
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --glass: rgba(15, 23, 42, 0.65);
+    --wood-light: #f4f1ea;
+    --wood-mid: #e8e5da;
+    --wood-dark: #d5cbb8;
+    --paper: #fcfbf7;
+    --ink: #3d3229;
+    --ink-soft: #5c4e42;
+    --border: #4a3b32;
+    --teal: #2a9d8f;
+    --teal-dark: #1f7a6f;
+    --blue: #457b9d;
+    --red: #c44536;
+    --gold: #c9a227;
+    --muted: #8a7a6a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Segoe UI", "Noto Sans TC", system-ui, sans-serif;
-    background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+    background: linear-gradient(160deg, var(--wood-light) 0%, var(--wood-mid) 45%, var(--wood-dark) 100%);
     background-attachment: fixed;
-    color: var(--text);
+    color: var(--ink);
     min-height: 100vh;
     line-height: 1.5;
   }
-  .screen { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; }
+  .screen { display: none; padding: 18px; max-width: 1380px; margin: 0 auto; }
   .screen.active { display: block; }
   h1 {
     text-align: center;
-    margin-bottom: 18px;
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
-    background: linear-gradient(90deg, var(--accent), #4ade80);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    margin-bottom: 16px;
+    font-size: clamp(1.55rem, 3.8vw, 2.1rem);
+    color: var(--border);
+    font-weight: 700;
   }
-  h2 { margin: 12px 0 8px; color: var(--accent2); font-size: 1.15rem; }
+  h2 { margin: 12px 0 8px; color: var(--teal-dark); font-size: 1.1rem; }
   button {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-    border: none;
+    background: var(--blue);
+    color: #fff;
+    border: 2px solid #3a6a88;
     padding: 10px 18px;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 0.95rem;
-    transition: 0.2s;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    font-weight: 600;
+    box-shadow: 0 3px 0 #2c5470;
+    transition: 0.12s;
   }
-  button:hover { filter: brightness(1.12); transform: translateY(-1px); }
-  button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-  button.danger { background: linear-gradient(135deg, #e63946, #c1121f); box-shadow: 0 4px 12px rgba(230,57,70,0.35); }
-  button.warn { background: linear-gradient(135deg, #f59e0b, #d97706); color: #111; }
-  button.success { background: linear-gradient(135deg, #2ec4b6, #20a090); color: #0f172a; box-shadow: 0 4px 12px rgba(46,196,182,0.35); }
-  button.large { padding: 16px 28px; font-size: 1.1rem; width: 100%; max-width: 360px; margin: 8px auto; display: block; }
+  button:hover { filter: brightness(1.06); }
+  button:active { transform: translateY(2px); box-shadow: 0 1px 0 #2c5470; }
+  button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+  button.danger { background: var(--red); border-color: #a3382c; box-shadow: 0 3px 0 #8b2e24; }
+  button.danger:active { box-shadow: 0 1px 0 #8b2e24; }
+  button.success { background: var(--teal); border-color: #238b7f; box-shadow: 0 3px 0 #1a6b62; color: #fff; }
+  button.success:active { box-shadow: 0 1px 0 #1a6b62; }
+  button.large {
+    padding: 14px 26px;
+    font-size: 1.05rem;
+    width: 100%;
+    max-width: 340px;
+    margin: 8px auto;
+    display: block;
+  }
   input, select {
-    background: rgba(15,23,42,0.7);
-    border: 1px solid #334155;
-    color: var(--text);
-    padding: 9px 12px;
-    border-radius: 8px;
+    background: var(--paper);
+    border: 2px solid #c4b8a8;
+    color: var(--ink);
+    padding: 8px 12px;
+    border-radius: 7px;
     font-size: 0.95rem;
   }
-  .menu-box, .setup-box, .lobby-box {
-    background: var(--card);
-    backdrop-filter: blur(12px);
-    padding: 28px;
-    border-radius: 16px;
-    max-width: 520px;
+  .menu-box, .setup-box {
+    background: var(--paper);
+    padding: 26px;
+    border-radius: 12px;
+    max-width: 500px;
     margin: 0 auto;
     text-align: center;
-    border: 1px solid rgba(148,163,184,0.15);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    border: 2px solid var(--border);
+    box-shadow: 0 6px 20px rgba(74, 59, 50, 0.12);
   }
   .player-setup {
     margin: 10px 0;
     display: grid;
-    grid-template-columns: 70px 1fr 100px 120px;
+    grid-template-columns: 70px 1fr 160px;
     gap: 8px;
     align-items: center;
     text-align: left;
   }
-  .player-setup label { font-size: 0.85rem; color: var(--muted); }
+  .player-setup label { font-size: 0.88rem; color: var(--muted); }
 
-  /* Draft */
   .draft-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
     gap: 10px;
     margin: 14px 0;
   }
   .sdg-pick {
-    background: rgba(30,41,59,0.9);
-    border: 2px solid #475569;
-    border-radius: 12px;
-    padding: 12px 8px;
+    background: var(--paper);
+    border: 2px solid #c4b8a8;
+    border-radius: 10px;
+    padding: 11px 7px;
     text-align: center;
     cursor: pointer;
-    transition: 0.2s;
+    transition: 0.15s;
     user-select: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
   }
   .sdg-pick:hover:not(.disabled):not(.selected) {
-    border-color: var(--accent2);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    border-color: var(--teal);
+    transform: translateY(-2px);
   }
-  .sdg-pick.disabled { opacity: 0.3; cursor: not-allowed; }
+  .sdg-pick.disabled { opacity: 0.35; cursor: not-allowed; }
   .sdg-pick.selected {
-    border-color: var(--accent);
-    background: rgba(46,196,182,0.18);
-    box-shadow: 0 0 0 2px var(--accent), 0 8px 20px rgba(46,196,182,0.25);
+    border-color: var(--teal);
+    background: #e6f5f3;
+    box-shadow: 0 0 0 2px var(--teal);
   }
   .sdg-pick.selected::after {
     content: "✓ 已選";
     display: block;
     font-size: 0.72rem;
-    color: #86efac;
-    margin-top: 4px;
+    color: var(--teal-dark);
+    margin-top: 3px;
   }
-  .draft-status { text-align: center; margin: 10px 0; font-size: 1.1rem; color: var(--accent); }
+  .draft-status { text-align: center; margin: 10px 0; font-size: 1.08rem; color: var(--teal-dark); font-weight: 600; }
   .draft-selected-count { text-align: center; color: var(--muted); margin-bottom: 6px; }
 
   .game-layout {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr 290px;
     gap: 14px;
   }
-  @media (max-width: 980px) {
+  @media (max-width: 960px) {
     .game-layout { grid-template-columns: 1fr; }
-    .log-panel { max-height: 280px; }
+    .log-panel { max-height: 260px; }
   }
   .board {
-    background: var(--card);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
+    background: var(--paper);
+    border-radius: 12px;
     padding: 14px;
-    border: 1px solid rgba(148,163,184,0.12);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    border: 2px solid var(--border);
+    box-shadow: 0 6px 18px rgba(74, 59, 50, 0.1);
   }
   .players-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     gap: 10px;
     margin-bottom: 12px;
   }
   .player-card {
-    background: rgba(15,23,42,0.75);
-    border: 2px solid #334155;
-    border-radius: 12px;
+    background: #f9f7f2;
+    border: 2px solid #c4b8a8;
+    border-radius: 10px;
     padding: 10px;
     position: relative;
-    transition: 0.2s;
   }
   .player-card.current {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(46,196,182,0.35), 0 8px 24px rgba(46,196,182,0.15);
+    border-color: var(--teal);
+    box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.3);
   }
   .player-card.sanctioned::after {
     content: "制裁中";
-    position: absolute; top: 6px; right: 8px;
-    background: var(--danger); color: white; font-size: 0.68rem;
-    padding: 2px 7px; border-radius: 6px;
+    position: absolute; top: 5px; right: 7px;
+    background: var(--red); color: white; font-size: 0.65rem;
+    padding: 2px 6px; border-radius: 5px;
   }
   .player-card.ai-tag::before {
-    content: "AI";
-    position: absolute; top: 6px; left: 8px;
-    background: #7c3aed; color: white; font-size: 0.62rem;
-    padding: 2px 6px; border-radius: 4px;
+    content: "Bot";
+    position: absolute; top: 5px; left: 7px;
+    background: #6b5b4f; color: white; font-size: 0.6rem;
+    padding: 2px 5px; border-radius: 4px;
   }
-  .player-name { font-weight: 700; font-size: 1rem; margin-bottom: 6px; padding-left: 26px; }
-  .sdg-row { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; }
+  .player-name { font-weight: 700; font-size: 0.98rem; margin-bottom: 6px; padding-left: 24px; }
+  .sdg-row { display: flex; gap: 6px; margin-bottom: 3px; align-items: center; }
   .sdg-badge {
-    background: #1e3a5f;
+    background: #e8e0d4;
+    border: 1px solid #c4b8a8;
     border-radius: 6px;
-    padding: 3px 7px;
-    font-size: 0.8rem;
-    min-width: 64px;
+    padding: 3px 6px;
+    font-size: 0.78rem;
+    min-width: 60px;
     text-align: center;
     font-weight: 600;
   }
   .sdg-badge.goal {
-    background: linear-gradient(135deg, #b45309, #fbbf24);
-    color: #1c1917;
-    box-shadow: 0 0 12px rgba(251,191,36,0.55);
-    animation: goalGlow 2s ease-in-out infinite alternate;
+    background: linear-gradient(135deg, #e8c547, #c9a227);
+    border-color: #a88b1a;
+    color: #3d3229;
   }
-  @keyframes goalGlow {
-    from { box-shadow: 0 0 8px rgba(251,191,36,0.4); }
-    to { box-shadow: 0 0 18px rgba(251,191,36,0.75); }
-  }
-  .sdg-badge.frozen { outline: 2px solid #38bdf8; }
+  .sdg-badge.frozen { outline: 2px solid #457b9d; }
   .progress-bar {
     flex: 1;
-    height: 20px;
-    background: #0f172a;
-    border-radius: 10px;
+    height: 18px;
+    background: #e5dfd4;
+    border-radius: 9px;
     overflow: hidden;
     position: relative;
-    border: 1px solid #1e293b;
+    border: 1px solid #c4b8a8;
   }
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #2ec4b6, #5eead4);
-    transition: width 0.55s cubic-bezier(0.34, 1.2, 0.64, 1);
+    background: linear-gradient(90deg, #2a9d8f, #40b5a6);
+    transition: width 0.5s ease;
   }
   .progress-fill.negative {
-    background: linear-gradient(90deg, #e63946, #ff6b6b);
+    background: linear-gradient(90deg, #c44536, #e06b5e);
   }
   .progress-preview {
     position: absolute; top: 0; bottom: 0;
-    background: repeating-linear-gradient(90deg, rgba(46,196,182,0.4), rgba(46,196,182,0.4) 4px, rgba(46,196,182,0.15) 4px, rgba(46,196,182,0.15) 8px);
-    border: 2px dashed #2ec4b6;
-    border-radius: 10px;
+    background: repeating-linear-gradient(90deg, rgba(42,157,143,0.35), rgba(42,157,143,0.35) 4px, rgba(42,157,143,0.12) 4px, rgba(42,157,143,0.12) 8px);
+    border: 2px dashed #2a9d8f;
+    border-radius: 9px;
     pointer-events: none;
   }
   .progress-preview.negative {
-    background: repeating-linear-gradient(90deg, rgba(230,57,70,0.45), rgba(230,57,70,0.45) 4px, rgba(230,57,70,0.2) 4px, rgba(230,57,70,0.2) 8px);
-    border-color: #e63946;
+    background: repeating-linear-gradient(90deg, rgba(196,69,54,0.4), rgba(196,69,54,0.4) 4px, rgba(196,69,54,0.15) 4px, rgba(196,69,54,0.15) 8px);
+    border-color: #c44536;
   }
   .progress-text {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.72rem; font-weight: 700; z-index: 2;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    font-size: 0.7rem; font-weight: 700; z-index: 2;
   }
   .progress-labels {
     display: flex; justify-content: space-between;
-    font-size: 0.6rem; color: var(--muted); margin-top: 1px; padding: 0 2px;
+    font-size: 0.58rem; color: var(--muted); margin-top: 1px; padding: 0 2px;
   }
 
   .hand-area {
-    background: rgba(15,23,42,0.7);
-    border-radius: 12px;
+    background: #f5f2eb;
+    border-radius: 10px;
     padding: 12px;
     margin-top: 10px;
-    border: 1px solid rgba(148,163,184,0.1);
+    border: 1px solid #d5cbb8;
   }
-  .hand-cards { display: flex; flex-wrap: wrap; gap: 10px; min-height: 120px; }
+  .hand-cards { display: flex; flex-wrap: wrap; gap: 10px; min-height: 115px; }
   .card {
-    background: linear-gradient(160deg, #1e293b, #0f172a);
-    border: 2px solid #475569;
-    border-radius: 12px;
+    background: var(--paper);
+    border: 2px solid var(--border);
+    border-radius: 10px;
     padding: 0;
-    width: 148px;
-    font-size: 0.76rem;
+    width: 142px;
+    font-size: 0.74rem;
     cursor: pointer;
-    transition: 0.22s cubic-bezier(0.34, 1.4, 0.64, 1);
-    position: relative;
+    transition: 0.18s ease;
     overflow: hidden;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(74, 59, 50, 0.12);
   }
   .card:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.4);
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 10px 22px rgba(74, 59, 50, 0.18);
     border-color: var(--gold);
   }
   .card.selected {
     border-color: var(--gold);
-    box-shadow: 0 0 0 2px var(--gold), 0 12px 24px rgba(251,191,36,0.25);
-    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 0 0 2px var(--gold), 0 8px 18px rgba(201, 162, 39, 0.2);
+    transform: translateY(-6px) scale(1.03);
   }
   .card.disabled-card { opacity: 0.4; cursor: not-allowed; transform: none !important; }
   .card-header {
-    padding: 5px 8px;
-    font-size: 0.68rem;
+    padding: 4px 8px;
+    font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.5px;
   }
-  .card.event .card-header { background: linear-gradient(90deg, #b45309, #d97706); color: #fff; }
-  .card.special .card-header { background: linear-gradient(90deg, #6d28d9, #a855f7); color: #fff; }
-  .card-body { padding: 8px; }
-  .card-name { font-weight: 700; margin-bottom: 4px; color: #f8fafc; font-size: 0.82rem; }
-  .card-effect { color: var(--muted); font-size: 0.7rem; }
-  .card-fwd { color: #5eead4; }
-  .card-bwd { color: #fca5a5; }
+  .card.event .card-header { background: #e8a54b; color: #3d3229; }
+  .card.special .card-header { background: #7b6b9e; color: #fff; }
+  .card-body { padding: 7px; }
+  .card-name { font-weight: 700; margin-bottom: 3px; font-size: 0.8rem; }
+  .card-effect { color: var(--muted); font-size: 0.68rem; }
+  .card-fwd { color: #1f7a6f; }
+  .card-bwd { color: #a3382c; }
 
   .deck-info { display: flex; gap: 14px; margin: 10px 0; font-size: 0.88rem; color: var(--muted); }
   .phase-bar {
-    background: rgba(30,58,95,0.7);
-    padding: 10px 14px;
-    border-radius: 10px;
+    background: #ebe6dc;
+    padding: 10px 12px;
+    border-radius: 8px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    border: 1px solid rgba(59,130,246,0.2);
+    border: 1px solid #d5cbb8;
   }
-  .phase-label { font-weight: 700; color: var(--accent); }
-  .ai-thinking { color: #c4b5fd; animation: pulse 1.2s infinite; }
+  .phase-label { font-weight: 700; color: var(--teal-dark); }
+  .ai-thinking { color: #6b5b4f; animation: pulse 1.2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
   .log-panel {
-    background: var(--glass);
-    backdrop-filter: blur(12px);
-    border-radius: 14px;
+    background: var(--paper);
+    border-radius: 12px;
     padding: 12px;
-    height: calc(100vh - 36px);
-    max-height: 860px;
+    height: calc(100vh - 40px);
+    max-height: 840px;
     display: flex;
     flex-direction: column;
-    border: 1px solid rgba(148,163,184,0.12);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    border: 2px solid var(--border);
+    box-shadow: 0 6px 18px rgba(74, 59, 50, 0.1);
   }
   .log-content {
     flex: 1;
     overflow-y: auto;
     font-size: 0.8rem;
-    color: var(--muted);
-    scrollbar-width: thin;
-    scrollbar-color: #334155 transparent;
+    color: var(--ink-soft);
   }
-  .log-content::-webkit-scrollbar { width: 5px; }
-  .log-content::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-  .log-entry { padding: 5px 0; border-bottom: 1px solid rgba(30,41,59,0.8); }
-  .log-entry.sys { color: #60a5fa; }
-  .log-entry.win { color: var(--accent); font-weight: 700; }
-  .log-entry.ai { color: #c4b5fd; }
-  .log-entry.up { color: #5eead4; }
-  .log-entry.down { color: #fca5a5; }
-  .log-entry.special { color: #fbbf24; }
+  .log-entry { padding: 4px 0; border-bottom: 1px solid #ebe6dc; }
+  .log-entry.sys { color: var(--blue); }
+  .log-entry.win { color: var(--teal-dark); font-weight: 700; }
+  .log-entry.ai { color: #6b5b4f; }
+  .log-entry.up { color: #1f7a6f; }
+  .log-entry.down { color: #a3382c; }
+  .log-entry.special { color: #8b6914; }
 
   .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    position: fixed; inset: 0; background: rgba(61, 50, 41, 0.45);
     display: none; align-items: center; justify-content: center; z-index: 100;
   }
   .modal-overlay.show { display: flex; }
   .modal {
-    background: var(--card);
-    backdrop-filter: blur(14px);
-    border-radius: 14px;
+    background: var(--paper);
+    border-radius: 12px;
     padding: 22px;
-    max-width: 460px;
+    max-width: 440px;
     width: 90%;
     max-height: 85vh;
     overflow-y: auto;
-    border: 1px solid rgba(148,163,184,0.2);
+    border: 2px solid var(--border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   }
-  .modal h3 { margin-bottom: 12px; color: var(--accent); }
+  .modal h3 { margin-bottom: 12px; color: var(--teal-dark); }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
 
-  .win-screen { text-align: center; padding: 50px 20px; }
-  .win-screen h1 { font-size: 2.4rem; }
+  .win-screen { text-align: center; padding: 48px 20px; }
+  .win-screen h1 { color: var(--gold); }
   .confirm-bar { margin-top: 10px; display: flex; gap: 10px; justify-content: center; }
 
-  .room-id-display {
-    font-size: 1.7rem; font-weight: 800; letter-spacing: 3px; color: var(--accent);
-    background: rgba(15,23,42,0.8); padding: 12px 20px; border-radius: 12px;
-    margin: 12px 0; display: inline-block; border: 1px solid rgba(46,196,182,0.3);
-  }
-  .lobby-players { text-align: left; margin: 14px 0; max-height: 240px; overflow-y: auto; }
-  .lobby-player {
-    padding: 8px 12px; background: rgba(15,23,42,0.7); border-radius: 8px; margin: 5px 0;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .lobby-player.ready { border-left: 4px solid var(--accent); }
-  .lobby-player.host { border-left: 4px solid var(--accent2); }
-  .status-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; }
-  .status-dot.ready { background: var(--accent); }
-  .status-dot.wait { background: var(--muted); }
-
-  /* ===== 卡牌全螢幕彈窗（玻璃擬態） ===== */
   #card-play-modal {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.72);
-    backdrop-filter: blur(8px);
+    background: rgba(61, 50, 41, 0.4);
     display: flex; align-items: center; justify-content: center;
     z-index: 9999;
     opacity: 0; pointer-events: none;
-    transition: opacity 0.35s ease;
+    transition: opacity 0.3s ease;
   }
   #card-play-modal.show { opacity: 1; pointer-events: auto; }
   #card-play-modal.fade-out { opacity: 0; }
   .card-announce-box {
-    background: rgba(15, 23, 42, 0.82);
-    backdrop-filter: blur(16px);
-    border: 2px solid rgba(46,196,182,0.55);
-    border-radius: 20px;
-    padding: 32px 40px;
-    max-width: 480px;
+    background: var(--paper);
+    border: 3px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 36px;
+    max-width: 420px;
     width: 90%;
     text-align: center;
-    box-shadow: 0 0 50px rgba(46,196,182,0.2), 0 20px 40px rgba(0,0,0,0.4);
-    transform: scale(0.88);
-    transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 12px 32px rgba(74, 59, 50, 0.2);
+    transform: scale(0.92);
+    transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
   }
   #card-play-modal.show .card-announce-box { transform: scale(1); }
-  .card-announce-player { font-size: 1.05rem; color: #93c5fd; margin-bottom: 6px; }
-  .card-announce-name {
-    font-size: 1.7rem; font-weight: 800; color: var(--accent);
-    margin-bottom: 10px; text-shadow: 0 0 20px rgba(46,196,182,0.4);
-  }
-  .card-announce-target {
-    font-size: 0.95rem; color: var(--gold); margin-bottom: 10px; font-weight: 600;
-  }
-  .card-announce-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
-  .card-announce-effects { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .card-announce-player { font-size: 1rem; color: var(--blue); margin-bottom: 4px; font-weight: 600; }
+  .card-announce-name { font-size: 1.55rem; font-weight: 800; color: var(--border); margin-bottom: 8px; }
+  .card-announce-target { font-size: 0.92rem; color: var(--gold); margin-bottom: 8px; font-weight: 600; display: none; }
+  .card-announce-desc { font-size: 0.88rem; color: var(--ink-soft); margin-bottom: 14px; }
+  .card-announce-effects { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; }
   .effect-tag {
-    background: rgba(30,58,95,0.8);
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 0.85rem;
+    background: #f0ebe3;
+    border: 1.5px solid #c4b8a8;
+    border-radius: 16px;
+    padding: 4px 11px;
+    font-size: 0.82rem;
     font-weight: 600;
   }
-  .effect-tag.up { color: #5eead4; border: 1px solid #2ec4b6; }
-  .effect-tag.down { color: #fca5a5; border: 1px solid #e63946; }
-  .effect-tag.special { color: #c4b5fd; border: 1px solid #a855f7; }
+  .effect-tag.up { color: #1f7a6f; border-color: #2a9d8f; }
+  .effect-tag.down { color: #a3382c; border-color: #c44536; }
+  .effect-tag.special { color: #6b5b4f; border-color: #8a7a6a; }
 </style>
 </head>
 <body>
 
-<!-- 卡牌全螢幕彈窗 -->
 <div id="card-play-modal">
   <div class="card-announce-box">
     <div class="card-announce-player" id="announcePlayer"></div>
@@ -426,11 +394,10 @@
   </div>
 </div>
 
-<!-- MAIN MENU -->
 <div id="mainMenu" class="screen active">
   <h1>🌍 SDG 永續桌遊</h1>
   <div class="menu-box">
-    <p style="color:var(--muted);margin-bottom:18px;">選擇遊戲模式</p>
+    <p style="color:var(--muted);margin-bottom:16px;">選擇遊戲模式</p>
     <button class="large success" id="btnPVC">單人 / 機器人模式 (PVC)</button>
     <button class="large" id="btnPVP">多人對戰模式 (PVP)</button>
   </div>
@@ -441,61 +408,7 @@
   <div class="menu-box">
     <button class="large success" id="btnLocal">同一裝置遊玩 (Local)</button>
     <button class="large" id="btnOnline">跨裝置線上連線 (Online)</button>
-    <button class="large danger" id="btnBackMain" style="margin-top:18px;">返回主選單</button>
-  </div>
-</div>
-
-<div id="onlineMenu" class="screen">
-  <h1>線上房間</h1>
-  <div class="menu-box">
-    <button class="large success" id="btnCreateRoom">建立房間</button>
-    <button class="large" id="btnJoinRoom">加入房間</button>
-    <button class="large danger" id="btnBackPVP" style="margin-top:18px;">返回</button>
-  </div>
-</div>
-
-<div id="createRoomScreen" class="screen">
-  <h1>建立房間</h1>
-  <div class="lobby-box">
-    <label>總玩家人數</label>
-    <select id="onlinePlayerCount" style="margin:10px 0;display:block;width:100%;">
-      <option value="3">3 人</option>
-      <option value="4" selected>4 人</option>
-      <option value="5">5 人</option>
-      <option value="6">6 人</option>
-    </select>
-    <label>你的暱稱</label>
-    <input type="text" id="hostName" value="房主" maxlength="12" style="width:100%;margin:8px 0;">
-    <button class="large success" id="btnDoCreate">建立並進入等候室</button>
-    <button class="large danger" id="btnBackOnline1" style="margin-top:10px;">返回</button>
-  </div>
-</div>
-
-<div id="joinRoomScreen" class="screen">
-  <h1>加入房間</h1>
-  <div class="lobby-box">
-    <label>房間號碼</label>
-    <input type="text" id="joinRoomId" placeholder="SDG-8829" style="width:100%;margin:8px 0;text-transform:uppercase;">
-    <label>你的暱稱</label>
-    <input type="text" id="joinName" value="玩家" maxlength="12" style="width:100%;margin:8px 0;">
-    <button class="large success" id="btnDoJoin">加入房間</button>
-    <button class="large danger" id="btnBackOnline2" style="margin-top:10px;">返回</button>
-  </div>
-</div>
-
-<div id="lobbyScreen" class="screen">
-  <h1>等候室</h1>
-  <div class="lobby-box">
-    <div>房間號碼</div>
-    <div class="room-id-display" id="lobbyRoomId">SDG-0000</div>
-    <button id="btnCopyRoom" style="margin-bottom:14px;">一鍵複製房間號碼</button>
-    <div id="lobbyStatus" style="color:var(--muted);margin-bottom:6px;">等待玩家加入...</div>
-    <div class="lobby-players" id="lobbyPlayers"></div>
-    <div style="margin-top:14px;">
-      <button class="large success" id="btnReady" style="display:none;">準備就緒</button>
-      <button class="large success" id="btnStartGame" style="display:none;">開始遊戲</button>
-      <button class="large danger" id="btnLeaveLobby" style="margin-top:8px;">離開房間</button>
-    </div>
+    <button class="large danger" id="btnBackMain" style="margin-top:16px;">返回主選單</button>
   </div>
 </div>
 
@@ -510,7 +423,7 @@
       <option value="6">6 人</option>
     </select>
     <div id="nameInputs" style="margin-top:14px;"></div>
-    <button id="startBtn" class="success" style="width:100%;margin-top:18px;padding:13px;font-size:1.05rem;">進入 SDG 挑選</button>
+    <button id="startBtn" class="success" style="width:100%;margin-top:16px;padding:12px;font-size:1.05rem;">進入 SDG 挑選</button>
     <button class="danger" id="btnBackFromSetup" style="width:100%;margin-top:8px;">返回</button>
   </div>
 </div>
@@ -520,10 +433,10 @@
   <div class="draft-status" id="draftStatus">輪到 玩家1 挑選 2 張 SDG</div>
   <div class="draft-selected-count" id="draftCount">已選 0 / 2</div>
   <div class="draft-grid" id="draftGrid"></div>
-  <div style="text-align:center;margin-top:14px;">
+  <div style="text-align:center;margin-top:12px;">
     <button id="btnConfirmDraft" class="success" disabled>確認選擇 SDG</button>
   </div>
-  <div id="draftPicks" style="margin-top:16px;text-align:center;color:var(--muted);"></div>
+  <div id="draftPicks" style="margin-top:14px;text-align:center;color:var(--muted);"></div>
 </div>
 
 <div id="gameScreen" class="screen">
@@ -563,7 +476,7 @@
 <div id="winScreen" class="screen">
   <div class="win-screen">
     <h1>🏆 勝利！</h1>
-    <p id="winnerText" style="font-size:1.35rem;margin:18px 0;"></p>
+    <p id="winnerText" style="font-size:1.3rem;margin:16px 0;"></p>
     <button onclick="location.reload()" class="success">再玩一次</button>
   </div>
 </div>
@@ -577,7 +490,6 @@
 </div>
 
 <script>
-/* ========== 資料 ========== */
 const eventCards = [
   {name:"金融海嘯(2008)",forward:[],backward:[1,8],desc:"全球金融市場崩盤，經濟大幅衰退。"},
   {name:"莫拉克颱風(2009)",forward:[],backward:[11],desc:"重創台灣南部，引發嚴重水患與土石流。"},
@@ -657,6 +569,7 @@ const eventCards = [
   {name:"Girls Who Code成立",forward:[4,5],backward:[],desc:"鼓勵女性學習程式，縮小科技性別落差。"},
   {name:"雨水回收系統",forward:[6,11],backward:[],desc:"收集雨水再利用，提高水資源使用效率。"}
 ];
+
 const specialCards = [
   {name:"永續轉型",type:"sustain",desc:"從未使用的 SDG 牌堆抽 1 張，與自己 1 張 SDG 交換，保留當前步數。"},
   {name:"否決權",type:"veto",desc:"當受到其他玩家負面效果時，可被動使用抵銷。"},
@@ -669,52 +582,135 @@ const specialCards = [
   {name:"歷史借鏡",type:"history",desc:"從棄牌堆選擇一張卡牌加入手牌。"},
   {name:"目標重整",type:"swapSDG",desc:"與另一名玩家交換一張 SDG，步數保留。"}
 ];
-const SDG_NAMES = {1:"消除貧窮",2:"消除飢餓",3:"健康與福祉",4:"優質教育",5:"性別平等",6:"淨水與衛生",7:"可負擔能源",8:"就業與經濟成長",9:"工業創新基礎建設",10:"減少不平等",11:"永續城市",12:"責任消費生產",13:"氣候行動",14:"海洋生態",15:"陸地生態",16:"和平正義制度",17:"全球夥伴"};
 
-/* ========== STATE ========== */
-let state = {
-  mode:"local", isHost:false, peer:null, connections:{}, myPeerId:null, roomId:null,
-  lobbyPlayers:[], maxPlayers:4, inputLocked:false,
-  players:[], currentPlayer:0, phase:"action", deck:[], discard:[], unusedSDGs:[],
-  selectedCards:[], modeAction:null, maxPlay:2, capacityActive:false, isAIThinking:false,
-  draftAvailable:[], draftCurrentPlayer:0, draftSelected:[], previewDeltas:{}
+const SDG_NAMES = {
+  1:"消除貧窮",2:"消除飢餓",3:"健康與福祉",4:"優質教育",5:"性別平等",6:"淨水與衛生",
+  7:"可負擔能源",8:"就業與經濟成長",9:"工業創新基礎建設",10:"減少不平等",11:"永續城市",
+  12:"責任消費生產",13:"氣候行動",14:"海洋生態",15:"陸地生態",16:"和平正義制度",17:"全球夥伴"
 };
 
-/* ========== UTILS ========== */
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function log(msg, type=""){
-  const el=document.getElementById("logContent"); if(!el) return;
-  const d=document.createElement("div"); d.className="log-entry "+type; d.textContent=msg;
-  el.appendChild(d); el.scrollTop=el.scrollHeight;
+let state = {
+  mode: "local",
+  isGameOver: false,
+  timers: [],
+  inputLocked: false,
+  players: [],
+  currentPlayer: 0,
+  phase: "action",
+  deck: [],
+  discard: [],
+  unusedSDGs: [],
+  selectedCards: [],
+  modeAction: null,
+  maxPlay: 2,
+  capacityActive: false,
+  isAIThinking: false,
+  draftAvailable: [],
+  draftCurrentPlayer: 0,
+  draftSelected: [],
+  previewDeltas: {}
+};
+
+function trackTimeout(fn, ms) {
+  if (state.isGameOver) return null;
+  var id = setTimeout(function() {
+    state.timers = state.timers.filter(function(t) { return t !== id; });
+    if (!state.isGameOver) fn();
+  }, ms);
+  state.timers.push(id);
+  return id;
 }
-function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
-function showModal(title,body,actions){
-  document.getElementById("modalTitle").textContent=title;
-  document.getElementById("modalBody").innerHTML=body;
-  const act=document.getElementById("modalActions"); act.innerHTML="";
-  (actions||[]).forEach(a=>{const b=document.createElement("button");b.textContent=a.label;if(a.class)b.className=a.class;b.onclick=()=>{hideModal();a.fn();};act.appendChild(b);});
+
+function clearAllTimers() {
+  state.timers.forEach(function(id) { clearTimeout(id); });
+  state.timers = [];
+}
+
+function shuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+  }
+  return arr;
+}
+
+function log(msg, type) {
+  type = type || "";
+  var el = document.getElementById("logContent");
+  if (!el) return;
+  var d = document.createElement("div");
+  d.className = "log-entry " + type;
+  d.textContent = msg;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+
+function clamp(v, min, max) {
+  return Math.max(min, Math.min(max, v));
+}
+
+function showModal(title, body, actions) {
+  if (state.isGameOver) return;
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalBody").innerHTML = body;
+  var act = document.getElementById("modalActions");
+  act.innerHTML = "";
+  (actions || []).forEach(function(a) {
+    var b = document.createElement("button");
+    b.textContent = a.label;
+    if (a.class) b.className = a.class;
+    b.onclick = function() {
+      hideModal();
+      a.fn();
+    };
+    act.appendChild(b);
+  });
   document.getElementById("modal").classList.add("show");
 }
-function hideModal(){document.getElementById("modal").classList.remove("show");}
-function getCurrentPlayer(){return state.players[state.currentPlayer];}
-function delay(ms){return new Promise(r=>setTimeout(r,ms));}
-function randChoice(a){return a[Math.floor(Math.random()*a.length)];}
-function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
-function generateRoomId(){return "SDG-"+Math.floor(1000+Math.random()*9000);}
 
-/* ========== 卡牌彈窗（修正重複 + 支援目標） ========== */
-function showCardAnnouncement(playerName, card, options = {}) {
-  // options: { targetName, affectedSDGs:[{id,delta}] }
-  return new Promise(resolve => {
+function hideModal() {
+  document.getElementById("modal").classList.remove("show");
+}
+
+function getCurrentPlayer() {
+  return state.players[state.currentPlayer];
+}
+
+function delay(ms) {
+  return new Promise(function(resolve) {
+    trackTimeout(resolve, ms);
+  });
+}
+
+function randChoice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(function(s) {
+    s.classList.remove("active");
+  });
+  document.getElementById(id).classList.add("active");
+}
+
+function showCardAnnouncement(playerName, card, options) {
+  options = options || {};
+  return new Promise(function(resolve) {
+    if (state.isGameOver) {
+      resolve();
+      return;
+    }
     state.inputLocked = true;
-    const modal = document.getElementById("card-play-modal");
+    var modal = document.getElementById("card-play-modal");
     document.getElementById("announcePlayer").textContent = playerName + " 打出了";
     document.getElementById("announceCardName").textContent = card.name;
 
-    const targetEl = document.getElementById("announceTarget");
+    var targetEl = document.getElementById("announceTarget");
     if (options.targetName) {
       targetEl.style.display = "block";
-      targetEl.textContent = `➤ 目標：${options.targetName}`;
+      targetEl.textContent = "➤ 目標：" + options.targetName;
     } else {
       targetEl.style.display = "none";
       targetEl.textContent = "";
@@ -722,36 +718,32 @@ function showCardAnnouncement(playerName, card, options = {}) {
 
     document.getElementById("announceDesc").textContent = card.desc || "";
 
-    const effectsEl = document.getElementById("announceEffects");
+    var effectsEl = document.getElementById("announceEffects");
     effectsEl.innerHTML = "";
 
-    // 只渲染一次：優先使用傳入的 affectedSDGs，否則從卡牌本身推導
-    const affected = options.affectedSDGs && options.affectedSDGs.length
-      ? options.affectedSDGs
-      : [];
-
-    if (affected.length) {
-      affected.forEach(a => {
-        const tag = document.createElement("span");
+    var affected = options.affectedSDGs || [];
+    if (affected.length > 0) {
+      affected.forEach(function(a) {
+        var tag = document.createElement("span");
         tag.className = "effect-tag " + (a.delta > 0 ? "up" : "down");
-        tag.textContent = `SDG ${a.id} ${a.delta > 0 ? "📈 +" : "📉 "}${a.delta}`;
+        tag.textContent = "SDG " + a.id + (a.delta > 0 ? " 📈 +" : " 📉 ") + a.delta;
         effectsEl.appendChild(tag);
       });
     } else if (card.kind === "event") {
-      (card.forward || []).forEach(id => {
-        const tag = document.createElement("span");
+      (card.forward || []).forEach(function(id) {
+        var tag = document.createElement("span");
         tag.className = "effect-tag up";
-        tag.textContent = `SDG ${id} 📈 +1`;
+        tag.textContent = "SDG " + id + " 📈 +1";
         effectsEl.appendChild(tag);
       });
-      (card.backward || []).forEach(id => {
-        const tag = document.createElement("span");
+      (card.backward || []).forEach(function(id) {
+        var tag = document.createElement("span");
         tag.className = "effect-tag down";
-        tag.textContent = `SDG ${id} 📉 -1`;
+        tag.textContent = "SDG " + id + " 📉 -1";
         effectsEl.appendChild(tag);
       });
     } else {
-      const tag = document.createElement("span");
+      var tag = document.createElement("span");
       tag.className = "effect-tag special";
       tag.textContent = "特殊效果";
       effectsEl.appendChild(tag);
@@ -759,455 +751,776 @@ function showCardAnnouncement(playerName, card, options = {}) {
 
     modal.classList.remove("fade-out");
     modal.classList.add("show");
-    setTimeout(() => {
+
+    trackTimeout(function() {
       modal.classList.add("fade-out");
-      setTimeout(() => {
+      trackTimeout(function() {
         modal.classList.remove("show", "fade-out");
         state.inputLocked = false;
         resolve();
-      }, 350);
+      }, 320);
     }, 3000);
   });
 }
 
-/* ========== 導航 ========== */
-document.getElementById("btnPVC").onclick=()=>{state.mode="local";showScreen("setupScreen");renderNameInputs();};
-document.getElementById("btnPVP").onclick=()=>showScreen("pvpMenu");
-document.getElementById("btnBackMain").onclick=()=>showScreen("mainMenu");
-document.getElementById("btnLocal").onclick=()=>{state.mode="local";showScreen("setupScreen");renderNameInputs(true);};
-document.getElementById("btnOnline").onclick=()=>showScreen("onlineMenu");
-document.getElementById("btnBackPVP").onclick=()=>showScreen("pvpMenu");
-document.getElementById("btnCreateRoom").onclick=()=>showScreen("createRoomScreen");
-document.getElementById("btnJoinRoom").onclick=()=>showScreen("joinRoomScreen");
-document.getElementById("btnBackOnline1").onclick=()=>showScreen("onlineMenu");
-document.getElementById("btnBackOnline2").onclick=()=>showScreen("onlineMenu");
-document.getElementById("btnBackFromSetup").onclick=()=>showScreen("mainMenu");
+/* 導航 */
+document.getElementById("btnPVC").onclick = function() {
+  state.mode = "local";
+  showScreen("setupScreen");
+  renderNameInputs("pvc");
+};
+document.getElementById("btnPVP").onclick = function() {
+  showScreen("pvpMenu");
+};
+document.getElementById("btnBackMain").onclick = function() {
+  showScreen("mainMenu");
+};
+document.getElementById("btnLocal").onclick = function() {
+  state.mode = "pvp-local";
+  showScreen("setupScreen");
+  renderNameInputs("pvp");
+};
+document.getElementById("btnOnline").onclick = function() {
+  alert("線上模式架構已保留，目前以本地模式為主進行測試。");
+};
+document.getElementById("btnBackFromSetup").onclick = function() {
+  showScreen("mainMenu");
+};
 
-/* ========== SETUP ========== */
-function renderNameInputs(allHuman=false){
-  const count=+document.getElementById("playerCount").value;
-  const box=document.getElementById("nameInputs"); box.innerHTML="";
-  for(let i=0;i<count;i++){
-    const isHuman=allHuman||i===0;
-    const div=document.createElement("div"); div.className="player-setup";
-    div.innerHTML=`<label>玩家 ${i+1}</label>
-      <input type="text" id="pname${i}" value="${isHuman?"玩家"+(i+1):"AI"+i}" maxlength="12">
-      <select id="ptype${i}"><option value="human"${isHuman?" selected":""}>人類</option><option value="ai"${!isHuman?" selected":""}>AI</option></select>
-      <select id="pdiff${i}" ${isHuman?"disabled":""}><option value="easy">Easy</option><option value="basic" selected>Basic</option><option value="advance">Advance</option></select>`;
+function renderNameInputs(mode) {
+  var count = parseInt(document.getElementById("playerCount").value, 10);
+  var box = document.getElementById("nameInputs");
+  box.innerHTML = "";
+  for (var i = 0; i < count; i++) {
+    var div = document.createElement("div");
+    div.className = "player-setup";
+    if (mode === "pvp") {
+      div.innerHTML =
+        '<label>玩家 ' + (i + 1) + '</label>' +
+        '<input type="text" id="pname' + i + '" value="玩家' + (i + 1) + '" maxlength="12">' +
+        '<select id="ptype' + i + '" disabled><option value="human" selected>人類玩家</option></select>';
+    } else {
+      var defaultType = i === 0 ? "human" : "basic";
+      div.innerHTML =
+        '<label>玩家 ' + (i + 1) + '</label>' +
+        '<input type="text" id="pname' + i + '" value="' + (i === 0 ? "玩家1" : "Bot" + i) + '" maxlength="12">' +
+        '<select id="ptype' + i + '">' +
+        '<option value="human"' + (defaultType === "human" ? " selected" : "") + '>人類玩家</option>' +
+        '<option value="easy">Easy Bot</option>' +
+        '<option value="basic"' + (defaultType === "basic" ? " selected" : "") + '>Basic Bot</option>' +
+        '<option value="advance">Advance Bot</option>' +
+        '</select>';
+    }
     box.appendChild(div);
-    document.getElementById("ptype"+i).onchange=function(){document.getElementById("pdiff"+i).disabled=this.value==="human";};
   }
 }
-document.getElementById("playerCount").onchange=()=>renderNameInputs();
-renderNameInputs();
-document.getElementById("startBtn").onclick=startLocalDraft;
 
-function startLocalDraft(){
-  const count=+document.getElementById("playerCount").value;
-  const names=[],types=[],diffs=[];
-  for(let i=0;i<count;i++){
-    names.push(document.getElementById("pname"+i).value.trim()||`玩家${i+1}`);
-    types.push(document.getElementById("ptype"+i).value);
-    diffs.push(document.getElementById("pdiff"+i).value);
+document.getElementById("playerCount").onchange = function() {
+  var isPvp = state.mode === "pvp-local";
+  renderNameInputs(isPvp ? "pvp" : "pvc");
+};
+
+document.getElementById("startBtn").onclick = startLocalDraft;
+
+function startLocalDraft() {
+  var count = parseInt(document.getElementById("playerCount").value, 10);
+  var names = [];
+  var types = [];
+  for (var i = 0; i < count; i++) {
+    names.push(document.getElementById("pname" + i).value.trim() || ("玩家" + (i + 1)));
+    types.push(document.getElementById("ptype" + i).value);
   }
-  state.players=names.map((n,i)=>({name:n,isAI:types[i]==="ai",difficulty:diffs[i],sdgs:[],hand:[],sanctioned:false,capacityNext:false}));
-  state.draftAvailable=Array.from({length:17},(_,i)=>i+1); shuffle(state.draftAvailable);
-  state.draftCurrentPlayer=0; state.draftSelected=[];
-  showScreen("draftScreen"); renderDraft();
+  state.players = names.map(function(n, i) {
+    var t = types[i];
+    var isAI = t !== "human";
+    return {
+      name: n,
+      isAI: isAI,
+      difficulty: isAI ? t : "basic",
+      sdgs: [],
+      hand: [],
+      sanctioned: false,
+      capacityNext: false
+    };
+  });
+  state.isGameOver = false;
+  clearAllTimers();
+  state.draftAvailable = [];
+  for (var k = 1; k <= 17; k++) state.draftAvailable.push(k);
+  shuffle(state.draftAvailable);
+  state.draftCurrentPlayer = 0;
+  state.draftSelected = [];
+  showScreen("draftScreen");
+  renderDraft();
 }
 
-/* ========== DRAFT ========== */
-function renderDraft(){
-  const p=state.players[state.draftCurrentPlayer];
-  document.getElementById("draftStatus").textContent=`輪到 ${p.name}${p.isAI?" (AI)":""} 挑選 2 張 SDG`;
-  document.getElementById("draftCount").textContent=`已選 ${state.draftSelected.length} / 2`;
-  const grid=document.getElementById("draftGrid"); grid.innerHTML="";
-  for(let id=1;id<=17;id++){
-    const avail=state.draftAvailable.includes(id);
-    const sel=state.draftSelected.includes(id);
-    const div=document.createElement("div");
-    div.className="sdg-pick"+(!avail?" disabled":"")+(sel?" selected":"");
-    div.innerHTML=`<strong>SDG ${id}</strong><br><span style="font-size:0.75rem;color:#94a3b8;">${SDG_NAMES[id]}</span>`;
-    if(avail&&!p.isAI) div.onclick=()=>toggleDraftSelect(id);
+function renderDraft() {
+  if (state.isGameOver) return;
+  var p = state.players[state.draftCurrentPlayer];
+  document.getElementById("draftStatus").textContent =
+    "輪到 " + p.name + (p.isAI ? " (Bot)" : "") + " 挑選 2 張 SDG";
+  document.getElementById("draftCount").textContent = "已選 " + state.draftSelected.length + " / 2";
+
+  var grid = document.getElementById("draftGrid");
+  grid.innerHTML = "";
+  for (var id = 1; id <= 17; id++) {
+    var avail = state.draftAvailable.indexOf(id) !== -1;
+    var sel = state.draftSelected.indexOf(id) !== -1;
+    var div = document.createElement("div");
+    div.className = "sdg-pick" + (!avail ? " disabled" : "") + (sel ? " selected" : "");
+    div.innerHTML = "<strong>SDG " + id + "</strong><br><span style=\"font-size:0.74rem;color:#8a7a6a;\">" + (SDG_NAMES[id] || "") + "</span>";
+    if (avail && !p.isAI) {
+      (function(sid) {
+        div.onclick = function() { toggleDraftSelect(sid); };
+      })(id);
+    }
     grid.appendChild(div);
   }
-  document.getElementById("draftPicks").textContent=state.players.map(pl=>{
-    const s=pl.sdgs.map(x=>"SDG "+x.id).join(", ")||"尚未選擇";
-    return `${pl.name}: ${s}`;
+
+  document.getElementById("draftPicks").textContent = state.players.map(function(pl) {
+    var s = pl.sdgs.map(function(x) { return "SDG " + x.id; }).join(", ") || "尚未選擇";
+    return pl.name + ": " + s;
   }).join(" ｜ ");
-  document.getElementById("btnConfirmDraft").disabled=state.draftSelected.length!==2||p.isAI;
-  if(p.isAI) setTimeout(aiDraftPick,600+Math.random()*400);
+
+  document.getElementById("btnConfirmDraft").disabled = state.draftSelected.length !== 2 || p.isAI;
+
+  if (p.isAI) {
+    trackTimeout(aiDraftPick, 550 + Math.random() * 350);
+  }
 }
-function toggleDraftSelect(id){
-  const idx=state.draftSelected.indexOf(id);
-  if(idx>=0) state.draftSelected.splice(idx,1);
-  else if(state.draftSelected.length<2) state.draftSelected.push(id);
+
+function toggleDraftSelect(id) {
+  var idx = state.draftSelected.indexOf(id);
+  if (idx >= 0) {
+    state.draftSelected.splice(idx, 1);
+  } else if (state.draftSelected.length < 2) {
+    state.draftSelected.push(id);
+  }
   renderDraft();
 }
-document.getElementById("btnConfirmDraft").onclick=()=>{
-  if(state.draftSelected.length!==2) return;
-  confirmDraftPick([...state.draftSelected]);
+
+document.getElementById("btnConfirmDraft").onclick = function() {
+  if (state.draftSelected.length !== 2) return;
+  confirmDraftPick(state.draftSelected.slice());
 };
-function confirmDraftPick(ids){
-  const p=state.players[state.draftCurrentPlayer];
-  ids.forEach(id=>{
-    p.sdgs.push({id,progress:0,frozen:false,immune:false});
-    state.draftAvailable=state.draftAvailable.filter(x=>x!==id);
+
+function confirmDraftPick(ids) {
+  var p = state.players[state.draftCurrentPlayer];
+  ids.forEach(function(id) {
+    p.sdgs.push({ id: id, progress: 0, frozen: false, immune: false });
+    state.draftAvailable = state.draftAvailable.filter(function(x) { return x !== id; });
   });
-  state.draftSelected=[];
+  state.draftSelected = [];
   state.draftCurrentPlayer++;
-  if(state.draftCurrentPlayer>=state.players.length){ startGameAfterDraft(); return; }
+  if (state.draftCurrentPlayer >= state.players.length) {
+    startGameAfterDraft();
+    return;
+  }
   renderDraft();
 }
-function aiDraftPick(){
-  const p=state.players[state.draftCurrentPlayer];
-  if(!p.isAI||state.draftAvailable.length<2) return;
-  let picks=p.difficulty==="easy" ? shuffle([...state.draftAvailable]).slice(0,2)
-    : state.draftAvailable.slice().sort((a,b)=>Math.abs(a-8.5)-Math.abs(b-8.5)).slice(0,2);
-  state.draftSelected=picks; renderDraft();
-  setTimeout(()=>confirmDraftPick(picks),450);
-}
-function startGameAfterDraft(){
-  state.unusedSDGs=[...state.draftAvailable]; shuffle(state.unusedSDGs);
-  state.deck=[];
-  eventCards.forEach(c=>state.deck.push({...c,kind:"event",id:Math.random().toString(36).slice(2)}));
-  specialCards.forEach(c=>{for(let i=0;i<2;i++) state.deck.push({...c,kind:"special",id:Math.random().toString(36).slice(2)+i});});
-  shuffle(state.deck); state.discard=[];
-  state.players.forEach(p=>{for(let i=0;i<5;i++){if(state.deck.length===0)reshuffle();p.hand.push(state.deck.pop());}});
-  state.currentPlayer=0; state.phase="action"; state.modeAction=null; state.selectedCards=[]; state.maxPlay=2;
-  state.capacityActive=false; state.isAIThinking=false; state.previewDeltas={};
-  showScreen("gameScreen");
-  log("SDG 挑選完成，遊戲開始！","sys");
-  log(`請 ${getCurrentPlayer().name} 開始行動。`,"sys");
-  updateUI(); maybeTriggerAI();
-}
-function reshuffle(){if(state.discard.length===0)return;state.deck=state.discard.splice(0);shuffle(state.deck);log("抽牌堆用盡，已重新洗牌。","sys");}
 
-/* ========== 簡化 ONLINE（保留結構） ========== */
-document.getElementById("btnDoCreate").onclick=()=>alert("線上模式結構已保留，目前以本地模式為主進行測試。可之後再擴充。");
-document.getElementById("btnDoJoin").onclick=()=>alert("線上模式結構已保留。");
-document.getElementById("btnCopyRoom").onclick=()=>{};
-document.getElementById("btnLeaveLobby").onclick=()=>showScreen("onlineMenu");
-document.getElementById("btnReady").onclick=()=>{};
-document.getElementById("btnStartGame").onclick=()=>{};
+function aiDraftPick() {
+  if (state.isGameOver) return;
+  var p = state.players[state.draftCurrentPlayer];
+  if (!p.isAI || state.draftAvailable.length < 2) return;
+  var picks;
+  if (p.difficulty === "easy") {
+    picks = shuffle(state.draftAvailable.slice()).slice(0, 2);
+  } else {
+    picks = state.draftAvailable.slice().sort(function(a, b) {
+      return Math.abs(a - 8.5) - Math.abs(b - 8.5);
+    }).slice(0, 2);
+  }
+  state.draftSelected = picks;
+  renderDraft();
+  trackTimeout(function() {
+    confirmDraftPick(picks);
+  }, 400);
+}
 
-/* ========== UI ========== */
-function computePreview(){
-  state.previewDeltas={};
-  const p=getCurrentPlayer();
-  if(state.modeAction!=="play"||!state.selectedCards.length||p.isAI) return;
-  state.selectedCards.forEach(idx=>{
-    const card=p.hand[idx];
-    if(!card||card.kind!=="event") return;
-    card.forward.forEach(id=>{
-      state.players.forEach((pl,pi)=>pl.sdgs.forEach((s,si)=>{
-        if(s.id===id&&s.progress<3&&!s.frozen){
-          if(!state.previewDeltas[pi]) state.previewDeltas[pi]={};
-          state.previewDeltas[pi][si]=(state.previewDeltas[pi][si]||0)+1;
-        }
-      }));
+function startGameAfterDraft() {
+  state.unusedSDGs = state.draftAvailable.slice();
+  shuffle(state.unusedSDGs);
+  state.deck = [];
+  eventCards.forEach(function(c) {
+    state.deck.push({
+      name: c.name, forward: c.forward.slice(), backward: c.backward.slice(),
+      desc: c.desc, kind: "event", id: Math.random().toString(36).slice(2)
     });
-    card.backward.forEach(id=>{
-      state.players.forEach((pl,pi)=>pl.sdgs.forEach((s,si)=>{
-        if(s.id===id&&s.progress<3&&!s.frozen&&!s.immune){
-          if(!state.previewDeltas[pi]) state.previewDeltas[pi]={};
-          state.previewDeltas[pi][si]=(state.previewDeltas[pi][si]||0)-1;
-        }
-      }));
+  });
+  specialCards.forEach(function(c) {
+    for (var i = 0; i < 2; i++) {
+      state.deck.push({
+        name: c.name, type: c.type, desc: c.desc,
+        kind: "special", id: Math.random().toString(36).slice(2) + i
+      });
+    }
+  });
+  shuffle(state.deck);
+  state.discard = [];
+  state.players.forEach(function(p) {
+    for (var i = 0; i < 5; i++) {
+      if (state.deck.length === 0) reshuffle();
+      p.hand.push(state.deck.pop());
+    }
+  });
+  state.currentPlayer = 0;
+  state.phase = "action";
+  state.modeAction = null;
+  state.selectedCards = [];
+  state.maxPlay = 2;
+  state.capacityActive = false;
+  state.isAIThinking = false;
+  state.previewDeltas = {};
+  state.isGameOver = false;
+  showScreen("gameScreen");
+  log("SDG 挑選完成，遊戲開始！", "sys");
+  log("請 " + getCurrentPlayer().name + " 開始行動。", "sys");
+  updateUI();
+  maybeTriggerAI();
+}
+
+function reshuffle() {
+  if (state.discard.length === 0) return;
+  state.deck = state.discard.splice(0);
+  shuffle(state.deck);
+  log("抽牌堆用盡，已重新洗牌。", "sys");
+}
+
+function computePreview() {
+  state.previewDeltas = {};
+  var p = getCurrentPlayer();
+  if (state.modeAction !== "play" || state.selectedCards.length === 0 || p.isAI) return;
+  state.selectedCards.forEach(function(idx) {
+    var card = p.hand[idx];
+    if (!card || card.kind !== "event") return;
+    (card.forward || []).forEach(function(id) {
+      state.players.forEach(function(pl, pi) {
+        pl.sdgs.forEach(function(s, si) {
+          if (s.id === id && s.progress < 3 && !s.frozen) {
+            if (!state.previewDeltas[pi]) state.previewDeltas[pi] = {};
+            state.previewDeltas[pi][si] = (state.previewDeltas[pi][si] || 0) + 1;
+          }
+        });
+      });
+    });
+    (card.backward || []).forEach(function(id) {
+      state.players.forEach(function(pl, pi) {
+        pl.sdgs.forEach(function(s, si) {
+          if (s.id === id && s.progress < 3 && !s.frozen && !s.immune) {
+            if (!state.previewDeltas[pi]) state.previewDeltas[pi] = {};
+            state.previewDeltas[pi][si] = (state.previewDeltas[pi][si] || 0) - 1;
+          }
+        });
+      });
     });
   });
 }
-function updateUI(){
-  const p=getCurrentPlayer(); if(!p) return;
-  document.getElementById("turnInfo").textContent=`目前回合：${p.name}${p.isAI?" (AI)":""}`;
-  document.getElementById("deckCount").textContent=state.deck.length;
-  document.getElementById("discardCount").textContent=state.discard.length;
-  document.getElementById("handCount").textContent=`(${p.hand.length}/5)`;
-  let phaseText="行動階段";
-  if(state.isAIThinking) phaseText="AI 思考中...";
-  else if(state.modeAction==="discard") phaseText="棄牌模式：選牌後確認";
-  else if(state.modeAction==="play") phaseText=`打牌模式（最多 ${state.maxPlay} 張）`;
-  document.getElementById("phaseLabel").textContent=phaseText;
-  document.getElementById("phaseLabel").className="phase-label"+(state.isAIThinking?" ai-thinking":"");
 
-  const humanTurn=!p.isAI&&state.phase==="action"&&!state.isAIThinking&&!state.inputLocked;
-  const btnD=document.getElementById("btnDiscardMode"), btnP=document.getElementById("btnPlayMode");
-  const btnC=document.getElementById("btnCancelAction"), conf=document.getElementById("confirmBar");
-  if(humanTurn&&!state.modeAction){btnD.style.display="";btnP.style.display="";btnC.style.display="none";conf.style.display="none";}
-  else if(humanTurn&&(state.modeAction==="discard"||state.modeAction==="play")){btnD.style.display="none";btnP.style.display="none";btnC.style.display="";conf.style.display=state.selectedCards.length?"flex":"none";}
-  else{btnD.style.display="none";btnP.style.display="none";btnC.style.display="none";conf.style.display="none";}
+function updateUI() {
+  if (state.isGameOver) return;
+  var p = getCurrentPlayer();
+  if (!p) return;
+
+  document.getElementById("turnInfo").textContent = "目前回合：" + p.name + (p.isAI ? " (Bot)" : "");
+  document.getElementById("deckCount").textContent = state.deck.length;
+  document.getElementById("discardCount").textContent = state.discard.length;
+  document.getElementById("handCount").textContent = "(" + p.hand.length + "/5)";
+
+  var phaseText = "行動階段";
+  if (state.isAIThinking) phaseText = "Bot 思考中...";
+  else if (state.modeAction === "discard") phaseText = "棄牌模式：選牌後確認";
+  else if (state.modeAction === "play") phaseText = "打牌模式（最多 " + state.maxPlay + " 張）";
+  document.getElementById("phaseLabel").textContent = phaseText;
+  document.getElementById("phaseLabel").className = "phase-label" + (state.isAIThinking ? " ai-thinking" : "");
+
+  var humanTurn = !p.isAI && state.phase === "action" && !state.isAIThinking && !state.inputLocked && !state.isGameOver;
+  var btnD = document.getElementById("btnDiscardMode");
+  var btnP = document.getElementById("btnPlayMode");
+  var btnC = document.getElementById("btnCancelAction");
+  var conf = document.getElementById("confirmBar");
+
+  if (humanTurn && !state.modeAction) {
+    btnD.style.display = "";
+    btnP.style.display = "";
+    btnC.style.display = "none";
+    conf.style.display = "none";
+  } else if (humanTurn && (state.modeAction === "discard" || state.modeAction === "play")) {
+    btnD.style.display = "none";
+    btnP.style.display = "none";
+    btnC.style.display = "";
+    conf.style.display = state.selectedCards.length > 0 ? "flex" : "none";
+  } else {
+    btnD.style.display = "none";
+    btnP.style.display = "none";
+    btnC.style.display = "none";
+    conf.style.display = "none";
+  }
 
   computePreview();
-  const grid=document.getElementById("playersGrid"); grid.innerHTML="";
-  state.players.forEach((pl,idx)=>{
-    const div=document.createElement("div");
-    div.className="player-card"+(idx===state.currentPlayer?" current":"")+(pl.sanctioned?" sanctioned":"")+(pl.isAI?" ai-tag":"");
-    let html=`<div class="player-name">${pl.name}${idx===state.currentPlayer?" ▶":""}${pl.isAI?" ["+pl.difficulty+"]":""}</div>`;
-    pl.sdgs.forEach((s,si)=>{
-      const cur=s.progress;
-      const delta=(state.previewDeltas[idx]&&state.previewDeltas[idx][si])||0;
-      const preview=clamp(cur+delta,-2,3);
-      const pct=((cur+2)/5)*100;
-      const previewPct=((preview+2)/5)*100;
-      html+=`<div class="sdg-row">
-        <div class="sdg-badge ${cur>=3?"goal":""} ${s.frozen?"frozen":""}">SDG ${s.id}</div>
-        <div class="progress-bar">
-          <div class="progress-fill ${cur<0?"negative":""}" style="width:${pct}%"></div>
-          ${delta!==0?`<div class="progress-preview ${delta<0?"negative":""}" style="left:0;width:${Math.max(pct,previewPct)}%;"></div>`:""}
-          <div class="progress-text">${cur>=3?"GOAL":cur}${delta?` →${preview}`:""}${s.frozen?" ❄":""}${s.immune?" 🛡":""}</div>
-        </div>
-      </div>
-      <div class="progress-labels"><span>-2</span><span>-1</span><span>0</span><span>1</span><span>2</span><span>GOAL</span></div>
-      <div style="font-size:0.68rem;color:#64748b;margin-bottom:3px;">${SDG_NAMES[s.id]||""}</div>`;
+
+  var grid = document.getElementById("playersGrid");
+  grid.innerHTML = "";
+  state.players.forEach(function(pl, idx) {
+    var div = document.createElement("div");
+    div.className = "player-card" +
+      (idx === state.currentPlayer ? " current" : "") +
+      (pl.sanctioned ? " sanctioned" : "") +
+      (pl.isAI ? " ai-tag" : "");
+    var html = '<div class="player-name">' + pl.name +
+      (idx === state.currentPlayer ? " ▶" : "") +
+      (pl.isAI ? " [" + pl.difficulty + "]" : "") + "</div>";
+    pl.sdgs.forEach(function(s, si) {
+      var cur = s.progress;
+      var delta = (state.previewDeltas[idx] && state.previewDeltas[idx][si]) || 0;
+      var preview = clamp(cur + delta, -2, 3);
+      var pct = ((cur + 2) / 5) * 100;
+      var previewPct = ((preview + 2) / 5) * 100;
+      html += '<div class="sdg-row">' +
+        '<div class="sdg-badge ' + (cur >= 3 ? "goal" : "") + (s.frozen ? " frozen" : "") + '">SDG ' + s.id + '</div>' +
+        '<div class="progress-bar">' +
+        '<div class="progress-fill ' + (cur < 0 ? "negative" : "") + '" style="width:' + pct + '%"></div>' +
+        (delta !== 0 ? '<div class="progress-preview ' + (delta < 0 ? "negative" : "") + '" style="left:0;width:' + Math.max(pct, previewPct) + '%;"></div>' : "") +
+        '<div class="progress-text">' + (cur >= 3 ? "GOAL" : cur) +
+        (delta ? " →" + preview : "") +
+        (s.frozen ? " ❄" : "") + (s.immune ? " 🛡" : "") + '</div></div></div>' +
+        '<div class="progress-labels"><span>-2</span><span>-1</span><span>0</span><span>1</span><span>2</span><span>GOAL</span></div>' +
+        '<div style="font-size:0.66rem;color:#8a7a6a;margin-bottom:2px;">' + (SDG_NAMES[s.id] || "") + '</div>';
     });
-    div.innerHTML=html; grid.appendChild(div);
+    div.innerHTML = html;
+    grid.appendChild(div);
   });
 
-  const handEl=document.getElementById("handCards"); handEl.innerHTML="";
-  p.hand.forEach((card,idx)=>{
-    const cannot=state.modeAction==="play"&&card.type==="veto";
-    const div=document.createElement("div");
-    div.className="card "+(card.kind==="event"?"event":"special")+(state.selectedCards.includes(idx)?" selected":"")+(cannot?" disabled-card":"");
-    let effect="";
-    if(card.kind==="event"){
-      effect=`<div class="card-fwd">${card.forward.length?"前進："+card.forward.join(","):""}</div>
-              <div class="card-bwd">${card.backward.length?"後退："+card.backward.join(","):""}</div>`;
-    } else effect=`<div class="card-effect">${card.desc}</div>`;
-    div.innerHTML=`<div class="card-header">${card.kind==="event"?"歷史事件":"特殊功能"}</div>
-      <div class="card-body"><div class="card-name">${card.name}</div>${effect}</div>`;
-    if(!p.isAI&&!cannot&&!state.inputLocked) div.onclick=()=>onCardClick(idx);
+  var handEl = document.getElementById("handCards");
+  handEl.innerHTML = "";
+  p.hand.forEach(function(card, idx) {
+    var cannot = state.modeAction === "play" && card.type === "veto";
+    var div = document.createElement("div");
+    div.className = "card " + (card.kind === "event" ? "event" : "special") +
+      (state.selectedCards.indexOf(idx) !== -1 ? " selected" : "") +
+      (cannot ? " disabled-card" : "");
+    var effect = "";
+    if (card.kind === "event") {
+      effect = '<div class="card-fwd">' + (card.forward.length ? "前進：" + card.forward.join(",") : "") + '</div>' +
+               '<div class="card-bwd">' + (card.backward.length ? "後退：" + card.backward.join(",") : "") + '</div>';
+    } else {
+      effect = '<div class="card-effect">' + (card.desc || "") + '</div>';
+    }
+    div.innerHTML =
+      '<div class="card-header">' + (card.kind === "event" ? "歷史事件" : "特殊功能") + '</div>' +
+      '<div class="card-body"><div class="card-name">' + card.name + '</div>' + effect + '</div>';
+    if (!p.isAI && !cannot && !state.inputLocked && !state.isGameOver) {
+      (function(i) {
+        div.onclick = function() { onCardClick(i); };
+      })(idx);
+    }
     handEl.appendChild(div);
   });
 }
 
-/* ========== 行動 ========== */
-document.getElementById("btnDiscardMode").onclick=()=>{if(state.inputLocked)return;state.modeAction="discard";state.selectedCards=[];updateUI();};
-document.getElementById("btnPlayMode").onclick=()=>{if(state.inputLocked)return;state.modeAction="play";state.maxPlay=getCurrentPlayer().sanctioned?1:2;state.selectedCards=[];updateUI();};
-document.getElementById("btnCancelAction").onclick=()=>{state.modeAction=null;state.selectedCards=[];state.previewDeltas={};updateUI();};
-document.getElementById("btnConfirmAction").onclick=()=>{
-  if(state.inputLocked||!state.selectedCards.length)return;
-  if(state.modeAction==="discard") executeDiscard();
+document.getElementById("btnDiscardMode").onclick = function() {
+  if (state.inputLocked || state.isGameOver) return;
+  state.modeAction = "discard";
+  state.selectedCards = [];
+  updateUI();
+};
+document.getElementById("btnPlayMode").onclick = function() {
+  if (state.inputLocked || state.isGameOver) return;
+  state.modeAction = "play";
+  state.maxPlay = getCurrentPlayer().sanctioned ? 1 : 2;
+  state.selectedCards = [];
+  updateUI();
+};
+document.getElementById("btnCancelAction").onclick = function() {
+  state.modeAction = null;
+  state.selectedCards = [];
+  state.previewDeltas = {};
+  updateUI();
+};
+document.getElementById("btnConfirmAction").onclick = function() {
+  if (state.inputLocked || state.isGameOver || state.selectedCards.length === 0) return;
+  if (state.modeAction === "discard") executeDiscard();
   else executePlay();
 };
-function onCardClick(idx){
-  if(state.inputLocked||state.phase!=="action"||!state.modeAction||getCurrentPlayer().isAI)return;
-  const card=getCurrentPlayer().hand[idx];
-  if(state.modeAction==="play"&&card.type==="veto")return;
-  if(state.modeAction==="discard"){
-    const pos=state.selectedCards.indexOf(idx);
-    if(pos>=0)state.selectedCards.splice(pos,1);else state.selectedCards.push(idx);
-  }else{
-    const pos=state.selectedCards.indexOf(idx);
-    if(pos>=0)state.selectedCards.splice(pos,1);
-    else{if(state.selectedCards.length>=state.maxPlay)state.selectedCards.shift();state.selectedCards.push(idx);}
+
+function onCardClick(idx) {
+  if (state.inputLocked || state.isGameOver || state.phase !== "action" || !state.modeAction || getCurrentPlayer().isAI) return;
+  var card = getCurrentPlayer().hand[idx];
+  if (state.modeAction === "play" && card.type === "veto") return;
+  if (state.modeAction === "discard") {
+    var pos = state.selectedCards.indexOf(idx);
+    if (pos >= 0) state.selectedCards.splice(pos, 1);
+    else state.selectedCards.push(idx);
+  } else {
+    var pos2 = state.selectedCards.indexOf(idx);
+    if (pos2 >= 0) {
+      state.selectedCards.splice(pos2, 1);
+    } else {
+      if (state.selectedCards.length >= state.maxPlay) state.selectedCards.shift();
+      state.selectedCards.push(idx);
+    }
   }
   updateUI();
 }
-function executeDiscard(){
-  const p=getCurrentPlayer();
-  [...state.selectedCards].sort((a,b)=>b-a).forEach(i=>{
-    const c=p.hand.splice(i,1)[0]; state.discard.push(c);
-    log(`${p.name} 棄掉「${c.name}」`);
-  });
-  state.selectedCards=[]; state.modeAction=null; endActionPhase();
-}
-async function executePlay(){
-  const p=getCurrentPlayer();
-  const sorted=[...state.selectedCards].sort((a,b)=>b-a);
-  const cards=[]; sorted.forEach(i=>cards.unshift(p.hand.splice(i,1)[0]));
-  cards.forEach(c=>state.discard.push(c));
-  state.selectedCards=[]; state.modeAction=null;
 
-  for(const card of cards){
-    // 準備 affected 與可能的 target
-    let affected=[], targetName=null;
-    if(card.kind==="event"){
-      (card.forward||[]).forEach(id=>affected.push({id,delta:1}));
-      (card.backward||[]).forEach(id=>affected.push({id,delta:-1}));
-    }
-    // 特殊卡先簡單處理 target（實際目標在 resolve 時決定，這裡先給預覽）
-    await showCardAnnouncement(p.name, card, {affectedSDGs:affected, targetName});
-    log(`${p.name} 打出「${card.name}」`, card.kind==="event"?"up":"special");
-    updateUI();
-    await new Promise(r=>resolveCard(card, false, r));
-    await delay(150);
-  }
+function executeDiscard() {
+  var p = getCurrentPlayer();
+  var sorted = state.selectedCards.slice().sort(function(a, b) { return b - a; });
+  sorted.forEach(function(i) {
+    var c = p.hand.splice(i, 1)[0];
+    state.discard.push(c);
+    log(p.name + " 棄掉「" + c.name + "」");
+  });
+  state.selectedCards = [];
+  state.modeAction = null;
   endActionPhase();
 }
-function endActionPhase(){
-  state.modeAction=null; state.selectedCards=[];
-  getCurrentPlayer().sdgs.forEach(s=>s.immune=false);
-  state.phase="draw"; doDrawPhase();
-}
-function doDrawPhase(){
-  const p=getCurrentPlayer();
-  let need=5-p.hand.length;
-  if(p.capacityNext){need+=1;p.capacityNext=false;state.capacityActive=true;}
-  const drawn=[];
-  for(let i=0;i<need;i++){if(state.deck.length===0)reshuffle();if(state.deck.length===0)break;drawn.push(state.deck.pop());}
-  if(state.capacityActive&&drawn.length){
-    state.capacityActive=false;
-    if(p.isAI){
-      const i=Math.floor(Math.random()*drawn.length);
-      state.discard.push(drawn.splice(i,1)[0]); p.hand.push(...drawn); finishTurn();
-    }else{
-      showModal("能力建構：選擇棄置",drawn.map((c,i)=>`<button data-i="${i}">${c.name}</button>`).join(""),[]);
-      setTimeout(()=>document.querySelectorAll("#modalBody button").forEach(btn=>{
-        btn.onclick=()=>{state.discard.push(drawn.splice(+btn.dataset.i,1)[0]);p.hand.push(...drawn);hideModal();finishTurn();};
-      }),30);
+
+async function executePlay() {
+  var p = getCurrentPlayer();
+  var sorted = state.selectedCards.slice().sort(function(a, b) { return b - a; });
+  var cards = [];
+  sorted.forEach(function(i) {
+    cards.unshift(p.hand.splice(i, 1)[0]);
+  });
+  cards.forEach(function(c) {
+    state.discard.push(c);
+  });
+  state.selectedCards = [];
+  state.modeAction = null;
+
+  for (var ci = 0; ci < cards.length; ci++) {
+    if (state.isGameOver) break;
+    var card = cards[ci];
+    var affected = [];
+    if (card.kind === "event") {
+      (card.forward || []).forEach(function(id) { affected.push({ id: id, delta: 1 }); });
+      (card.backward || []).forEach(function(id) { affected.push({ id: id, delta: -1 }); });
     }
-  }else{
-    p.hand.push(...drawn);
-    if(drawn.length) log(`${p.name} 補了 ${drawn.length} 張牌`);
+    await showCardAnnouncement(p.name, card, { affectedSDGs: affected });
+    log(p.name + " 打出「" + card.name + "」", card.kind === "event" ? "up" : "special");
+    updateUI();
+    await new Promise(function(r) { resolveCard(card, false, r); });
+    await delay(120);
+  }
+  if (!state.isGameOver) endActionPhase();
+}
+
+function endActionPhase() {
+  if (state.isGameOver) return;
+  state.modeAction = null;
+  state.selectedCards = [];
+  getCurrentPlayer().sdgs.forEach(function(s) { s.immune = false; });
+  state.phase = "draw";
+  doDrawPhase();
+}
+
+function doDrawPhase() {
+  if (state.isGameOver) return;
+  var p = getCurrentPlayer();
+  var need = 5 - p.hand.length;
+  if (p.capacityNext) {
+    need += 1;
+    p.capacityNext = false;
+    state.capacityActive = true;
+  }
+  var drawn = [];
+  for (var i = 0; i < need; i++) {
+    if (state.deck.length === 0) reshuffle();
+    if (state.deck.length === 0) break;
+    drawn.push(state.deck.pop());
+  }
+  if (state.capacityActive && drawn.length > 0) {
+    state.capacityActive = false;
+    if (p.isAI) {
+      var ri = Math.floor(Math.random() * drawn.length);
+      state.discard.push(drawn.splice(ri, 1)[0]);
+      p.hand = p.hand.concat(drawn);
+      finishTurn();
+    } else {
+      var body = drawn.map(function(c, i) {
+        return '<button data-i="' + i + '">' + c.name + '</button>';
+      }).join("");
+      showModal("能力建構：選擇棄置", body, []);
+      setTimeout(function() {
+        document.querySelectorAll("#modalBody button").forEach(function(btn) {
+          btn.onclick = function() {
+            var i = parseInt(btn.getAttribute("data-i"), 10);
+            state.discard.push(drawn.splice(i, 1)[0]);
+            p.hand = p.hand.concat(drawn);
+            hideModal();
+            finishTurn();
+          };
+        });
+      }, 30);
+    }
+  } else {
+    p.hand = p.hand.concat(drawn);
+    if (drawn.length > 0) log(p.name + " 補了 " + drawn.length + " 張牌");
     finishTurn();
   }
 }
-function finishTurn(){
-  const next=(state.currentPlayer+1)%state.players.length;
-  getCurrentPlayer().sanctioned=false;
-  state.players[next].sdgs.forEach(s=>s.frozen=false);
-  state.currentPlayer=next; state.phase="action"; state.modeAction=null;
-  log(`── 輪到 ${getCurrentPlayer().name} ──`,"sys");
-  checkWin(); updateUI(); maybeTriggerAI();
-}
 
-/* ========== AI ========== */
-async function maybeTriggerAI(){
-  const p=getCurrentPlayer();
-  if(!p||!p.isAI||state.phase!=="action") return;
-  state.isAIThinking=true; updateUI();
-  await delay(700+Math.random()*400);
-  const playable=p.hand.map((c,i)=>i).filter(i=>p.hand[i].type!=="veto");
-  if(playable.length && Math.random()>0.28){
-    const n=Math.min(playable.length, p.sanctioned?1:2);
-    const idxs=shuffle(playable).slice(0,n);
-    const cards=[];
-    [...idxs].sort((a,b)=>b-a).forEach(i=>cards.unshift(p.hand.splice(i,1)[0]));
-    cards.forEach(c=>state.discard.push(c));
-    for(const card of cards){
-      let affected=[];
-      if(card.kind==="event"){
-        (card.forward||[]).forEach(id=>affected.push({id,delta:1}));
-        (card.backward||[]).forEach(id=>affected.push({id,delta:-1}));
-      }
-      await showCardAnnouncement(p.name, card, {affectedSDGs:affected});
-      log(`${p.name} 打出「${card.name}」`,"ai");
-      await new Promise(r=>resolveCard(card,true,r));
-    }
-  }else{
-    const n=Math.min(2,p.hand.length);
-    for(let i=0;i<n;i++){const c=p.hand.pop();state.discard.push(c);log(`${p.name} 棄掉「${c.name}」`,"ai");}
+function finishTurn() {
+  if (state.isGameOver) return;
+  var next = (state.currentPlayer + 1) % state.players.length;
+  getCurrentPlayer().sanctioned = false;
+  state.players[next].sdgs.forEach(function(s) { s.frozen = false; });
+  state.currentPlayer = next;
+  state.phase = "action";
+  state.modeAction = null;
+  log("── 輪到 " + getCurrentPlayer().name + " ──", "sys");
+  checkWin();
+  if (!state.isGameOver) {
+    updateUI();
+    maybeTriggerAI();
   }
-  state.isAIThinking=false; endActionPhase();
 }
 
-/* ========== Resolve（含目標標註） ========== */
-function isValidNegativeTarget(s){return s.progress<3&&!s.immune&&!s.frozen;}
-function resolveCard(card, isAI, done){
-  if(card.kind==="event") resolveEvent(card, isAI, done);
+async function maybeTriggerAI() {
+  if (state.isGameOver) return;
+  var p = getCurrentPlayer();
+  if (!p || !p.isAI || state.phase !== "action") return;
+  state.isAIThinking = true;
+  updateUI();
+  await delay(650 + Math.random() * 350);
+  if (state.isGameOver) return;
+
+  var playable = [];
+  p.hand.forEach(function(c, i) {
+    if (c.type !== "veto") playable.push(i);
+  });
+
+  if (playable.length > 0 && Math.random() > 0.28) {
+    var n = Math.min(playable.length, p.sanctioned ? 1 : 2);
+    shuffle(playable);
+    var idxs = playable.slice(0, n);
+    var cards = [];
+    idxs.sort(function(a, b) { return b - a; }).forEach(function(i) {
+      cards.unshift(p.hand.splice(i, 1)[0]);
+    });
+    cards.forEach(function(c) { state.discard.push(c); });
+
+    for (var ci = 0; ci < cards.length; ci++) {
+      if (state.isGameOver) break;
+      var card = cards[ci];
+      var affected = [];
+      if (card.kind === "event") {
+        (card.forward || []).forEach(function(id) { affected.push({ id: id, delta: 1 }); });
+        (card.backward || []).forEach(function(id) { affected.push({ id: id, delta: -1 }); });
+      }
+      await showCardAnnouncement(p.name, card, { affectedSDGs: affected });
+      log(p.name + " 打出「" + card.name + "」", "ai");
+      await new Promise(function(r) { resolveCard(card, true, r); });
+    }
+  } else {
+    var n2 = Math.min(2, p.hand.length);
+    for (var j = 0; j < n2; j++) {
+      var c = p.hand.pop();
+      state.discard.push(c);
+      log(p.name + " 棄掉「" + c.name + "」", "ai");
+    }
+  }
+  state.isAIThinking = false;
+  if (!state.isGameOver) endActionPhase();
+}
+
+function isValidNegativeTarget(s) {
+  return s.progress < 3 && !s.immune && !s.frozen;
+}
+
+function resolveCard(card, isAI, done) {
+  if (state.isGameOver) {
+    done();
+    return;
+  }
+  if (card.kind === "event") resolveEvent(card, isAI, done);
   else resolveSpecial(card, isAI, done);
 }
-function resolveEvent(card, isAI, done){
-  card.forward.forEach(id=>{
-    state.players.forEach(pl=>pl.sdgs.forEach(s=>{
-      if(s.id===id&&s.progress<3&&!s.frozen){
-        s.progress=clamp(s.progress+1,-2,3);
-        log(`${pl.name} 的 SDG ${id} 前進至 ${s.progress}`,"up");
-      }
-    }));
+
+function resolveEvent(card, isAI, done) {
+  (card.forward || []).forEach(function(id) {
+    state.players.forEach(function(pl) {
+      pl.sdgs.forEach(function(s) {
+        if (s.id === id && s.progress < 3 && !s.frozen) {
+          s.progress = clamp(s.progress + 1, -2, 3);
+          log(pl.name + " 的 SDG " + id + " 前進至 " + s.progress, "up");
+        }
+      });
+    });
   });
-  if(!card.backward.length){done();return;}
-  const targets=[];
-  state.players.forEach(pl=>pl.sdgs.forEach(s=>{
-    if(card.backward.includes(s.id)&&isValidNegativeTarget(s)) targets.push({pl,s});
-  }));
-  if(!targets.length){log("後退無有效目標");done();return;}
-  let i=0;
-  function next(){
-    if(i>=targets.length){done();return;}
-    const t=targets[i++];
-    const vIdx=t.pl.hand.findIndex(c=>c.type==="veto");
-    if(vIdx>=0&&!t.pl.isAI){
-      showModal("否決權",`<p>${t.pl.name} 的 SDG ${t.s.id} 即將後退，是否使用否決權？</p>`,[
-        {label:"使用",class:"success",fn:()=>{t.pl.hand.splice(vIdx,1);state.discard.push({type:"veto"});log(`${t.pl.name} 使用否決權`,"special");next();}},
-        {label:"不使用",class:"danger",fn:()=>{t.s.progress=clamp(t.s.progress-1,-2,3);log(`${t.pl.name} 的 SDG ${t.s.id} 後退至 ${t.s.progress}`,"down");next();}}
+
+  if (!card.backward || card.backward.length === 0) {
+    done();
+    return;
+  }
+
+  var targets = [];
+  state.players.forEach(function(pl) {
+    pl.sdgs.forEach(function(s) {
+      if (card.backward.indexOf(s.id) !== -1 && isValidNegativeTarget(s)) {
+        targets.push({ pl: pl, s: s });
+      }
+    });
+  });
+
+  if (targets.length === 0) {
+    log("後退無有效目標");
+    done();
+    return;
+  }
+
+  var i = 0;
+  function next() {
+    if (state.isGameOver || i >= targets.length) {
+      done();
+      return;
+    }
+    var t = targets[i++];
+    var vIdx = -1;
+    for (var vi = 0; vi < t.pl.hand.length; vi++) {
+      if (t.pl.hand[vi].type === "veto") {
+        vIdx = vi;
+        break;
+      }
+    }
+
+    if (vIdx >= 0 && !t.pl.isAI) {
+      showModal("否決權", "<p>" + t.pl.name + " 的 SDG " + t.s.id + " 即將後退，是否使用否決權？</p>", [
+        {
+          label: "使用",
+          class: "success",
+          fn: function() {
+            t.pl.hand.splice(vIdx, 1);
+            state.discard.push({ type: "veto" });
+            log(t.pl.name + " 使用否決權", "special");
+            next();
+          }
+        },
+        {
+          label: "不使用",
+          class: "danger",
+          fn: function() {
+            t.s.progress = clamp(t.s.progress - 1, -2, 3);
+            log(t.pl.name + " 的 SDG " + t.s.id + " 後退至 " + t.s.progress, "down");
+            next();
+          }
+        }
       ]);
-    }else{
-      if(vIdx>=0&&t.pl.isAI&&t.pl.difficulty==="advance"){
-        t.pl.hand.splice(vIdx,1); log(`${t.pl.name} (AI) 使用否決權`,"ai");
-      }else{
-        t.s.progress=clamp(t.s.progress-1,-2,3);
-        log(`${t.pl.name} 的 SDG ${t.s.id} 後退至 ${t.s.progress}`,"down");
+    } else {
+      if (vIdx >= 0 && t.pl.isAI && t.pl.difficulty === "advance") {
+        t.pl.hand.splice(vIdx, 1);
+        log(t.pl.name + " (Bot) 使用否決權", "ai");
+      } else {
+        t.s.progress = clamp(t.s.progress - 1, -2, 3);
+        log(t.pl.name + " 的 SDG " + t.s.id + " 後退至 " + t.s.progress, "down");
       }
       next();
     }
   }
   next();
 }
-function resolveSpecial(card, isAI, done){
-  const p=getCurrentPlayer();
-  if(card.type==="capacity"){
-    p.capacityNext=true; log(`${p.name} 獲得【能力建構】`,"special"); done();
-  }else if(card.type==="immunity"){
-    if(isAI){p.sdgs[0].immune=true;log(`${p.name} (AI) 獲得豁免`,"ai");done();}
-    else{
-      showModal("政策豁免",p.sdgs.map((s,i)=>`<button data-i="${i}">SDG ${s.id}</button>`).join(""),[]);
-      setTimeout(()=>document.querySelectorAll("#modalBody button").forEach(btn=>{
-        btn.onclick=()=>{p.sdgs[+btn.dataset.i].immune=true;log(`${p.name} 的 SDG ${p.sdgs[+btn.dataset.i].id} 獲得豁免`,"special");hideModal();done();};
-      }),30);
+
+function resolveSpecial(card, isAI, done) {
+  var p = getCurrentPlayer();
+  if (card.type === "capacity") {
+    p.capacityNext = true;
+    log(p.name + " 獲得【能力建構】", "special");
+    done();
+  } else if (card.type === "immunity") {
+    if (isAI) {
+      p.sdgs[0].immune = true;
+      log(p.name + " (Bot) 獲得豁免", "ai");
+      done();
+    } else {
+      var body = p.sdgs.map(function(s, i) {
+        return '<button data-i="' + i + '">SDG ' + s.id + '</button>';
+      }).join("");
+      showModal("政策豁免", body, []);
+      setTimeout(function() {
+        document.querySelectorAll("#modalBody button").forEach(function(btn) {
+          btn.onclick = function() {
+            var i = parseInt(btn.getAttribute("data-i"), 10);
+            p.sdgs[i].immune = true;
+            log(p.name + " 的 SDG " + p.sdgs[i].id + " 獲得豁免", "special");
+            hideModal();
+            done();
+          };
+        });
+      }, 30);
     }
-  }else if(card.type==="freeze"){
-    let best=null;
-    state.players.forEach(pl=>{
-      if(pl===p)return;
-      pl.sdgs.forEach(s=>{if(isValidNegativeTarget(s)&&(!best||s.progress>best.progress))best={pl,s};});
+  } else if (card.type === "freeze") {
+    var best = null;
+    state.players.forEach(function(pl) {
+      if (pl === p) return;
+      pl.sdgs.forEach(function(s) {
+        if (isValidNegativeTarget(s) && (!best || s.progress > best.progress)) {
+          best = { pl: pl, s: s };
+        }
+      });
     });
-    if(best){
-      best.s.frozen=true;
-      log(`[${p.name}] 對 [${best.pl.name}] 使用了【凍結計畫】！`,"special");
-      // 已在打出時播過動畫，這裡補 log 即可
+    if (best) {
+      best.s.frozen = true;
+      log("[" + p.name + "] 對 [" + best.pl.name + "] 使用了【凍結計畫】！", "special");
     }
     done();
-  }else if(card.type==="sanction"){
-    let best=null, max=-99;
-    state.players.forEach(pl=>{
-      if(pl===p)return;
-      const t=pl.sdgs.reduce((a,s)=>a+s.progress,0);
-      if(t>max){max=t;best=pl;}
+  } else if (card.type === "sanction") {
+    var bestP = null;
+    var max = -99;
+    state.players.forEach(function(pl) {
+      if (pl === p) return;
+      var t = pl.sdgs.reduce(function(a, s) { return a + s.progress; }, 0);
+      if (t > max) {
+        max = t;
+        bestP = pl;
+      }
     });
-    if(best){
-      best.sanctioned=true;
-      log(`[${p.name}] 對 [${best.name}] 使用了【國際制裁】！`,"special");
+    if (bestP) {
+      bestP.sanctioned = true;
+      log("[" + p.name + "] 對 [" + bestP.name + "] 使用了【國際制裁】！", "special");
     }
     done();
-  }else if(card.type==="tradeHand"){
-    // 簡化：隨機交換
-    const opps=state.players.filter(pl=>pl!==p&&pl.hand.length);
-    if(opps.length&&p.hand.length){
-      const target=randChoice(opps);
-      const myC=p.hand.pop(), tC=target.hand.pop();
-      p.hand.push(tC); target.hand.push(myC);
-      log(`[${p.name}] 與 [${target.name}] 交換了手牌！`,"special");
+  } else if (card.type === "tradeHand") {
+    var opps = state.players.filter(function(pl) {
+      return pl !== p && pl.hand.length > 0;
+    });
+    if (opps.length > 0 && p.hand.length > 0) {
+      var target = randChoice(opps);
+      var myC = p.hand.pop();
+      var tC = target.hand.pop();
+      p.hand.push(tC);
+      target.hand.push(myC);
+      log("[" + p.name + "] 與 [" + target.name + "] 交換了手牌！", "special");
     }
     done();
-  }else if(card.type==="swapSDG"){
-    const opps=state.players.filter(pl=>pl!==p);
-    if(opps.length){
-      const target=randChoice(opps);
-      const tmp=p.sdgs[0]; p.sdgs[0]=target.sdgs[0]; target.sdgs[0]=tmp;
-      log(`[${p.name}] 與 [${target.name}] 交換了 SDG！`,"special");
+  } else if (card.type === "swapSDG") {
+    var opps2 = state.players.filter(function(pl) { return pl !== p; });
+    if (opps2.length > 0) {
+      var target2 = randChoice(opps2);
+      var tmp = p.sdgs[0];
+      p.sdgs[0] = target2.sdgs[0];
+      target2.sdgs[0] = tmp;
+      log("[" + p.name + "] 與 [" + target2.name + "] 交換了 SDG！", "special");
     }
     done();
-  }else{
-    log(`「${card.name}」效果已觸發`,"special"); done();
+  } else {
+    log("「" + card.name + "」效果已觸發", "special");
+    done();
   }
 }
-function checkWin(){
-  for(const pl of state.players){
-    if(pl.sdgs.every(s=>s.progress>=3)){
+
+function checkWin() {
+  for (var i = 0; i < state.players.length; i++) {
+    var pl = state.players[i];
+    var allGoal = pl.sdgs.every(function(s) { return s.progress >= 3; });
+    if (allGoal) {
+      state.isGameOver = true;
+      clearAllTimers();
+      state.isAIThinking = false;
+      state.inputLocked = true;
       showScreen("winScreen");
-      document.getElementById("winnerText").textContent=`${pl.name} 率先完成兩項 SDG 目標！`;
-      log(`🏆 ${pl.name} 獲勝！`,"win");
+      document.getElementById("winnerText").textContent = pl.name + " 率先完成兩項 SDG 目標！";
+      log("🏆 " + pl.name + " 獲勝！遊戲結束。", "win");
       return;
     }
   }
